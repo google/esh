@@ -17,7 +17,7 @@
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
-SHELL_ROOT=../shell
+SHELL_ROOT=../../shell
 -include $(SHELL_ROOT)/Makefile
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
