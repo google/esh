@@ -5,9 +5,8 @@ Implementation of a `bare-metal shell`. Can be used for early bringup of embedde
 ## Source Code Headers
 
 Every file containing source code must include copyright and license
-information. This includes any JS/CSS files that you might be serving out to
-browsers. (This is to help well-intentioned people avoid accidental copying that
-doesn't comply with the license.)
+information. This is to help well-intentioned people avoid accidental copying that
+doesn't comply with the license.
 
 Apache header:
 
