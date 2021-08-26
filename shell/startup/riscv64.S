@@ -1,3 +1,4 @@
+#
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,9 +12,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
 # Execution starts from here
 .section .init
 .globl _start
 _start:
-    j . # spin
+    la sp, _STACK_TOP_  # Load the SP with end of RAM
+    jal uart_init       # Junp to uart_init()
+    jal prompt          # Jump to prompt()
+    j .                 # Spin forever
