@@ -67,7 +67,7 @@ OBJS += $(patsubst %.S,%.o,$(SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
 # ------------------------------ memory layout----------------------------------
-LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/layout.ld)
+LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
 # ------------------------------ targets ---------------------------------------
 %.ld: %.ldt
@@ -83,7 +83,7 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/layout.ld)
 
 %.o:%.S
 	@echo "assembling" $^
-	@$(AS) -c $^ -o $@
+	$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
 %.elf: $(OBJS) $(LAYOUT_FILE)
 	@echo "generating" $@

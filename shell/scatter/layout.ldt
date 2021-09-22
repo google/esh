@@ -26,19 +26,23 @@ SECTIONS
         *(.text*)
     } > RAM
 
-    /* Place the command table immediately after the text section */
     . = ALIGN(8);
-    __CMD_TABLE_START__ = .;
-    .cmd_list : {
-        *(.cmd_list*)
-        *(.cmd_end*)
+    .data : {
+        *(.data*)
     } > RAM
 
     . = ALIGN(8);
-    .rodata : {*(.rodata*)} > RAM
+    .bss : {
+        *(.bss*)
+    } > RAM
 
     . = ALIGN(8);
-    .bss : {*(.bss*)} > RAM
+    .rodata : {
+        __CMD_TABLE_START__ = .;
+        *(.cmd_list*)
+        *(.cmd_end*)
+        *(.rodata*)
+    } > RAM
 
     . = ALIGN(8);
     . = . + __STACK_SIZE__;
