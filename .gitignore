@@ -4,3 +4,4 @@
 *.bin
 *.lst
 .DS_Store
+.gdb_history
