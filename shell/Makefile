@@ -44,7 +44,10 @@ OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
 
-FLAGS   = $(DEFINES) -O0 -I$(INC) -Wall -O0 -nostdlib
+# ------------------------------ optimization ----------------------------------
+OPTIMIZATION ?= g
+
+FLAGS   = $(DEFINES) -I$(INC) -Wall -O$(OPTIMIZATION) -nostdlib
 FLAGS  += -nostartfiles -ffreestanding -ggdb -c
 
 # ------------------------------ source ----------------------------------------
@@ -109,14 +112,15 @@ clean:
 ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
-$(info |- PROJECT    : $(PROJECT))
-$(info |- STARTUP    : $(STARTUP).S)
-$(info |- TOOLCHAIN  : $(TOOLCHAIN_PREFIX))
+$(info |- PROJECT      : $(PROJECT))
+$(info |- STARTUP      : $(STARTUP).S)
+$(info |- TOOLCHAIN    : $(TOOLCHAIN_PREFIX))
+$(info |- OPTIMIZATION : $(OPTIMIZATION))
 $(info *)
-$(info |- RAM BASE   : $(RAM_BASE_PHYSICAL))
-$(info |- RAM SIZE   : $(RAM_SIZE))
-$(info |- UART BASE  : $(UART_BASE_PHYSICAL))
-$(info `- STACK SIZE : $(STACK_SIZE))
+$(info |- RAM BASE     : $(RAM_BASE_PHYSICAL))
+$(info |- RAM SIZE     : $(RAM_SIZE))
+$(info |- UART BASE    : $(UART_BASE_PHYSICAL))
+$(info `- STACK SIZE   : $(STACK_SIZE))
 $(info )
 $(info >> If incorrect, please set these Variables in Makefile << )
 $(info )

@@ -16,6 +16,7 @@
 
 # should be v10 or above
 TOOLCHAIN_PREFIX ?= arm-none-eabi-
+OPTIMIZATION     = g
 
 DEFINES = -mcpu=cortex-m55 -mthumb
 ASM_FLAGS = -march=armv8-m.main

@@ -15,6 +15,7 @@
 #
 
 TOOLCHAIN_PREFIX = aarch64-linux-gnu-
+OPTIMIZATION     = g
 STARTUP    		 = aarch64
 
 # MANDATORY:
