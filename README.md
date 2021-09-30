@@ -65,11 +65,13 @@ make run
 You should see a prompt as below:
 ```
 ❯ make run
+Build: Thu Sep 30 09:57:45 2021
 #
 ```
 Typing `help` should reveal all the available commands. Like below:
 ```
 ❯ make run
+Build: Thu Sep 30 09:57:45 2021
 # help
 help : Prints all available commands
 hello : Echoes the commandline

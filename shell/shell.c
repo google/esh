@@ -125,6 +125,7 @@ static void shell(void) {
     for (int i = 0; i < MAX_ARG_COUNT; i++)
         argv[i] = NULL;
 
+    printf("Build: " __TIMESTAMP__ "\n");
     printf(PROMPT);
 
     while (TRUE) {
