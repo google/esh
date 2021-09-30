@@ -34,12 +34,14 @@ SHELL_ROOT=../../shell
 
 # ------------------------ User targets below this line ------------------------
 run_debug:
-	@qemu-system-aarch64 -S -M virt -cpu cortex-a72 -nographic -kernel \
+	@qemu-system-aarch64 -S -M virt,secure=on,virtualization=on \
+	 -cpu cortex-a72 -nographic -kernel \
 	 $(PROJECT).elf -gdb tcp::1234
 
 debug:
 	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-aarch64 -M virt -cpu cortex-a72 -nographic \
+	@qemu-system-aarch64 -M virt,secure=on,virtualization=on \
+	 -cpu cortex-a72 -nographic \
 	 -kernel $(PROJECT).elf
