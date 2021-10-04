@@ -43,3 +43,7 @@ __attribute__((weak)) int getc(void) {
 __attribute__((weak)) void uart_init(void) {
     /* The default config works! */
 }
+
+void __attribute__((weak)) platform_init(void) {
+    uart_init();
+}

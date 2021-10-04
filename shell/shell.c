@@ -33,6 +33,7 @@
 #define LINE_BUFF_SIZE    64
 #define MAX_ARG_COUNT     (LINE_BUFF_SIZE / 2)
 
+extern void platform_init(void);
 extern int getc(void);
 extern void putc(char c);
 
@@ -125,7 +126,6 @@ static void shell(void) {
     for (int i = 0; i < MAX_ARG_COUNT; i++)
         argv[i] = NULL;
 
-    printf("Build: " __TIMESTAMP__ "\n");
     printf(PROMPT);
 
     while (TRUE) {
@@ -171,6 +171,7 @@ static void shell(void) {
  *
  */
 void prompt() {
+    printf("Build: " __TIMESTAMP__ "\n");
     while (TRUE)
         shell();
 }

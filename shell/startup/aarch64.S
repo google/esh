@@ -25,6 +25,6 @@ _start_:
     b .
 1:  ldr x0, =_STACK_TOP_    // Store the stackpointer
     mov sp, x0              // Move the value to SP
-    bl uart_init            // enable Uart
+    bl platform_init        // call platform init
     bl prompt               // show the prompt
     b .

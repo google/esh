@@ -19,6 +19,6 @@
 .globl reset_handler
 .type reset_handler, %function
 reset_handler:
-    bl uart_init
+    bl platform_init
     bl prompt
     bl .
