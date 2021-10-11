@@ -14,27 +14,21 @@
  * limitations under the License.
  **/
 
-/*
- * This is a mandatory include.
- * This has the ADD_CMD() macro
+#ifndef __PRINTF_H__
+#define __PRINTF_H__
+
+// Currently, printf handles 64 bit integers, which can take a maximum value of
+// 2^64 - 1 when the integer is unsigned, which is approximately 10^19.
+#define MAX_DIGITS  20
+
+// This is used while printing hexadecimal values.
+#define LAST_NIBBLE_FIRST_BIT   60
+
+/**
+ * @brief prints an unformatted string to the UART
+ *
+ * @param s string
  */
-#include "shell.h"
+int printf(const char *s, ...);
 
-/*
- * There can be one or many function with same prototype, exposed as
- * a command on the shell. They can be in same or multiple files.
- */
-void hello(int argc, char** argv) {
-    for (int i = 0; i < argc; i++) {
-        printf("%s ", argv[i]);
-    }
-
-    printf("\nPress ctrl + a, x to exit !\n");
-}
-
-/*
-
- * One or many such can exist per file.
- * Description: ADD_CMD(command, help string, function to be exposed)
- */
-ADD_CMD(hello, "Echoes the commandline\n\tusage: hello <any string>", hello);
+#endif // __PRINTF_H__

@@ -17,12 +17,10 @@
 #ifndef __H_SHELL__
 #define __H_SHELL__
 
-/**
- * @brief prints an unformatted string to the UART
- *
- * @param s string
- */
-void printf(const char *s);
+#include "printf.h"
+#include "string.h"
+
+#include <stdint.h>
 
 /**
  * @brief Expected format of the user defined function

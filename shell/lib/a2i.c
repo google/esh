@@ -14,27 +14,12 @@
  * limitations under the License.
  **/
 
-/*
- * This is a mandatory include.
- * This has the ADD_CMD() macro
- */
-#include "shell.h"
+#include "a2i.h"
 
-/*
- * There can be one or many function with same prototype, exposed as
- * a command on the shell. They can be in same or multiple files.
- */
-void hello(int argc, char** argv) {
-    for (int i = 0; i < argc; i++) {
-        printf("%s ", argv[i]);
+int atoi(const char* str) {
+    int res = 0;
+    for (int i = 0; str[i] != '\0'; ++i) {
+        res = res * 10 + str[i] - '0';
     }
-
-    printf("\nPress ctrl + a, x to exit !\n");
+    return res;
 }
-
-/*
-
- * One or many such can exist per file.
- * Description: ADD_CMD(command, help string, function to be exposed)
- */
-ADD_CMD(hello, "Echoes the commandline\n\tusage: hello <any string>", hello);

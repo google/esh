@@ -15,6 +15,7 @@
  **/
 
 #include "shell.h"
+#include "string.h"
 
 #define NULL              ((void *)0)
 #define TRUE              (1==1)
@@ -39,37 +40,6 @@ extern void putc(char c);
 
 extern unsigned long int __CMD_TABLE_START__;
 static cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
-
-void printf(const char *s) {
-    while(*s != END_OF_LINE) {
-        putc(*s);
-        s++;
-    }
-}
-
-static int strcmp(char *s1, char *s2) {
-    while (*s1 == *s2) {
-        if (*s1 == END_OF_LINE && *s2 == END_OF_LINE)
-            return 0;
-
-        if (*s1 != *s2 && ( *s1 == END_OF_LINE || *s2 == END_OF_LINE))
-            return -1;
-
-        s1++;
-        s2++;
-    }
-
-    return -2;
-}
-
-static int strlen(char *s) {
-    int len = 0;
-
-    while (*s++ != END_OF_LINE)
-        len++;
-
-    return len;
-}
 
 static int parse_line(char** argv, char *line_buff, int argument_size) {
     int argc = 0;
@@ -187,6 +157,22 @@ void help(int argc, char** argv) {
     }
 }
 
+void printf_examples(int argc, char **argv) {
+    printf("Printing printf examples\n");
+    printf("%c \n", 'A');
+    printf("%s \n", "Test");
+    printf("%u \n", (uint32_t)(-1));
+    printf("%d \n", -1);
+    printf("%x \n", 0xDEADBEEF);
+    printf("%lu \n", (uint32_t)(-2));
+    printf("%ld \n", -2);
+    printf("%lx \n", ~0xDEADBEEF);
+    printf("%llu \n", (1ll << 60));
+    printf("%lld \n", (1ll << 63));
+    printf("%llx \n", (0xDEADBEEFll << 32) | 0xDEADBEEF);
+}
+
 // DO NOT REMOVE THESE
 ADD_CMD(help, "Prints all available commands", help);
+ADD_CMD(printf_examples, "Prints example usage of printf", printf_examples);
 __attribute__((section (".cmd_end"))) cmd_t cmd_end_= {NULL, NULL, NULL};
