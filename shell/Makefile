@@ -50,6 +50,9 @@ OPTIMIZATION ?= g
 FLAGS   = $(DEFINES) -I$(INC) -Wall -O$(OPTIMIZATION) -nostdlib
 FLAGS  += -nostartfiles -ffreestanding -ggdb -c
 
+
+LD_FLAGS ?=
+
 # ------------------------------ source ----------------------------------------
 INC    ?= $(shell realpath $(SHELL_ROOT)/include/)
 SRC_C  += $(shell realpath $(shell find $(SHELL_ROOT) -iname "*.c"))
@@ -90,7 +93,7 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
 %.elf: $(OBJS) $(LAYOUT_FILE)
 	@echo "generating" $@
-	@$(LD) -T$(LAYOUT_FILE) $(OBJS) -o $@
+	@$(LD) -T$(LAYOUT_FILE) $(OBJS) $(LD_FLAGS) -o $@
 	@$(OBJDUMP) -D -S $@ > $(PROJECT).lst
 
 %.bin:%.elf

@@ -14,12 +14,23 @@
 # limitations under the License.
 #
 
-# should be v10 or above
-TOOLCHAIN_PREFIX ?= arm-none-eabi-
+# NOTE: should be v10 or above
+# $ sudo apt update; sudo apt install -y gcc-arm-none-eabi
+# Reading package lists... Done
+# Building dependency tree... Done
+# Reading state information... Done
+# gcc-arm-none-eabi is already the newest version (15:10-2020-q4-major-2).
+# 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+TOOLCHAIN_PATH ?=
+LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/10.2.1/thumb/v8-m.main+fp/softfp
+
+TOOLCHAIN_PREFIX ?= $(TOOLCHAIN_PATH)arm-none-eabi-
 OPTIMIZATION     = g
 
 DEFINES = -mcpu=cortex-m55 -mthumb
 ASM_FLAGS = -march=armv8-m.main
+LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
 
 STARTUP = cortex-m
 
