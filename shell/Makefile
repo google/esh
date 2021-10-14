@@ -39,7 +39,7 @@ DEFINES += -DRAM_BASE_PHYSICAL=$(RAM_BASE_PHYSICAL)
 # ------------------------------ toolchain -------------------------------------
 GCC     = $(TOOLCHAIN_PREFIX)gcc
 LD      = $(TOOLCHAIN_PREFIX)ld
-AS      = $(TOOLCHAIN_PREFIX)as
+AS      = $(TOOLCHAIN_PREFIX)gcc
 OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
@@ -65,11 +65,13 @@ SRC_ASM = $(shell realpath $(ASM_F))
 endif
 endif
 
-STARTUP_FILE += $(shell realpath $(SHELL_ROOT)/startup/$(STARTUP).S)
+STARTUP_FILE ?= $(shell realpath $(SHELL_ROOT)/startup/$(STARTUP).S)
+FILTERED_SRC_ASM = $(filter-out $(STARTUP_FILE), $(SRC_ASM))
 
 # ------------------------------ objects ---------------------------------------
-OBJS  = $(patsubst %.c,%.o,$(SRC_C))
-OBJS += $(patsubst %.S,%.o,$(SRC_ASM))
+OBJS ?=
+OBJS += $(patsubst %.c,%.o,$(SRC_C))
+OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
 # ------------------------------ memory layout----------------------------------

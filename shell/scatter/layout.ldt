@@ -44,7 +44,7 @@ SECTIONS
         *(.rodata*)
     } > RAM
 
-    . = ALIGN(8);
+    . = ALIGN(32);
     . = . + __STACK_SIZE__;
     _STACK_TOP_ = .;
 }
