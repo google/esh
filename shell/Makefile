@@ -45,7 +45,7 @@ OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
 
 # ------------------------------ optimization ----------------------------------
-OPTIMIZATION ?= g
+OPTIMIZATION ?= 0
 
 FLAGS   = $(DEFINES) -I$(INC) -Wall -O$(OPTIMIZATION) -nostdlib
 FLAGS  += -nostartfiles -ffreestanding -ggdb -c
@@ -55,11 +55,11 @@ LD_FLAGS ?=
 
 # ------------------------------ source ----------------------------------------
 INC    ?= $(shell realpath $(SHELL_ROOT)/include/)
-SRC_C  += $(shell realpath $(shell find $(SHELL_ROOT) -iname "*.c"))
+SRC_C  += $(shell realpath $(shell find $(SHELL_ROOT) -type f -name "*.c"))
 
 ifneq ($(SHELL_ROOT), ./)
-SRC_C  += $(shell realpath $(shell find -iname "*.c"))
-ASM_F  += $(shell find -iname "*.S")
+SRC_C  += $(shell realpath $(shell find . -type f -name "*.c"))
+ASM_F  += $(shell find . -type f -name "*.S")
 ifneq ($(ASM_F),)
 SRC_ASM = $(shell realpath $(ASM_F))
 endif
@@ -81,9 +81,9 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 %.ld: %.ldt
 	@echo "generating" $@
 	@cp $^ $@
-	@sed -i 's/__RAM_BASE__/$(RAM_BASE_PHYSICAL)/g' $@
-	@sed -i 's/__RAM_SIZE__/$(RAM_SIZE)/g' $@
-	@sed -i 's/__STACK_SIZE__/$(STACK_SIZE)/g' $@
+	@sed 's/__RAM_BASE__/$(RAM_BASE_PHYSICAL)/g' $^ | \
+	sed 's/__RAM_SIZE__/$(RAM_SIZE)/g' | \
+	sed 's/__STACK_SIZE__/$(STACK_SIZE)/g' > $@
 
 %.o:%.c
 	@echo "compiling" $^
