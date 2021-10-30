@@ -22,11 +22,20 @@
 # gcc-arm-none-eabi is already the newest version (15:10-2020-q4-major-2).
 # 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
 
+# should be v10.3.1 or above
 TOOLCHAIN_PATH ?=
-LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/10.2.1/thumb/v8-m.main+fp/softfp
 
-TOOLCHAIN_PREFIX ?= $(TOOLCHAIN_PATH)arm-none-eabi-
-OPTIMIZATION     = g
+TOOLCHAIN_PREFIX ?= arm-none-eabi-
+OPTIMIZATION     = 0
+
+TOOLCHAIN_VERSION := $(shell $(TOOLCHAIN_PREFIX)gcc -dumpversion)
+ifneq ($(TOOLCHAIN_VERSION), 10.3.1)
+dummy:
+	echo -e "\033[0;31mIncorrect toolchain version, need 10.3.1 \nBuild Failed!\033[0m"
+	exit
+endif
+
+LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/$(TOOLCHAIN_VERSION)/thumb/v8-m.main+fp/softfp
 
 DEFINES = -mcpu=cortex-m55 -mthumb
 ASM_FLAGS = -march=armv8-m.main
