@@ -149,6 +149,11 @@ int printf(const char *fmt, ...) {
                 }
 
                 switch (*fmt) {
+                    case '%':
+                        outchar(*fmt);
+                        fmt++;
+                        state = CHECK_CH;
+                        break;
                     case 'c':
                     case 'C':
                         outchar(va_arg(args, int));
