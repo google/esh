@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,15 @@
  * limitations under the License.
  **/
 
-#ifndef __A2I_H__
-#define __A2I_H__
+#ifndef __REGS_H__
+#define __REGS_H__
+
+#include "a2i.h"
+#include "printf.h"
+#include "string.h"
 
 #include <stdint.h>
 
-/**
- * @brief Converts provided string to integer
- *
- * @param str string
- */
-int atoi(const char* str);
+#define reg32(addr) (*((volatile uint32_t *)((uintptr_t)(addr))))
 
-/**
- * @brief Converts provided string to hex
- *
- * @param str string
- */
-uint32_t atoh(const char* str);
-
-#endif // __A2I_H__
+#endif
