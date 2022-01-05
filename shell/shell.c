@@ -73,7 +73,7 @@ static void execute(int argc, char **argv) {
     }
 
     if (match_found == FALSE)
-        printf("command not found!\n");
+        printf("\"%s\": command not found. Use \"help\" to list all command.\n", argv[0]);
 }
 
 static void delete(void) {

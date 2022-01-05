@@ -51,6 +51,6 @@ typedef struct {
  *
  */
 #define ADD_CMD(_name, _help_string, _function) \
-    __attribute__((section(".cmd_list"))) cmd_t _var##_name = {#_name, _help_string, &_function}
+    __attribute__((section(".cmd_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
 
 #endif
