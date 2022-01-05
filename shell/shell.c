@@ -141,7 +141,7 @@ static void shell(void) {
  *
  */
 void prompt() {
-    printf("Build: " __TIMESTAMP__ "\n");
+    printf("Build: " __DATE__ " - " __TIME__ "\n");
     while (TRUE)
         shell();
 }
