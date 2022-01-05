@@ -146,6 +146,20 @@ void prompt() {
         shell();
 }
 
+void exec(char * cmd_str) {
+    int argc;
+
+    // TODO: this takes too much stack space. Optimize!
+    char *argv[MAX_ARG_COUNT];
+
+    // parse the line_buff
+    argc = parse_line(argv, cmd_str, MAX_ARG_COUNT);
+
+    // execute the parsed commands
+    if (argc > 0)
+        execute(argc, argv);
+}
+
 void help(int argc, char** argv) {
     int i = 0;
     while (table[i].command_name != NULL) {

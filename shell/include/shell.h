@@ -23,6 +23,13 @@
 #include <stdint.h>
 
 /**
+ * @brief Looks for and executes a string as a command
+ *
+ * @param cmd_str command string to be executed
+ */
+void exec(char * cmd_str);
+
+/**
  * @brief Expected format of the user defined function
  *
  */
