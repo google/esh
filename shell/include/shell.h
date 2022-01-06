@@ -60,4 +60,17 @@ typedef struct {
 #define ADD_CMD(_name, _help_string, _function) \
     __attribute__((section(".cmd_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
 
+/**
+ * @brief Format for the user to add a command to be executed quickly after boot
+ *        This command will also be available from the console!
+ *
+ * @param _name Name of the command that should trigger the function
+ *              on the shell
+ * @param _help_string String describing the function/command
+ * @param _function fucntion that needs to be made available in the shell
+ *
+ */
+#define AUTO_CMD(_name, _help_string, _function) \
+    __attribute__((section(".auto_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
+
 #endif

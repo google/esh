@@ -17,6 +17,12 @@
 #include "shell.h"
 #include "string.h"
 
+// Build and Versioning related info
+#define TO_STR(x) #x
+#define TOSTRING(x) TO_STR(x)
+#define BUILD_USER TOSTRING(__BUILD_USER__)
+#define BUILD_HOST TOSTRING(__BUILD_HOST__)
+
 #define NULL              ((void *)0)
 #define TRUE              (1==1)
 #define FALSE             (1==0)
@@ -39,7 +45,10 @@ extern int getc(void);
 extern void putc(char c);
 
 extern unsigned long int __CMD_TABLE_START__;
+extern unsigned long int __AUTO_TABLE_START__;
+
 static cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
+static cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
 
 static int parse_line(char** argv, char *line_buff, int argument_size) {
     int argc = 0;
@@ -136,12 +145,22 @@ static void shell(void) {
         execute(argc, argv);
 }
 
+static void exec_auto_cmds(void) {
+    for (int i = 0; auto_load[i].command_name != NULL; i++) {
+            auto_load[i].command(0, NULL);
+    }
+}
+
+static void build_info(int argc, char **argv) {
+    printf("Build: %s@%s - " __DATE__ " - " __TIME__ "\n", BUILD_USER, BUILD_HOST);
+}
+
 /**
  * @brief spwans the prompt
  *
  */
 void prompt() {
-    printf("Build: " __DATE__ " - " __TIME__ "\n");
+    exec_auto_cmds();
     while (TRUE)
         shell();
 }
@@ -164,9 +183,9 @@ void help(int argc, char** argv) {
     int i = 0;
     while (table[i].command_name != NULL) {
         printf(table[i].command_name);
-        printf(" : ");
+        printf("\n\t");
         printf(table[i].command_help);
-        printf("\n");
+        printf("\n\n");
         i++;
     }
 }
@@ -187,6 +206,9 @@ void printf_examples(int argc, char **argv) {
 }
 
 // DO NOT REMOVE THESE
+AUTO_CMD(version, "Prints details of the build", build_info);
 ADD_CMD(help, "Prints all available commands", help);
 ADD_CMD(printf_examples, "Prints example usage of printf", printf_examples);
+
+// Mandatory!
 __attribute__((section (".cmd_end"))) cmd_t cmd_end_= {NULL, NULL, NULL};

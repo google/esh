@@ -40,6 +40,8 @@ SECTIONS
     .rodata : {
         __CMD_TABLE_START__ = .;
         *(.cmd_list*)
+        __AUTO_TABLE_START__ = .;
+        *(.auto_list*)
         *(.cmd_end*)
         *(.rodata*)
     } > RAM

@@ -36,6 +36,11 @@ TOOLCHAIN_PREFIX   ?= riscv64-linux-gnu-
 DEFINES += -DUART_BASE_PHYSICAL=$(UART_BASE_PHYSICAL)
 DEFINES += -DRAM_BASE_PHYSICAL=$(RAM_BASE_PHYSICAL)
 
+BUILD_USER=$(shell whoami)
+BUILD_HOST=$(shell hostname)
+DEFINES += -D__BUILD_USER__=$(BUILD_USER)
+DEFINES += -D__BUILD_HOST__=$(BUILD_HOST)
+
 # ------------------------------ toolchain -------------------------------------
 GCC     = $(TOOLCHAIN_PREFIX)gcc
 LD      = $(TOOLCHAIN_PREFIX)ld
@@ -118,6 +123,8 @@ ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
 $(info |- PROJECT      : $(PROJECT))
+$(info |- BUILD USER   : $(BUILD_USER))
+$(info |- BUILD HOST   : $(BUILD_HOST))
 $(info |- STARTUP      : $(STARTUP).S)
 $(info |- TOOLCHAIN    : $(TOOLCHAIN_PREFIX))
 $(info |- OPTIMIZATION : $(OPTIMIZATION))
