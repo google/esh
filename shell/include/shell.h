@@ -17,7 +17,9 @@
 #ifndef __H_SHELL__
 #define __H_SHELL__
 
+#include "a2i.h"
 #include "printf.h"
+#include "regs.h"
 #include "string.h"
 
 #include <stdint.h>
