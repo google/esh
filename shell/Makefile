@@ -35,6 +35,7 @@ TOOLCHAIN_PREFIX   ?= riscv64-linux-gnu-
 # Every Physical Address should be defined as below
 DEFINES += -DUART_BASE_PHYSICAL=$(UART_BASE_PHYSICAL)
 DEFINES += -DRAM_BASE_PHYSICAL=$(RAM_BASE_PHYSICAL)
+DEFINES += -DECHO_INIT_VALUE=$(ECHO_INIT_VALUE)
 
 BUILD_USER=$(shell whoami)
 BUILD_HOST=$(shell hostname)

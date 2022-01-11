@@ -16,6 +16,7 @@
 
 #include "shell.h"
 #include "string.h"
+#include <stdbool.h>
 
 // Build and Versioning related info
 #define TO_STR(x) #x
@@ -28,17 +29,21 @@
 #define FALSE             (1==0)
 
 // Key codes
-#define END_OF_LINE       '\0'
-#define SPACE             ' '
-#define TAB               `\t`
-#define NEW_LINE           '\n'
-#define CARRIAGE_RETURN   '\r'
-#define BACK_SPACE        '\b'
-#define DELETE            '\177'
+#define END_OF_LINE         '\0'
+#define SPACE               ' '
+#define TAB                 '\t'
+#define NEW_LINE            '\n'
+#define CARRIAGE_RETURN     '\r'
+#define BACK_SPACE          '\b'
+#define DELETE              '\177'
+#define ESCAPE              '\33'
+#define SQUARE_BRACKET_OPEN '\133'
+#define UP_ARROW            '\101'
 
-#define PROMPT            "# "
-#define LINE_BUFF_SIZE    64
-#define MAX_ARG_COUNT     (LINE_BUFF_SIZE / 2)
+#define PROMPT              "# "
+#define LINE_BUFF_SIZE      64
+#define MAX_ARG_COUNT       (LINE_BUFF_SIZE / 2)
+#define NUM_HISTORY_ENTRIES 16
 
 extern void platform_init(void);
 extern int getc(void);
@@ -49,6 +54,75 @@ extern unsigned long int __AUTO_TABLE_START__;
 
 static cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
 static cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
+
+static int total_num_commands = 0;
+static int curr_command_ptr = 0;
+static char cmd_history[NUM_HISTORY_ENTRIES][LINE_BUFF_SIZE];
+static bool echo = ECHO_INIT_VALUE; // Should be set in the Makefile
+
+static void set_echo(int argc, char **argv) {
+    if (argc < 2) {
+        printf("Usage: echo <on/off>\n");
+        return;
+    }
+
+    if (!strcmp(argv[1], "on")) {
+        echo = true;
+    } else {
+        echo = false;
+    }
+}
+
+static void delete(void) {
+    putc(BACK_SPACE);
+    putc(SPACE);
+    putc(BACK_SPACE);
+}
+
+static void clear_prompt(int char_count) {
+    while (char_count) {
+        delete();
+        char_count--;
+    }
+}
+
+static void handle_up_arrow(char *cmd_buff, int *char_count) {
+    if (curr_command_ptr < total_num_commands - NUM_HISTORY_ENTRIES ||
+        curr_command_ptr == 0) {
+        printf("%s", cmd_buff);
+        return;
+    }
+
+    memset(cmd_buff, 0, LINE_BUFF_SIZE);
+
+    curr_command_ptr--;
+    int index = (curr_command_ptr % NUM_HISTORY_ENTRIES);
+    memcpy(cmd_buff, &cmd_history[index], LINE_BUFF_SIZE);
+    *char_count = strlen(cmd_buff);
+
+    printf("%s", cmd_buff);
+}
+
+static void handle_down_arrow(char *cmd_buff, int *char_count) {
+    memset(cmd_buff, 0, LINE_BUFF_SIZE);
+    *char_count = 0;
+    if (curr_command_ptr == total_num_commands)
+        return;
+
+    curr_command_ptr++;
+    int index = (curr_command_ptr % NUM_HISTORY_ENTRIES);
+    memcpy(cmd_buff, &cmd_history[index], LINE_BUFF_SIZE);
+    *char_count = strlen(cmd_buff);
+
+    printf("%s", cmd_buff);
+}
+
+static void add_command_to_history(const char *cmd_str) {
+    int index = total_num_commands % NUM_HISTORY_ENTRIES;
+    memcpy(&cmd_history[index], cmd_str, LINE_BUFF_SIZE);
+    total_num_commands++;
+    curr_command_ptr = total_num_commands;
+}
 
 static int parse_line(char** argv, char *line_buff, int argument_size) {
     int argc = 0;
@@ -85,15 +159,10 @@ static void execute(int argc, char **argv) {
         printf("\"%s\": command not found. Use \"help\" to list all command.\n", argv[0]);
 }
 
-static void delete(void) {
-    putc(BACK_SPACE);
-    putc(SPACE);
-    putc(BACK_SPACE);
-}
-
 static void shell(void) {
     int s, argc;
     int count = 0;
+    int escaped = 0;
     char c;
 
     char line_buff[LINE_BUFF_SIZE];
@@ -119,6 +188,11 @@ static void shell(void) {
             }
 
             if (c == DELETE) {
+                if (!echo) {
+                    delete();
+                    delete();
+                }
+
                 // guard against the count going negative!
                 if (count == 0)
                     continue;
@@ -126,18 +200,43 @@ static void shell(void) {
                 count--;
 
                 line_buff[count] = END_OF_LINE;
-                delete ();
+                delete();
             }
-            else
-            {
+            else if (c == ESCAPE) {
+                escaped = 1;
+                continue;
+            }
+            else if (c == SQUARE_BRACKET_OPEN && escaped == 1) {
+                escaped = 2;
+                continue;
+            }
+            else if ((c == 'A' || c == 'B') && escaped == 2) {
+                if (!echo) {
+                    clear_prompt(count + 4);
+                } else {
+                    clear_prompt(count);
+                }
+
+                if (c == 'A') {
+                    handle_up_arrow(line_buff, &count);
+                } else {
+                    handle_down_arrow(line_buff, &count);
+                }
+                escaped = 0;
+                continue;
+            }
+            else {
                 line_buff[count] = c;
                 count++;
             }
-            putc(c);
+            if (echo) {
+                putc(c);
+            }
         }
     }
 
     // parse the line_buff
+    add_command_to_history(line_buff);
     argc = parse_line(argv, line_buff, MAX_ARG_COUNT);
 
     // execute the parsed commands
@@ -209,6 +308,7 @@ void printf_examples(int argc, char **argv) {
 AUTO_CMD(version, "Prints details of the build", build_info);
 ADD_CMD(help, "Prints all available commands", help);
 ADD_CMD(printf_examples, "Prints example usage of printf", printf_examples);
+ADD_CMD(echo, "Turn input echo on/off", set_echo);
 
 // Mandatory!
 __attribute__((section (".cmd_end"))) cmd_t cmd_end_= {NULL, NULL, NULL};
