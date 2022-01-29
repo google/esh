@@ -21,6 +21,7 @@ MAKEFLAGS += --silent
 PROJECT            ?= shell
 SHELL_ROOT         ?= ./
 STARTUP            ?= riscv64
+ECHO_INIT_VALUE    ?= 0x1
 
 # Memory and UART address. Use riscv64, qemu target defaults
 RAM_BASE_PHYSICAL  ?= 0x80000000
