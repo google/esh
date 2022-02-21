@@ -51,18 +51,21 @@ OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
 
+# ------------------------------ source ----------------------------------------
+INC    ?= $(shell realpath $(SHELL_ROOT)/include/)
+SRC_C  += $(shell realpath $(shell find $(SHELL_ROOT) -type f -name "*.c"))
+
+INCLUDES = $(shell find . -type d -name "inc*" | \
+			while read line; do echo "-I"$$line; done;)
+DEFINES += $(INCLUDES)
+
 # ------------------------------ optimization ----------------------------------
 OPTIMIZATION ?= 0
 
 FLAGS   = $(DEFINES) -I$(INC) -Wall -O$(OPTIMIZATION) -nostdlib
 FLAGS  += -nostartfiles -ffreestanding -ggdb -c
 
-
 LD_FLAGS ?=
-
-# ------------------------------ source ----------------------------------------
-INC    ?= $(shell realpath $(SHELL_ROOT)/include/)
-SRC_C  += $(shell realpath $(shell find $(SHELL_ROOT) -type f -name "*.c"))
 
 ifneq ($(SHELL_ROOT), ./)
 SRC_C  += $(shell realpath $(shell find . -type f -name "*.c"))
@@ -102,8 +105,8 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
 %.elf: $(OBJS) $(LAYOUT_FILE)
 	@echo "generating" $@
-	@$(LD) -T$(LAYOUT_FILE) $(OBJS) $(LD_FLAGS) -o $@
-	@$(OBJDUMP) -D -S $@ > $(PROJECT).lst
+	@$(LD) -T$(LAYOUT_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
+	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
 	@echo "section size: "
@@ -112,12 +115,12 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 	@$(OBJCOPY) -O binary $^ $@
 	@echo "Done!"
 
-all: $(PROJECT).bin
+all: $(PROJECT).bin $(PROJECT).elf
 	@
 
 .PHONY: clean
 clean:
-	@rm -rf $(LAYOUT_FILE) $(OBJS) $(PROJECT).elf $(PROJECT).bin $(PROJECT).lst
+	@rm -rf $(LAYOUT_FILE) $(OBJS) *.elf *.bin *.lst *.map
 
 # ------------------------------ configuration ---------------------------------
 # Only printed when issued - make
