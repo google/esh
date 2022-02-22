@@ -16,6 +16,10 @@
 
 MEMORY
 {
+    /**
+     * Use the SRAM base and Size provided by the user in the Makefile
+     * __RAM_BASE__ and __RAM_SIZE__ will be dynamically replaced during the build.
+     */
     RAM : ORIGIN = __RAM_BASE__, LENGTH = __RAM_SIZE__
 }
 
@@ -26,18 +30,18 @@ SECTIONS
         *(.text*)
     } > RAM
 
-    . = ALIGN(8);
     .data : {
+        . = ALIGN(8);
         *(.data*)
     } > RAM
 
-    . = ALIGN(8);
     .bss : {
+        . = ALIGN(8);
         *(.bss*)
     } > RAM
 
-    . = ALIGN(8);
     .rodata : {
+        . = ALIGN(8);
         __CMD_TABLE_START__ = .;
         *(.cmd_list*)
         __AUTO_TABLE_START__ = .;
@@ -46,7 +50,10 @@ SECTIONS
         *(.rodata*)
     } > RAM
 
-    . = ALIGN(32);
-    . = . + __STACK_SIZE__;
-    _STACK_TOP_ = .;
+    /**
+     * Let the stack be at the end of the RAM.
+     * Not all CPUs may decrement the stack before use,
+     * so point to one word less than the end.
+     */
+    _STACK_TOP_ = __RAM_BASE__ + __RAM_SIZE__ - 4;
 }

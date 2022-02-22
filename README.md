@@ -40,8 +40,7 @@ Detected Configuration
 *
 |- RAM BASE   : 0x80000000
 |- RAM SIZE   : 0x4000000
-|- UART BASE  : 0x10000000
-`- STACK SIZE : 0x1000
+`- UART BASE  : 0x10000000
 
 >> If incorrect, please set these Variables in Makefile <<
 

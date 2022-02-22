@@ -49,7 +49,6 @@ STARTUP = cortex-m
 RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
 UART_BASE_PHYSICAL = 0x59303000
-STACK_SIZE         = 0x1000
 
 # setting the stack start manually for m class processors
 DEFINES += -DSTACK_START=0x80000000UL

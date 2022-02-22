@@ -19,12 +19,11 @@ OPTIMIZATION     = g
 STARTUP    		 = aarch64
 
 # MANDATORY:
-#     These 4 parameters are needed for every port
+#     These 3 parameters are needed for every port
 #     Provide all values in hex
 RAM_BASE_PHYSICAL  = 0x40000000
 RAM_SIZE           = 0x4000
 UART_BASE_PHYSICAL = 0x09000000
-STACK_SIZE         = 0x1000
 
 ECHO_INIT_VALUE	   = 0x1
 

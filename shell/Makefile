@@ -27,7 +27,6 @@ ECHO_INIT_VALUE    ?= 0x1
 RAM_BASE_PHYSICAL  ?= 0x80000000
 RAM_SIZE           ?= 0x4000000
 UART_BASE_PHYSICAL ?= 0x10000000
-STACK_SIZE         ?= 0x1000
 
 # Build for RISCV-64 by default
 TOOLCHAIN_PREFIX   ?= riscv64-linux-gnu-
@@ -92,8 +91,7 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 	@echo "generating" $@
 	@cp $^ $@
 	@sed 's/__RAM_BASE__/$(RAM_BASE_PHYSICAL)/g' $^ | \
-	sed 's/__RAM_SIZE__/$(RAM_SIZE)/g' | \
-	sed 's/__STACK_SIZE__/$(STACK_SIZE)/g' > $@
+	sed 's/__RAM_SIZE__/$(RAM_SIZE)/g' > $@
 
 %.o:%.c
 	@echo "compiling" $^
@@ -128,6 +126,7 @@ ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
 $(info |- PROJECT      : $(PROJECT))
+$(info |- SHELL_ROOT   : $(shell realpath $(SHELL_ROOT)))
 $(info |- BUILD USER   : $(BUILD_USER))
 $(info |- BUILD HOST   : $(BUILD_HOST))
 $(info |- STARTUP      : $(STARTUP).S)
@@ -136,8 +135,7 @@ $(info |- OPTIMIZATION : $(OPTIMIZATION))
 $(info *)
 $(info |- RAM BASE     : $(RAM_BASE_PHYSICAL))
 $(info |- RAM SIZE     : $(RAM_SIZE))
-$(info |- UART BASE    : $(UART_BASE_PHYSICAL))
-$(info `- STACK SIZE   : $(STACK_SIZE))
+$(info `- UART BASE    : $(UART_BASE_PHYSICAL))
 $(info )
 $(info >> If incorrect, please set these Variables in Makefile << )
 $(info )
