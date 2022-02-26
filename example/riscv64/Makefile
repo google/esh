@@ -14,6 +14,13 @@
 # limitations under the License.
 #
 
+TOOLCHAIN_PREFIX   ?= riscv64-linux-gnu-
+
+STARTUP            = riscv64
+RAM_BASE_PHYSICAL  = 0x80000000
+RAM_SIZE           = 0x4000000
+UART_BASE_PHYSICAL = 0x10000000
+
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
