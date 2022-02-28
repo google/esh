@@ -14,6 +14,8 @@
  * limitations under the License.
  **/
 
+#include "shell.h"
+
 /**
  * @brief Default UART implementation in case the user hasn't provided
  *        putc(), get(), uart_init() implementation.
@@ -46,4 +48,6 @@ __attribute__((weak)) void uart_init(void) {
 
 void __attribute__((weak)) platform_init(void) {
     uart_init();
+    set_read_char(getc);
+    set_write_char(putc);
 }

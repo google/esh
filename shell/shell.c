@@ -45,9 +45,8 @@
 #define MAX_ARG_COUNT       (LINE_BUFF_SIZE / 2)
 #define NUM_HISTORY_ENTRIES 16
 
-extern void platform_init(void);
-extern int getc(void);
-extern void putc(char c);
+int (*__read_char__)(void);
+void (*__write_char__)(char c);
 
 extern unsigned long int __CMD_TABLE_START__;
 extern unsigned long int __AUTO_TABLE_START__;
@@ -59,6 +58,14 @@ static int total_num_commands = 0;
 static int curr_command_ptr = 0;
 static char cmd_history[NUM_HISTORY_ENTRIES][LINE_BUFF_SIZE];
 static bool echo = ECHO_INIT_VALUE; // Should be set in the Makefile
+
+void set_read_char(int (*func)(void)){
+    __read_char__ = func;
+}
+
+void set_write_char(void (*func)(char)){
+    __write_char__ = func;
+}
 
 static void set_echo(int argc, char **argv) {
     if (argc < 2) {
@@ -74,9 +81,9 @@ static void set_echo(int argc, char **argv) {
 }
 
 static void delete(void) {
-    putc(BACK_SPACE);
-    putc(SPACE);
-    putc(BACK_SPACE);
+    __write_char__(BACK_SPACE);
+    __write_char__(SPACE);
+    __write_char__(BACK_SPACE);
 }
 
 static void clear_prompt(int char_count) {
@@ -177,13 +184,13 @@ static void shell(void) {
     printf(PROMPT);
 
     while (TRUE) {
-        s = getc();
+        s = __read_char__();
         if (s != -1) {
             c = (char)s;
 
             if (c == CARRIAGE_RETURN || c == NEW_LINE) {
                 line_buff[count] = END_OF_LINE;
-                putc(NEW_LINE);
+                __write_char__(NEW_LINE);
                 break;
             }
 
@@ -230,7 +237,7 @@ static void shell(void) {
                 count++;
             }
             if (echo) {
-                putc(c);
+                __write_char__(c);
             }
         }
     }

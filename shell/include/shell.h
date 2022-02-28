@@ -75,4 +75,28 @@ typedef struct {
 #define AUTO_CMD(_name, _help_string, _function) \
     __attribute__((section(".auto_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
 
+/**
+ * @brief Set a way to read a byte from input source.
+ *        The use needs to set a function that can be used to read a character
+ *        from a source. This way the shell would be able to read incoming
+ *        characters. A call to this function can be in the platform_init()
+ *        function or during the runtime!
+ *
+ * @param func function pointer to a function that should be used to read a
+ *        character.
+ */
+void set_read_char(int (*func)(void));
+
+/**
+ * @brief Set a way to write a byte to output source.
+ *        The use needs to set a function that can be used to write a character
+ *        to destination. This way the shell would be able to write outgoing
+ *        characters. A call to this function can be in the platform_init()
+ *        function or during the runtime!
+ *
+ * @param func function pointer to a function that should be used to write a
+ *        character.
+ */
+void set_write_char(void (*func)(char));
+
 #endif

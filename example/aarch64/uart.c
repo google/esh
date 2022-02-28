@@ -14,6 +14,8 @@
  * limitations under the License.
  **/
 
+#include "shell.h"
+
 /**
  * @brief Default UART implementation in case the user hasn't provided
  *        putc(), get(), uart_init() implementation.
@@ -25,13 +27,13 @@
 #define UART_IFLS  *((unsigned int *) (UART_BASE_PHYSICAL + 0x34))
 #define UART_ICR   *((unsigned int *) (UART_BASE_PHYSICAL + 0x44))
 
-void putc(char c) {
+void uputc(char c) {
     while (UART_TFR & (1<<5));
 
     UART_DR = (unsigned int)(c);
 }
 
-int getc(void) {
+int ugetc(void) {
     if ((UART_TFR & (1 << 4)) == 0)
         return UART_DR;
 

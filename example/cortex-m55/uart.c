@@ -24,13 +24,13 @@
 #define UART_CTRL   *((unsigned int *) (UART_BASE_PHYSICAL + 0x08))
 #define UART_INT    *((unsigned int *) (UART_BASE_PHYSICAL + 0x04))
 
-void putc(char c) {
+void uputc(char c) {
     while (UART_STATE & 1);
 
     UART_DR = c;
 }
 
-int getc(void) {
+int ugetc(void) {
     if (UART_STATE & (1 << 1))
         return UART_DR;
 

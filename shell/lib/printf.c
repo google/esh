@@ -18,7 +18,8 @@
 #include <stdarg.h>
 #include <stdbool.h>
 
-extern void putc(const char c);
+extern int (*__read_char__)(void);
+extern void (*__write_char__)(char c);
 
 typedef enum {
     CHECK_CH,
@@ -29,7 +30,7 @@ static char hextable[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                           '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 static void outchar(const char c) {
-    putc(c);
+    __write_char__(c);
 }
 
 static void outstr(const char *str) {
