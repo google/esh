@@ -6,3 +6,4 @@
 .DS_Store
 .gdb_history
 *.map
+*.patch

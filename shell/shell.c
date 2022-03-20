@@ -41,23 +41,23 @@
 #define UP_ARROW            '\101'
 
 #define PROMPT              "# "
-#define LINE_BUFF_SIZE      64
+#define LINE_BUFF_SIZE      32
 #define MAX_ARG_COUNT       (LINE_BUFF_SIZE / 2)
-#define NUM_HISTORY_ENTRIES 16
+#define NUM_HISTORY_ENTRIES 2
 
-int (*__read_char__)(void);
-void (*__write_char__)(char c);
+volatile int (*__read_char__)(void);
+volatile void (*__write_char__)(char c);
 
 extern unsigned long int __CMD_TABLE_START__;
 extern unsigned long int __AUTO_TABLE_START__;
 
-static cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
-static cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
+static const cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
+static const cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
 
-static int total_num_commands = 0;
-static int curr_command_ptr = 0;
+static volatile int total_num_commands = 0;
+static volatile int curr_command_ptr = 0;
 static char cmd_history[NUM_HISTORY_ENTRIES][LINE_BUFF_SIZE];
-static bool echo = ECHO_INIT_VALUE; // Should be set in the Makefile
+static volatile bool echo = ECHO_INIT_VALUE; // Should be set in the Makefile
 
 void set_read_char(int (*func)(void)){
     __read_char__ = func;
