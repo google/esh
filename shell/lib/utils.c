@@ -17,6 +17,11 @@
 #include "shell.h"
 #include "regs.h"
 
+/*
+ * Memory manipulation utilities can be skipped to reduce
+ * final binary size. Skip if SHELL_NO_UTILS is defined.
+ */
+#ifndef SHELL_NO_UTILS
 void r32(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Usage: %s <address> (in hex)\n", argv[0]);
@@ -62,3 +67,4 @@ void read_mem(int argc, char *argv[]) {
 ADD_CMD(r32, "reads a 32 bit memory location", r32);
 ADD_CMD(w32, "writes a 32 bit value to a memory location", w32);
 ADD_CMD(read, "Reads number of bytes from memory", read_mem);
+#endif // SHELL_NO_UTILS
