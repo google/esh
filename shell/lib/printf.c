@@ -50,14 +50,31 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
 
     switch (fmt) {
         case 'd': {
+/*
+ * 32 bit targets require libgcc.a for this to work.
+ * this results in increased binary size.
+ * Allow skipping the %l and %ll if SHELL_NO_PRINTF_LL
+ * is defined.
+ */
+#ifndef SHELL_NO_PRINTF_LL
             long long int value = 0;
-
+#else
+            int value = 0;
+#endif
             if (l_count == 0) {
                 value = va_arg(*args, int);
+/*
+ * 32 bit targets require libgcc.a for this to work.
+ * this results in increased binary size.
+ * Allow skipping the %l and %ll if SHELL_NO_PRINTF_LL
+ * is defined.
+ */
+#ifndef SHELL_NO_PRINTF_LL
             } else if (l_count == 1) {
                 value = va_arg(*args, long int);
             } else if (l_count == 2) {
                 value = va_arg(*args, long long int);
+#endif
             } else {
                 return false;
             }
@@ -81,14 +98,31 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
         case 'u':
         case 'x':
         case 'X': {
+/*
+ * 32 bit targets require libgcc.a for this to work.
+ * this results in increased binary size.
+ * Allow skipping the %l and %ll if SHELL_NO_PRINTF_LL
+ * is defined.
+ */
+#ifndef SHELL_NO_PRINTF_LL
             long long unsigned int value = 0;
-
+#else
+            unsigned int value = 0;
+#endif // SHELL_NO_PRINTF_LL
             if (l_count == 0) {
                 value = va_arg(*args, unsigned int);
+/*
+ * 32 bit targets require libgcc.a for this to work.
+ * this results in increased binary size.
+ * Allow skipping the %lx and %llx if SHELL_NO_PRINTF_LL
+ * is defined.
+ */
+#ifndef SHELL_NO_PRINTF_LL
             } else if (l_count == 1) {
                 value = va_arg(*args, long unsigned int);
             } else if (l_count == 2) {
                 value = va_arg(*args, long long unsigned int);
+#endif // SHELL_NO_PRINTF_LL
             } else {
                 return false;
             }

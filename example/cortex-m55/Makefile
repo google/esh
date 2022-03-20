@@ -35,11 +35,8 @@ dummy:
 	exit
 endif
 
-LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/$(TOOLCHAIN_VERSION)/thumb/v8-m.main+fp/softfp
-
 DEFINES = -mcpu=cortex-m55 -mthumb
 ASM_FLAGS = -march=armv8-m.main
-LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
 
 STARTUP = cortex-m
 
@@ -52,6 +49,7 @@ UART_BASE_PHYSICAL = 0x59303000
 
 # setting the stack start manually for m class processors
 DEFINES += -DSTACK_START=0x80000000UL
+DEFINES += -DSHELL_NO_PRINTF_LL
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
