@@ -28,6 +28,7 @@ ifeq ($(TOOLCHAIN_PREFIX),)
     $(error )
 endif
 
+ifeq ($(USER_LAYOUT_FILE),)
 ifeq ($(RAM_BASE_PHYSICAL),)
     $(info RAM_BASE_PHYSICAL not set!)
     $(info This is expected to be set in project level Makefile by user)
@@ -40,6 +41,7 @@ ifeq ($(RAM_SIZE),)
     $(info This is expected to be set in project level Makefile by user)
     $(info Example: RAM_SIZE = 0x4000 )
     $(error )
+endif
 endif
 
 ifeq ($(UART_BASE_PHYSICAL),)
@@ -124,14 +126,21 @@ OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
 # ------------------------------ memory layout----------------------------------
+# If the User is using a custom linker file then just assign the absolute path
+# to LD_FILE and use that during the linking.
+ifneq ($(USER_LAYOUT_FILE),)
+LD_FILE = $(shell realpath $(USER_LAYOUT_FILE))
+else
 LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
+LD_FILE = $(LAYOUT_FILE)
 # ------------------------------ targets ---------------------------------------
 %.ld: %.ldt
 	@echo "generating" $@
 	@cp $^ $@
 	@sed 's/__RAM_BASE__/$(RAM_BASE_PHYSICAL)/g' $^ | \
 	sed 's/__RAM_SIZE__/$(RAM_SIZE)/g' > $@
+endif
 
 %.o:%.c
 	@echo "compiling" $^
@@ -143,7 +152,7 @@ LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
 %.elf: $(OBJS) $(LAYOUT_FILE)
 	@echo "generating" $@
-	@$(LD) -T$(LAYOUT_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
+	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
@@ -176,6 +185,7 @@ $(info |- OPTIMIZATION        : $(OPTIMIZATION))
 $(info *)
 $(info |- TOOLCHAIN           : $(TOOLCHAIN_PREFIX))
 $(info |- STARTUP             : $(STARTUP_FILE))
+$(info |- LAYOUT FILE         : $(LD_FILE))
 $(info |- RAM BASE            : $(RAM_BASE_PHYSICAL))
 $(info |- RAM SIZE            : $(RAM_SIZE))
 $(info `- UART BASE           : $(UART_BASE_PHYSICAL))
