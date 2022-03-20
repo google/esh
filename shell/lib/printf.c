@@ -21,6 +21,14 @@
 extern int (*__read_char__)(void);
 extern void (*__write_char__)(char c);
 
+/*
+ * Skip the format support in printf if
+ * SHELL_PRINTF_LITE is defined.
+ *
+ * Supporting formatting is expensive in
+ * terms of memory.
+ */
+#ifndef SHELL_PRINTF_LITE
 typedef enum {
     CHECK_CH,
     PARSE_FMT_STR,
@@ -29,13 +37,9 @@ typedef enum {
 static char hextable[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                           '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-static void outchar(const char c) {
-    __write_char__(c);
-}
-
 static void outstr(const char *str) {
     while (*str != '\0') {
-        outchar(*str);
+        __write_char__(*str);
         str++;
     }
 }
@@ -60,7 +64,7 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
 
             // handle negative
             if (value < 0) {
-                outchar('-');
+                __write_char__('-');
                 value = -value;
             }
 
@@ -70,7 +74,7 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
             } while (value > 0);
 
             while (num_len > 0) {
-                outchar(num[--num_len]);
+                __write_char__(num[--num_len]);
             };
             break;
         }
@@ -96,11 +100,11 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
                 } while (value > 0);
 
                 while (num_len > 0) {
-                    outchar(num[--num_len]);
+                    __write_char__(num[--num_len]);
                 };
             } else {
                 if (value == 0) {
-                    outchar(hextable[0]);
+                    __write_char__(hextable[0]);
                 } else {
                     // print hex
                     int start_bit = LAST_NIBBLE_FIRST_BIT;
@@ -110,7 +114,7 @@ static bool printf_numbers(const char fmt, va_list *args, int l_count) {
                         int val = (value >> start_bit) & 0xF;
                         if (val || leading_zero_ignored) {
                             leading_zero_ignored = true;
-                            outchar(hextable[val]);
+                            __write_char__(hextable[val]);
                         }
                         start_bit -= 4;
                     }
@@ -139,7 +143,7 @@ int printf(const char *fmt, ...) {
                     fmt++;
                     continue;
                 }
-                outchar(*fmt);
+                __write_char__(*fmt);
                 fmt++;
                 break;
             }
@@ -151,13 +155,13 @@ int printf(const char *fmt, ...) {
 
                 switch (*fmt) {
                     case '%':
-                        outchar(*fmt);
+                        __write_char__(*fmt);
                         fmt++;
                         state = CHECK_CH;
                         break;
                     case 'c':
                     case 'C':
-                        outchar(va_arg(args, int));
+                        __write_char__(va_arg(args, int));
                         fmt++;
                         state = CHECK_CH;
                         break;
@@ -195,3 +199,13 @@ int printf(const char *fmt, ...) {
     }
     return 0;
 }
+#else
+int printf(const char *fmt, ...) {
+    while (*fmt != '\0') {
+        __write_char__(*fmt);
+        fmt++;
+    }
+    return 0;
+}
+
+#endif // SHELL_PRINTF_LITE
