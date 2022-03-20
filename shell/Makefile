@@ -58,6 +58,7 @@ endif
 
 # Use these defaults if none provided by user
 PROJECT            ?= shell
+PROJECT_ROOT        = ./
 SHELL_ROOT         ?= ./
 ECHO_INIT_VALUE    ?= 0x1
 
@@ -70,8 +71,13 @@ DEFINES += -DECHO_INIT_VALUE=$(ECHO_INIT_VALUE)
 # note the use and host that the build was fired on
 BUILD_USER=$(shell whoami)
 BUILD_HOST=$(shell hostname)
+SHELL_VERSION=$(shell cd $(SHELL_ROOT) && git rev-parse --short HEAD 2>/dev/null)
+USER_REPO_VERSION=$(shell cd $(PROJECT_ROOT) && git rev-parse --short HEAD 2>/dev/null)
+
 DEFINES += -D__BUILD_USER__=$(BUILD_USER)
 DEFINES += -D__BUILD_HOST__=$(BUILD_HOST)
+DEFINES += -D__SHELL_VERSION__=$(SHELL_VERSION)
+DEFINES += -D__USER_REPO_VERSION__=$(USER_REPO_VERSION)
 
 # ------------------------------ toolchain -------------------------------------
 GCC     = $(TOOLCHAIN_PREFIX)gcc
@@ -159,19 +165,21 @@ clean:
 ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
-$(info |- PROJECT      : $(PROJECT))
-$(info |- BUILD USER   : $(BUILD_USER))
-$(info |- BUILD HOST   : $(BUILD_HOST))
-$(info |- SHELL_ROOT   : $(shell realpath $(SHELL_ROOT)))
-$(info |- OPTIMIZATION : $(OPTIMIZATION))
+$(info |- PROJECT             : $(PROJECT))
+$(info |- BUILD USER          : $(BUILD_USER))
+$(info |- BUILD HOST          : $(BUILD_HOST))
+$(info |- SHELL VERSION       : $(SHELL_VERSION))
+$(info |- USER REPO VERSION   : $(USER_REPO_VERSION))
+$(info |- SHELL ROOT          : $(shell realpath $(SHELL_ROOT)))
+$(info |- PROJECT ROOT        : $(shell realpath $(PROJECT_ROOT)))
+$(info |- OPTIMIZATION        : $(OPTIMIZATION))
 $(info *)
-$(info |- TOOLCHAIN    : $(TOOLCHAIN_PREFIX))
-$(info |- STARTUP      : $(STARTUP_FILE))
-$(info |- RAM BASE     : $(RAM_BASE_PHYSICAL))
-$(info |- RAM SIZE     : $(RAM_SIZE))
-$(info `- UART BASE    : $(UART_BASE_PHYSICAL))
+$(info |- TOOLCHAIN           : $(TOOLCHAIN_PREFIX))
+$(info |- STARTUP             : $(STARTUP_FILE))
+$(info |- RAM BASE            : $(RAM_BASE_PHYSICAL))
+$(info |- RAM SIZE            : $(RAM_SIZE))
+$(info `- UART BASE           : $(UART_BASE_PHYSICAL))
 $(info )
 $(info >> If incorrect, please set these Variables in Makefile << )
 $(info )
-$(info Building...)
 endif

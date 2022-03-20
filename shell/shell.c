@@ -23,6 +23,8 @@
 #define TOSTRING(x) TO_STR(x)
 #define BUILD_USER TOSTRING(__BUILD_USER__)
 #define BUILD_HOST TOSTRING(__BUILD_HOST__)
+#define SHELL_VERSION TOSTRING(__SHELL_VERSION__)
+#define USER_REPO_VERSION TOSTRING(__USER_REPO_VERSION__)
 
 #define NULL              ((void *)0)
 #define TRUE              (1==1)
@@ -258,7 +260,8 @@ static void exec_auto_cmds(void) {
 }
 
 static void build_info(int argc, char **argv) {
-    printf("Build: %s@%s - " __DATE__ " - " __TIME__ "\n", BUILD_USER, BUILD_HOST);
+    printf("Build: [%s]:[%s] - [%s@%s] - " __DATE__ " - " __TIME__ "\n", \
+           SHELL_VERSION, USER_REPO_VERSION, BUILD_USER, BUILD_HOST);
 }
 
 /**
