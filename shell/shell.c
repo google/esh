@@ -56,9 +56,17 @@ extern unsigned long int __AUTO_TABLE_START__;
 static const cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
 static const cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
 
+/*
+ * To reduce the shell size the history feature
+ * is made optional. Skip history feature if
+ * SHELL_NO_HISTORY is defined.
+ */
+#ifndef SHELL_NO_HISTORY
 static volatile int total_num_commands = 0;
 static volatile int curr_command_ptr = 0;
 static char cmd_history[NUM_HISTORY_ENTRIES][LINE_BUFF_SIZE];
+#endif
+
 static volatile bool echo = ECHO_INIT_VALUE; // Should be set in the Makefile
 
 void set_read_char(int (*func)(void)){
@@ -95,6 +103,12 @@ static void clear_prompt(int char_count) {
     }
 }
 
+/*
+ * To reduce the shell size the history feature
+ * is made optional. Skip history feature if
+ * SHELL_NO_HISTORY is defined.
+ */
+#ifndef SHELL_NO_HISTORY
 static void handle_up_arrow(char *cmd_buff, int *char_count) {
     if (curr_command_ptr < total_num_commands - NUM_HISTORY_ENTRIES ||
         curr_command_ptr == 0) {
@@ -132,6 +146,7 @@ static void add_command_to_history(const char *cmd_str) {
     total_num_commands++;
     curr_command_ptr = total_num_commands;
 }
+#endif // SHELL_NO_HISTORY
 
 static int parse_line(char** argv, char *line_buff, int argument_size) {
     int argc = 0;
@@ -225,12 +240,18 @@ static void shell(void) {
                 } else {
                     clear_prompt(count);
                 }
-
+/*
+ * To reduce the shell size the history feature
+ * is made optional. Skip history feature if
+ * SHELL_NO_HISTORY is defined.
+ */
+#ifndef SHELL_NO_HISTORY
                 if (c == 'A') {
                     handle_up_arrow(line_buff, &count);
                 } else {
                     handle_down_arrow(line_buff, &count);
                 }
+#endif // SHELL_NO_HISTORY
                 escaped = 0;
                 continue;
             }
@@ -244,8 +265,16 @@ static void shell(void) {
         }
     }
 
-    // parse the line_buff
+/*
+ * To reduce the shell size the history feature
+ * is made optional. Skip history feature if
+ * SHELL_NO_HISTORY is defined.
+ */
+#ifndef SHELL_NO_HISTORY
     add_command_to_history(line_buff);
+#endif
+
+    // parse the line_buff
     argc = parse_line(argv, line_buff, MAX_ARG_COUNT);
 
     // execute the parsed commands
