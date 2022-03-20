@@ -14,29 +14,14 @@
 # limitations under the License.
 #
 
-# NOTE: should be v10 or above
-# $ sudo apt update; sudo apt install -y gcc-arm-none-eabi
-# Reading package lists... Done
-# Building dependency tree... Done
-# Reading state information... Done
-# gcc-arm-none-eabi is already the newest version (15:10-2020-q4-major-2).
-# 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-
-# should be v10.3.1 or above
-TOOLCHAIN_PATH ?=
+# NOTE: the toolchain can be installed using -
+# sudo apt install -y gcc-arm-none-eabi
 
 TOOLCHAIN_PREFIX ?= arm-none-eabi-
-OPTIMIZATION     = 0
+OPTIMIZATION     = g
 
-TOOLCHAIN_VERSION := $(shell $(TOOLCHAIN_PREFIX)gcc -dumpversion)
-ifneq ($(TOOLCHAIN_VERSION), 10.3.1)
-dummy:
-	echo -e "\033[0;31mIncorrect toolchain version, need 10.3.1 \nBuild Failed!\033[0m"
-	exit
-endif
-
-DEFINES = -mcpu=cortex-m55 -mthumb
-ASM_FLAGS = -march=armv8-m.main
+DEFINES = -mcpu=cortex-m3 -mthumb
+ASM_FLAGS = -march=armv7-m
 
 STARTUP = cortex-m
 
@@ -45,10 +30,10 @@ STARTUP = cortex-m
 #     Provide all values in hex
 RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
-UART_BASE_PHYSICAL = 0x59303000
+UART_BASE_PHYSICAL = 0x40004000
 
 # setting the stack start manually for m class processors
-DEFINES += -DSTACK_START=0x80000000UL
+DEFINES += -DSTACK_START=0x0003FFFF
 DEFINES += -DSHELL_NO_PRINTF_LL
 
 # MANDATORY:
@@ -60,12 +45,12 @@ SHELL_ROOT=../../shell
 
 # ------------------------ User targets below this line ------------------------
 run_debug:
-	@qemu-system-arm -S -M mps3-an547 -cpu cortex-m55 -nographic -kernel \
+	@qemu-system-arm -S -M mps2-an385 -cpu cortex-m3 -nographic -kernel \
 	 $(PROJECT).elf -gdb tcp::1234
 
 debug:
 	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-arm -M mps3-an547 -cpu cortex-m55 -nographic \
+	@qemu-system-arm -M mps2-an385 -cpu cortex-m3 -nographic \
 	 -kernel $(PROJECT).elf
