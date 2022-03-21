@@ -167,7 +167,7 @@ all: $(PROJECT).bin $(PROJECT).elf
 
 .PHONY: clean
 clean:
-	@rm -rf $(LAYOUT_FILE) $(OBJS) *.elf *.bin *.lst *.map
+	@rm -rf $(LAYOUT_FILE) $(OBJS) *.elf *.bin *.lst *.map *.gdb
 
 # ------------------------------ configuration ---------------------------------
 # Only printed when issued - make

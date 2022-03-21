@@ -41,12 +41,13 @@ OPENOC_CONFIG_FILE = board/sifive-hifive1-revb.cfg
 upload: $(PROJECT).elf
 	@echo -n "Uploading..."
 	@sudo $(OPENOCD) -f $(OPENOC_CONFIG_FILE) -c "program $^ verify reset exit"
-	@echo "\nDone :)"
+	@echo "Done :)"
 
 debug: $(PROJECT).elf
 	@echo "target extended-remote localhost:3333" > $(PROJECT).gdb
 	@echo "monitor reset halt" >> $(PROJECT).gdb
-	@echo "GDB server active... \nUse Ctrl+c to close the server!"
+	@echo "GDB server active..."
+	@echo "Use Ctrl+c to close the server!"
 	@sudo $(OPENOCD) -f $(OPENOC_CONFIG_FILE) 2>/dev/null
 
 gdb: $(PROJECT).elf

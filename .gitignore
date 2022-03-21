@@ -7,3 +7,4 @@
 .gdb_history
 *.map
 *.patch
+*.gdb
