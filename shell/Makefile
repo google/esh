@@ -81,6 +81,13 @@ DEFINES += -D__BUILD_HOST__=$(BUILD_HOST)
 DEFINES += -D__SHELL_VERSION__=$(SHELL_VERSION)
 DEFINES += -D__USER_REPO_VERSION__=$(USER_REPO_VERSION)
 
+ifeq ($(SHELL_LITE),1)
+DEFINES += -DSHELL_PRINTF_LITE
+DEFINES += -DSHELL_NO_PRINTF_LL
+DEFINES += -DSHELL_NO_UTILS
+DEFINES += -DSHELL_NO_HISTORY
+endif
+
 # ------------------------------ toolchain -------------------------------------
 GCC     = $(TOOLCHAIN_PREFIX)gcc
 LD      = $(TOOLCHAIN_PREFIX)ld

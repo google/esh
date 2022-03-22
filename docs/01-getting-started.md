@@ -69,6 +69,15 @@ UART_BASE_PHYSICAL = 0x10000000
 # ASM_FLAGS += <flags to be passed to the assembler>
 # LD_FLAGS  += <flags to be passed to the assembler>
 
+# Set this as 1 to use a lite version of the shell \
+This disables support for the following: \
+* printf formatting \
+* long integers in printf \
+* memory manipulation utilities \
+* commmand history in prompt \
+Skip the next 4 defines in this file if using SHELL_LITE
+SHELL_LITE = 0
+
 # Uncomment to use printf() without the formatting support
 # DEFINES += -DSHELL_PRINTF_LITE
 
@@ -76,7 +85,7 @@ UART_BASE_PHYSICAL = 0x10000000
 # formatting support. Valid only if SHELL_PRINTF_LITE is not defined
 # DEFINES += -DSHELL_NO_PRINTF_LL
 
-# Uncomment to skip compiling the memory manegement utilities.
+# Uncomment to skip compiling the memory manipulation utilities.
 # DEFINES += -DSHELL_NO_UTILS
 
 # Uncommnet to disable the command history on the prompt

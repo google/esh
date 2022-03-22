@@ -20,8 +20,12 @@
 TOOLCHAIN_PREFIX ?= arm-none-eabi-
 OPTIMIZATION     = g
 
+TOOLCHAIN_VERSION := $(shell $(TOOLCHAIN_PREFIX)gcc -dumpversion)
+LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/$(TOOLCHAIN_VERSION)/thumb/v7-m/nofp/
+
 DEFINES = -mcpu=cortex-m3 -mthumb
 ASM_FLAGS = -march=armv7-m
+LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
 
 STARTUP = cortex-m
 
@@ -31,6 +35,8 @@ STARTUP = cortex-m
 RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
 UART_BASE_PHYSICAL = 0x40004000
+
+SHELL_LITE = 0
 
 # setting the stack start manually for m class processors
 DEFINES += -DSTACK_START=0x0003FFFF
