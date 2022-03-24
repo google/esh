@@ -60,4 +60,4 @@ void *memcpy(void *dest, const void *src, size_t size);
  */
 void *memset(void *dest, int val, size_t size);
 
-#endif // __STRING_H__
+#endif  // __STRING_H__

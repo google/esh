@@ -17,45 +17,45 @@
 #include "string.h"
 
 size_t strlen(const char *str) {
-    size_t len = 0;
-    while (str[len]) {
-        len++;
-    }
-    return len;
+  size_t len = 0;
+  while (str[len]) {
+    len++;
+  }
+  return len;
 }
 
 int strcmp(const char *str1, const char *str2) {
-    while (*str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-    }
-    return *str1 - *str2;
+  while (*str1 && (*str1 == *str2)) {
+    str1++;
+    str2++;
+  }
+  return *str1 - *str2;
 }
 
 char *strcpy(char *str1, const char *str2) {
-    while (*str2) {
-        *(str1++) = *(str2++);
-    }
-    *str1 = '\0';
-    return 0;
+  while (*str2) {
+    *(str1++) = *(str2++);
+  }
+  *str1 = '\0';
+  return 0;
 }
 
 void *memcpy(void *dest, const void *src, size_t size) {
-    int i;
-    char *src_char = (char *)src;
-    char *dest_char = (char *)dest;
-    for (i = 0; i < size; i++) {
-        dest_char[i] = src_char[i];
-    }
-    return 0;
+  int i;
+  char *src_char = (char *)src;
+  char *dest_char = (char *)dest;
+  for (i = 0; i < size; i++) {
+    dest_char[i] = src_char[i];
+  }
+  return 0;
 }
 
 void *memset(void *dest, int val, size_t size) {
-    int i;
-    char *dest_char = (char *)dest;
-    for (i = 0; i < size; i++) {
-        dest_char[i] = val;
-    }
+  int i;
+  char *dest_char = (char *)dest;
+  for (i = 0; i < size; i++) {
+    dest_char[i] = val;
+  }
 
-    return 0;
+  return 0;
 }

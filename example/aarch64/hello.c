@@ -25,11 +25,11 @@
  * a command on the shell. They can be in same or multiple files.
  */
 void hello(int argc, char** argv) {
-    for (int i = 0; i < argc; i++) {
-        printf("%s ", argv[i]);
-    }
+  for (int i = 0; i < argc; i++) {
+    printf("%s ", argv[i]);
+  }
 
-    printf("\nPress ctrl + a, x to exit !\n");
+  printf("\nPress ctrl + a, x to exit !\n");
 }
 
 /*

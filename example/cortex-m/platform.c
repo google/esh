@@ -21,8 +21,8 @@
  * @brief Inilialize the platform
  *
  */
-void platform_init(){
-    uart_init();
-    set_read_char(ugetc);
-    set_write_char(uputc);
+void platform_init() {
+  uart_init();
+  set_read_char(ugetc);
+  set_write_char(uputc);
 }

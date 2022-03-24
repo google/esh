@@ -17,11 +17,11 @@
 #ifndef __REGS_H__
 #define __REGS_H__
 
+#include <stdint.h>
+
 #include "a2i.h"
 #include "printf.h"
 #include "string.h"
-
-#include <stdint.h>
 
 #define reg32(addr) (*((volatile uint32_t *)((uintptr_t)(addr))))
 

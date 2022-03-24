@@ -19,26 +19,26 @@
  *        putc(), get(), uart_init() implementation.
  *
  */
-#define UART_DR     *((unsigned int *) (UART_BASE_PHYSICAL + 0x00))
-#define UART_STATE  *((unsigned int *) (UART_BASE_PHYSICAL + 0x04))
-#define UART_CTRL   *((unsigned int *) (UART_BASE_PHYSICAL + 0x08))
-#define UART_INT    *((unsigned int *) (UART_BASE_PHYSICAL + 0x04))
+#define UART_DR *((unsigned int *)(UART_BASE_PHYSICAL + 0x00))
+#define UART_STATE *((unsigned int *)(UART_BASE_PHYSICAL + 0x04))
+#define UART_CTRL *((unsigned int *)(UART_BASE_PHYSICAL + 0x08))
+#define UART_INT *((unsigned int *)(UART_BASE_PHYSICAL + 0x04))
 
 void uputc(char c) {
-    while (UART_STATE & 1);
+  while (UART_STATE & 1)
+    ;
 
-    UART_DR = c;
+  UART_DR = c;
 }
 
 int ugetc(void) {
-    if (UART_STATE & (1 << 1))
-        return UART_DR;
+  if (UART_STATE & (1 << 1)) return UART_DR;
 
-    return -1;
+  return -1;
 }
 
 void uart_init(void) {
-    UART_CTRL = 0x0;
-    UART_INT  = 0xF;
-    UART_CTRL = 0x3;
+  UART_CTRL = 0x0;
+  UART_INT = 0xF;
+  UART_CTRL = 0x3;
 }

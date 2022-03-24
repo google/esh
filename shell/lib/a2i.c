@@ -17,32 +17,32 @@
 #include "a2i.h"
 
 int atoi(const char* str) {
-    int res = 0;
-    for (int i = 0; str[i] != '\0'; ++i) {
-        res = res * 10 + str[i] - '0';
-    }
-    return res;
+  int res = 0;
+  for (int i = 0; str[i] != '\0'; ++i) {
+    res = res * 10 + str[i] - '0';
+  }
+  return res;
 }
 
 uint32_t atoh(const char* str) {
-    uint32_t hex = 0;
-    uint32_t value = 0;
+  uint32_t hex = 0;
+  uint32_t value = 0;
 
-    for (uint32_t i = 0; str[i] != '\0'; i++) {
-        if (str[i] >= '0' && str[i] <= '9') {
-            value = str[i] - '0';
-        } else if (str[i] >= 'a' && str[i] <= 'f') {
-            value = str[i] - 'a' + 10;
-        } else if (str[i] >= 'A' && str[i] <= 'F') {
-            value = str[i] - 'A' + 10;
-        } else {
-            continue;
-        }
-
-        // make space for the new nibble on the right
-        hex = hex << 4;
-        hex |= value;
+  for (uint32_t i = 0; str[i] != '\0'; i++) {
+    if (str[i] >= '0' && str[i] <= '9') {
+      value = str[i] - '0';
+    } else if (str[i] >= 'a' && str[i] <= 'f') {
+      value = str[i] - 'a' + 10;
+    } else if (str[i] >= 'A' && str[i] <= 'F') {
+      value = str[i] - 'A' + 10;
+    } else {
+      continue;
     }
 
-    return hex;
+    // make space for the new nibble on the right
+    hex = hex << 4;
+    hex |= value;
+  }
+
+  return hex;
 }

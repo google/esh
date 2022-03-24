@@ -33,4 +33,4 @@ int atoi(const char* str);
  */
 uint32_t atoh(const char* str);
 
-#endif // __A2I_H__
+#endif  // __A2I_H__

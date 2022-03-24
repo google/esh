@@ -17,45 +17,46 @@
 #include "shell.h"
 
 #define BAUD_115200 139
-#define UART0_TX    16
-#define UART0_RX    17
+#define UART0_TX 16
+#define UART0_RX 17
 
-#define UART_BASE   UART_BASE_PHYSICAL
-#define GPIO_BASE   (0x10012000UL)
+#define UART_BASE UART_BASE_PHYSICAL
+#define GPIO_BASE (0x10012000UL)
 
-#define UART_TXDATA             (*((volatile uint32_t *)(UART_BASE + 0x0)))
-#define UART_RXDATA             (*((volatile uint32_t *)(UART_BASE + 0x4)))
-#define UART_DIV                (*((volatile uint32_t *)(UART_BASE + 0x18)))
+#define UART_TXDATA (*((volatile uint32_t *)(UART_BASE + 0x0)))
+#define UART_RXDATA (*((volatile uint32_t *)(UART_BASE + 0x4)))
+#define UART_DIV (*((volatile uint32_t *)(UART_BASE + 0x18)))
 
-#define GPIO_IOF_EN             (*((uint32_t *)(GPIO_BASE + 0x38)))
-#define GPIO_IOF_SEL            (*((uint32_t *)(GPIO_BASE + 0x3c)))
+#define GPIO_IOF_EN (*((uint32_t *)(GPIO_BASE + 0x38)))
+#define GPIO_IOF_SEL (*((uint32_t *)(GPIO_BASE + 0x3c)))
 
 void uart_init() {
-    UART_DIV = BAUD_115200;
-    GPIO_IOF_EN  |=   (1 << UART0_TX) | (1 << UART0_RX);
-    GPIO_IOF_SEL &= ~((1 << UART0_TX) | (1 << UART0_RX));
+  UART_DIV = BAUD_115200;
+  GPIO_IOF_EN |= (1 << UART0_TX) | (1 << UART0_RX);
+  GPIO_IOF_SEL &= ~((1 << UART0_TX) | (1 << UART0_RX));
 }
 
 void putc(char c) {
-    while (UART_TXDATA & (1 << 31));
-    UART_TXDATA = c;
+  while (UART_TXDATA & (1 << 31))
+    ;
+  UART_TXDATA = c;
 
-    if (c == '\n'){
-        while (UART_TXDATA & (1 << 31));
-        UART_TXDATA = '\r';
-    }
+  if (c == '\n') {
+    while (UART_TXDATA & (1 << 31))
+      ;
+    UART_TXDATA = '\r';
+  }
 }
 
 int getc(void) {
-    while (1) {
-        uint32_t c = UART_RXDATA;
-        if (!(c & (1 << 31)))
-            return (int)c;
-    }
+  while (1) {
+    uint32_t c = UART_RXDATA;
+    if (!(c & (1 << 31))) return (int)c;
+  }
 }
 
 void platform_init(void) {
-    uart_init();
-    set_read_char(getc);
-    set_write_char(putc);
+  uart_init();
+  set_read_char(getc);
+  set_write_char(putc);
 }

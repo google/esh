@@ -14,8 +14,8 @@
  * limitations under the License.
  **/
 
-#include "shell.h"
 #include "regs.h"
+#include "shell.h"
 
 /*
  * Memory manipulation utilities can be skipped to reduce
@@ -23,48 +23,48 @@
  */
 #ifndef SHELL_NO_UTILS
 void r32(int argc, char *argv[]) {
-    if (argc < 2) {
-        printf("Usage: %s <address> (in hex)\n", argv[0]);
-        return;
-    }
+  if (argc < 2) {
+    printf("Usage: %s <address> (in hex)\n", argv[0]);
+    return;
+  }
 
-    uint32_t addr = atoh(argv[1]);
-    uint32_t data;
+  uint32_t addr = atoh(argv[1]);
+  uint32_t data;
 
-    data = reg32(addr);
+  data = reg32(addr);
 
-    printf("0x%x: 0x%x\n", addr, data);
+  printf("0x%x: 0x%x\n", addr, data);
 }
 
 void w32(int argc, char *argv[]) {
-    if (argc < 3) {
-        printf("Usage: %s <address> (in hex) <value> (in hex)\n", argv[0]);
-        return;
-    }
-    uint32_t addr = atoh(argv[1]);
-    uint32_t data = atoh(argv[2]);
-    reg32(addr) = data;
+  if (argc < 3) {
+    printf("Usage: %s <address> (in hex) <value> (in hex)\n", argv[0]);
+    return;
+  }
+  uint32_t addr = atoh(argv[1]);
+  uint32_t data = atoh(argv[2]);
+  reg32(addr) = data;
 }
 
 void read_mem(int argc, char *argv[]) {
-    if (argc < 3) {
-        printf("Usage: %s <address> (in hex) <num_words> (in decimal)\n", argv[0]);
-        return;
-    }
+  if (argc < 3) {
+    printf("Usage: %s <address> (in hex) <num_words> (in decimal)\n", argv[0]);
+    return;
+  }
 
-    uint32_t addr = atoh(argv[1]);
-    uint32_t length = atoi(argv[2]);
-    uint32_t data;
+  uint32_t addr = atoh(argv[1]);
+  uint32_t length = atoi(argv[2]);
+  uint32_t data;
 
-    for (int i = 0; i<length; i++) {
-        data = reg32(addr);
-        printf("0x%x: %x\n", addr, data);
+  for (int i = 0; i < length; i++) {
+    data = reg32(addr);
+    printf("0x%x: 0x%x\n", addr, data);
 
-        addr+=4;
-    }
+    addr += 4;
+  }
 }
 
 ADD_CMD(r32, "reads a 32 bit memory location", r32);
 ADD_CMD(w32, "writes a 32 bit value to a memory location", w32);
 ADD_CMD(read, "Reads number of bytes from memory", read_mem);
-#endif // SHELL_NO_UTILS
+#endif  // SHELL_NO_UTILS

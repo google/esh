@@ -17,25 +17,25 @@
 #ifndef __H_SHELL__
 #define __H_SHELL__
 
+#include <stdint.h>
+
 #include "a2i.h"
 #include "printf.h"
 #include "regs.h"
 #include "string.h"
-
-#include <stdint.h>
 
 /**
  * @brief Looks for and executes a string as a command
  *
  * @param cmd_str command string to be executed
  */
-void exec(char * cmd_str);
+void exec(char *cmd_str);
 
 /**
  * @brief Expected format of the user defined function
  *
  */
-typedef void (*cmd)(int argc, char** argv);
+typedef void (*cmd)(int argc, char **argv);
 
 /**
  * @brief Command table entry format
@@ -45,9 +45,9 @@ typedef void (*cmd)(int argc, char** argv);
  *
  */
 typedef struct {
-    char *command_name;
-    char *command_help;
-    cmd command;
+  char *command_name;
+  char *command_help;
+  cmd command;
 } cmd_t;
 
 /**
@@ -60,7 +60,8 @@ typedef struct {
  *
  */
 #define ADD_CMD(_name, _help_string, _function) \
-    __attribute__((section(".cmd_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
+  __attribute__((section(".cmd_list")))         \
+  cmd_t _var##_function = {#_name, _help_string, &_function}
 
 /**
  * @brief Format for the user to add a command to be executed quickly after boot
@@ -73,7 +74,8 @@ typedef struct {
  *
  */
 #define AUTO_CMD(_name, _help_string, _function) \
-    __attribute__((section(".auto_list"))) cmd_t _var##_function = {#_name, _help_string, &_function}
+  __attribute__((section(".auto_list")))         \
+  cmd_t _var##_function = {#_name, _help_string, &_function}
 
 /**
  * @brief Set a way to read a byte from input source.

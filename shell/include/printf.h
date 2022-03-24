@@ -19,10 +19,10 @@
 
 // Currently, printf handles 64 bit integers, which can take a maximum value of
 // 2^64 - 1 when the integer is unsigned, which is approximately 10^19.
-#define MAX_DIGITS  20
+#define MAX_DIGITS 20
 
 // This is used while printing hexadecimal values.
-#define LAST_NIBBLE_FIRST_BIT   60
+#define LAST_NIBBLE_FIRST_BIT 60
 
 /**
  * @brief prints an unformatted string to the UART
@@ -31,4 +31,4 @@
  */
 int printf(const char *s, ...);
 
-#endif // __PRINTF_H__
+#endif  // __PRINTF_H__

@@ -21,28 +21,28 @@
  *        putc(), get(), uart_init() implementation.
  *
  */
-#define UART_DR    *((unsigned int *) (UART_BASE_PHYSICAL + 0x00))
-#define UART_TFR   *((unsigned int *) (UART_BASE_PHYSICAL + 0x18))
-#define UART_CR    *((unsigned int *) (UART_BASE_PHYSICAL + 0x30))
-#define UART_IFLS  *((unsigned int *) (UART_BASE_PHYSICAL + 0x34))
-#define UART_ICR   *((unsigned int *) (UART_BASE_PHYSICAL + 0x44))
+#define UART_DR *((unsigned int *)(UART_BASE_PHYSICAL + 0x00))
+#define UART_TFR *((unsigned int *)(UART_BASE_PHYSICAL + 0x18))
+#define UART_CR *((unsigned int *)(UART_BASE_PHYSICAL + 0x30))
+#define UART_IFLS *((unsigned int *)(UART_BASE_PHYSICAL + 0x34))
+#define UART_ICR *((unsigned int *)(UART_BASE_PHYSICAL + 0x44))
 
 void uputc(char c) {
-    while (UART_TFR & (1<<5));
+  while (UART_TFR & (1 << 5))
+    ;
 
-    UART_DR = (unsigned int)(c);
+  UART_DR = (unsigned int)(c);
 }
 
 int ugetc(void) {
-    if ((UART_TFR & (1 << 4)) == 0)
-        return UART_DR;
+  if ((UART_TFR & (1 << 4)) == 0) return UART_DR;
 
-    return -1;
+  return -1;
 }
 
 void uart_init(void) {
-    UART_CR = (1<<8)|(1<<0);
-    UART_ICR = 0x3ff;
-    UART_IFLS = 0;
-    UART_CR |= (1<<9);
+  UART_CR = (1 << 8) | (1 << 0);
+  UART_ICR = 0x3ff;
+  UART_IFLS = 0;
+  UART_CR |= (1 << 9);
 }
