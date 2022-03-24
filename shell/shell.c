@@ -18,6 +18,7 @@
 
 #include <stdbool.h>
 
+#include "platform.h"
 #include "string.h"
 
 // Build and Versioning related info
@@ -287,11 +288,14 @@ static void build_info(int argc, char **argv) {
          SHELL_VERSION, USER_REPO_VERSION, BUILD_USER, BUILD_HOST);
 }
 
+void initial_setup(void) { platform_init(); }
+
 /**
  * @brief spwans the prompt
  *
  */
 void prompt() {
+  initial_setup();
   exec_auto_cmds();
   while (TRUE) shell();
 }

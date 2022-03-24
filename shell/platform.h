@@ -14,10 +14,8 @@
  * limitations under the License.
  **/
 
-.section .init
-.globl _start
-_start:
-    lui sp, 0x80004 # Load the SP with end of RAM
-    jal prompt      # Jump to prompt()
-    j .             # Spin forever
-1:  j 1b            # Spin forever
+/**
+ * @brief To be defined by the user at project level!
+ *
+ */
+void __attribute__((weak)) platform_init(void);

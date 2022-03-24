@@ -16,11 +16,6 @@
 
 #include "shell.h"
 
-/**
- * @brief Default UART implementation in case the user hasn't provided
- *        putc(), get(), uart_init() implementation.
- *
- */
 #define UART_THR *((unsigned char *)(UART_BASE_PHYSICAL + 0x00))
 #define UART_RBR *((unsigned char *)(UART_BASE_PHYSICAL + 0x00))
 #define UART_LSR *((unsigned char *)(UART_BASE_PHYSICAL + 0x05))
@@ -29,22 +24,22 @@
 #define NO_DATA (-1)
 #define RX_BUFF_FULL (UART_LSR & 1)
 
-__attribute__((weak)) void putc(char c) {
+void putc(char c) {
   while (TX_BUFF_FULL)
     ;
 
   UART_THR = c;
 }
 
-__attribute__((weak)) int getc(void) {
+int getc(void) {
   if (RX_BUFF_FULL) return (int)UART_RBR;
 
   return NO_DATA;
 }
 
-__attribute__((weak)) void uart_init(void) { /* The default config works! */ }
+void uart_init(void) { /* The default config works! */}
 
-void __attribute__((weak)) platform_init(void) {
+void platform_init(void) {
   uart_init();
   set_read_char(getc);
   set_write_char(putc);

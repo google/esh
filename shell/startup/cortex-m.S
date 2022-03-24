@@ -19,6 +19,5 @@
 .globl reset_handler
 .type reset_handler, %function
 reset_handler:
-    bl platform_init
     bl prompt
     bl .

@@ -19,6 +19,5 @@
 .globl _start
 _start:
     la sp, _STACK_TOP_  # Load the SP with end of RAM
-    jal platform_init   # Junp to platform_init()
     jal prompt          # Jump to prompt()
     j .                 # Spin forever
