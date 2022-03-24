@@ -107,6 +107,7 @@ STARTUP_FILE ?= $(shell realpath $(shell find . $(SHELL_ROOT) \
 FILTERED_SRC_ASM = $(filter-out $(STARTUP_FILE), $(SRC_ASM))
 
 # record all the paths where .h files are available
+H_FILES  = $(shell find . $(SHELL_ROOT) -type f -name "*.h")
 INCLUDES = $(shell find . $(SHELL_ROOT) -type f -name "*.h" | \
 			sed -r "s|/[^/]+$$||" | \
 			sort | uniq | \
@@ -150,7 +151,7 @@ endif
 	@echo "assembling" $^
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
-%.elf: $(OBJS) $(LAYOUT_FILE)
+%.elf: $(OBJS) $(H_FILES) $(LAYOUT_FILE)
 	@echo "generating" $@
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
