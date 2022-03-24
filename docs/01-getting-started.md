@@ -89,7 +89,7 @@ SHELL_ROOT=../shell
 # ------------------------ User targets below this line ------------------------
 
 # example: <dependencies>
-#     @recepies
+#     @recipes
 ```
 
 ## Note
@@ -108,34 +108,34 @@ Detected Configuration
 *
 |- PROJECT             : shell
 |- BUILD USER          : itankar
-|- BUILD HOST          : itankar.blr.corp.google.com
-|- SHELL VERSION       : 122ff0c
-|- USER REPO VERSION   : 122ff0c
-|- SHELL ROOT          : /usr/local/google/home/itankar/Downloads/early-bringup/shell
-|- PROJECT ROOT        : /usr/local/google/home/itankar/Downloads/early-bringup/demo
+|- BUILD HOST          : sandbox
+|- SHELL VERSION       : 6309660
+|- USER REPO VERSION   : 6309660
+|- SHELL ROOT          : /home/itankar/early-bringup-tool/shell
+|- PROJECT ROOT        : /home/itankar/early-bringup-tool/new_project
 |- OPTIMIZATION        : 0
 *
 |- TOOLCHAIN           : riscv64-linux-gnu-
-|- STARTUP             : /usr/local/google/home/itankar/Downloads/early-bringup/shell/startup/riscv64.S
-|- LAYOUT FILE         : /usr/local/google/home/itankar/Downloads/early-bringup/shell/scatter/layout.ld
+|- STARTUP             : /home/itankar/early-bringup-tool/shell/startup/riscv64.S
+|- LAYOUT FILE         : /home/itankar/early-bringup-tool/shell/scatter/layout.ld
 |- RAM BASE            : 0x80000000
 |- RAM SIZE            : 0x4000000
 `- UART BASE           : 0x10000000
 
 >> If incorrect, please set these Variables in Makefile <<
 
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/lib/string.c
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/lib/utils.c
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/lib/printf.c
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/lib/a2i.c
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/platform_init.c
-compiling /usr/local/google/home/itankar/Downloads/early-bringup/shell/shell.c
-assembling /usr/local/google/home/itankar/Downloads/early-bringup/shell/startup/riscv64.S
-generating /usr/local/google/home/itankar/Downloads/early-bringup/shell/scatter/layout.ld
+compiling /home/itankar/early-bringup-tool/shell/lib/string.c
+compiling /home/itankar/early-bringup-tool/shell/lib/utils.c
+compiling /home/itankar/early-bringup-tool/shell/lib/printf.c
+compiling /home/itankar/early-bringup-tool/shell/lib/a2i.c
+compiling /home/itankar/early-bringup-tool/shell/platform_init.c
+compiling /home/itankar/early-bringup-tool/shell/shell.c
+assembling /home/itankar/early-bringup-tool/shell/startup/riscv64.S
+generating /home/itankar/early-bringup-tool/shell/scatter/layout.ld
 generating shell.elf
 section size:
    text    data     bss     dec     hex filename
-   5608    1128      88    6824    1aa8 shell.elf
+   5618    1112      88    6818    1aa2 shell.elf
 generating shell.bin
 Done!
 ```

@@ -13,8 +13,10 @@ In order to be able to run the examples in the `example/` directory, you would n
 sudo apt install -y binutils \
                     make \
                     binutils-riscv64-linux-gnu \
+                    binutils-arm-none-eabi \
                     gcc-aarch64-linux-gnu \
                     gcc-riscv64-linux-gnu \
+                    gcc-arm-none-eabi \
                     qemu-system-riscv64 \
                     qemu-system-aarch64 \
                     qemu-system-arm \
@@ -57,16 +59,16 @@ Detected Configuration
 *
 |- PROJECT             : shell
 |- BUILD USER          : itankar
-|- BUILD HOST          : itankar.blr.corp.google.com
-|- SHELL VERSION       : 990a7f8
-|- USER REPO VERSION   : 990a7f8
-|- SHELL ROOT          : /usr/local/google/home/itankar/Downloads/early-bringup/shell
-|- PROJECT ROOT        : /usr/local/google/home/itankar/Downloads/early-bringup/example/riscv64
+|- BUILD HOST          : sandbox
+|- SHELL VERSION       : 6309660
+|- USER REPO VERSION   : 6309660
+|- SHELL ROOT          : /home/itankar/early-bringup-tool/shell
+|- PROJECT ROOT        : /home/itankar/early-bringup-tool/example/riscv64
 |- OPTIMIZATION        : 0
 *
 |- TOOLCHAIN           : riscv64-linux-gnu-
-|- STARTUP             : /usr/local/google/home/itankar/Downloads/early-bringup/shell/startup/riscv64.S
-|- LAYOUT FILE         : /usr/local/google/home/itankar/Downloads/early-bringup/shell/scatter/layout.ld
+|- STARTUP             : /home/itankar/early-bringup-tool/shell/startup/riscv64.S
+|- LAYOUT FILE         : /home/itankar/early-bringup-tool/shell/scatter/layout.ld
 |- RAM BASE            : 0x80000000
 |- RAM SIZE            : 0x4000000
 `- UART BASE           : 0x10000000
@@ -77,7 +79,7 @@ Detected Configuration
 generating shell.elf
 section size:
    text    data     bss     dec     hex filename
-   5714    1256      88    7058    1b92 shell.elf
+   5722    1240      88    7050    1b8a shell.elf
 generating shell.bin
 Done!
 ```
@@ -90,14 +92,14 @@ make run
 ```
 You should see a prompt as below:
 ```
-➜ make run
-Build: [990a7f8]:[990a7f8] - [itankar@itankar.blr.corp.google.com] - Mar 21 2022 - 09:20:49
+➜   make run
+Build: [6309660]:[6309660] - [itankar@sandbox] - Mar 24 2022 - 05:53:50
 #
 ```
 Typing `help` should reveal all the available commands. Like below:
 ```
 ➜   make run
-Build: [990a7f8]:[990a7f8] - [itankar@itankar.blr.corp.google.com] - Mar 21 2022 - 09:20:49
+Build: [6309660]:[6309660] - [itankar@sandbox] - Mar 24 2022 - 05:53:50
 # help
 hello
         Echoes the commandline
@@ -300,7 +302,7 @@ Press CTRL-A Z for help on special keys
 Bench Clock Reset Complete
 
 ATE0--> Send Flag error: #255 #255 #255 #255 AT+BLEINIT=0--> Send Flag error: #255 #255 #255 #255 AT+CWMODE=0--> Send Flag er
-Build: [990a7f8]:[990a7f8] - [itankar@itankar.blr.corp.google.com] - Mar 21 2022 - 09:33:56
+Build: [6309660]:[6309660] - [itankar@sandbox] - Mar 24 2022 - 05:53:50
 #
 
 
@@ -366,7 +368,7 @@ Reading symbols from shell.elf...
 ─── Source ─────────────────────────────────────────────────────────────────────
 ─── Stack ──────────────────────────────────────────────────────────────────────
 [0] from 0x00001004
-[1] from 0x20010a2c in shell+220 at /usr/local/google/home/itankar/Downloads/early-bringup/shell/shell.c:204
+[1] from 0x20010a2c in shell+220 at /home/itankar/early-bringup-tool/shell/shell.c:204
 [2] from 0x00000000
 ─── Threads ────────────────────────────────────────────────────────────────────
 [1] id 0 from 0x00001004
