@@ -283,8 +283,8 @@ static void exec_auto_cmds(void) {
 }
 
 static void build_info(int argc, char **argv) {
-  printf("Build: [%s]:[%s] - [%s@%s] - " __DATE__ " - " __TIME__ "\n",
-         SHELL_VERSION, USER_REPO_VERSION, BUILD_USER, BUILD_HOST);
+  printf("Build: [" SHELL_VERSION ":" USER_REPO_VERSION "] - ["
+          BUILD_USER "@" BUILD_HOST "] - " __DATE__ " - " __TIME__ "\n");
 }
 
 void initial_setup(void) {
