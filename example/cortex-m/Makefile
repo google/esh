@@ -36,7 +36,7 @@ RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
 UART_BASE_PHYSICAL = 0x40004000
 
-SHELL_LITE = 0
+# SHELL_LITE = 0
 
 # setting the stack start manually for m class processors
 DEFINES += -DSTACK_START=0x0003FFFF

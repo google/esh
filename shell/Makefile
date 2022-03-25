@@ -81,6 +81,11 @@ DEFINES += -D__BUILD_HOST__=$(BUILD_HOST)
 DEFINES += -D__SHELL_VERSION__=$(SHELL_VERSION)
 DEFINES += -D__USER_REPO_VERSION__=$(USER_REPO_VERSION)
 
+# ------------------------------ feature control--------------------------------
+# build with complete set of feature by default
+SHELL_LITE ?= 0
+
+# Exclude features if SHELL_LITE == 1
 ifeq ($(SHELL_LITE),1)
 DEFINES += -DSHELL_PRINTF_LITE
 DEFINES += -DSHELL_NO_PRINTF_LL
