@@ -101,4 +101,22 @@ void set_read_char(int (*func)(void));
  */
 void set_write_char(void (*func)(char));
 
+/**
+ * NOTE TO USER!!!
+ *
+ * platform_init() is expected to be defined by the user.
+ * Expectation is that the user would do any needed hardware initialization
+ * And register two functions to read a byte and write a byte using
+ * - set_read_char(<way to read a byte>);
+ * - set_write_char(<way to write a byte>);
+ *
+ * typical implementation may look like:
+ * void platform_init(void) {
+ *   uart_init();
+ *   set_read_char(uart_getchar);
+ *   set_write_char(uart_putchar);
+ * }
+ */
+void platform_init(void);
+
 #endif
