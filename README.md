@@ -2,9 +2,10 @@
 
     This is not an officially supported Google product
 
-# Early Bringup
+# Embedded Shell
 
-Implementation of a `bare-metal shell`. Can be used for early bringup of embedded platforms or for the purposes of learning and research.
+Implementation of a `bare-metal shell`. Can be used for early bringup of embedded platforms or for the purposes of learning and research. Detailed documentation available in [docs/00-getting-sarted.md](docs/00-getting-sarted.md).
+
 
 ## Install Dependencies
 
@@ -24,7 +25,8 @@ sudo apt install -y binutils \
                     gdb-multiarch \
                     gcc-riscv64-linux-gnu \
                     openocd \
-                    minicom
+                    minicom \
+                    python3-pip
 ```
 This would allow compiling, running, uploading and debugging the code.
 
