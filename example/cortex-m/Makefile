@@ -34,8 +34,8 @@ STARTUP = cortex-m
 #     Provide all values in hex
 RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
-UART_BASE_PHYSICAL = 0x40004000
 
+# to reduce binary size, set to 1
 # SHELL_LITE = 0
 
 # setting the stack start manually for m class processors

@@ -14,33 +14,33 @@
  * limitations under the License.
  **/
 
-#include "shell.h"
+#include "uart.h"
 
-#define UART_THR *((unsigned char *)(UART_BASE_PHYSICAL + 0x00))
-#define UART_RBR *((unsigned char *)(UART_BASE_PHYSICAL + 0x00))
-#define UART_LSR *((unsigned char *)(UART_BASE_PHYSICAL + 0x05))
+/**
+ * @brief Default UART implementation in case the user hasn't provided
+ *        putc(), get(), uart_init() implementation.
+ *
+ */
+#define UART_DR *((unsigned int *)(UART_BASE + 0x00))
+#define UART_STATE *((unsigned int *)(UART_BASE + 0x04))
+#define UART_CTRL *((unsigned int *)(UART_BASE + 0x08))
+#define UART_INT *((unsigned int *)(UART_BASE + 0x04))
 
-#define TX_BUFF_FULL (!(UART_LSR & (1 << 5)))
-#define NO_DATA (-1)
-#define RX_BUFF_FULL (UART_LSR & 1)
-
-void putc(char c) {
-  while (TX_BUFF_FULL)
+void uputc(char c) {
+  while (UART_STATE & 1)
     ;
 
-  UART_THR = c;
+  UART_DR = c;
 }
 
-int getc(void) {
-  if (RX_BUFF_FULL) return (int)UART_RBR;
+int ugetc(void) {
+  if (UART_STATE & (1 << 1)) return UART_DR;
 
-  return NO_DATA;
+  return -1;
 }
 
-void uart_init(void) { /* The default config works! */}
-
-void platform_init(void) {
-  uart_init();
-  set_read_char(getc);
-  set_write_char(putc);
+void uart_init(void) {
+  UART_CTRL = 0x0;
+  UART_INT = 0xF;
+  UART_CTRL = 0x3;
 }

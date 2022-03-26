@@ -23,9 +23,6 @@ STARTUP    		 = aarch64
 #     Provide all values in hex
 RAM_BASE_PHYSICAL  = 0x40000000
 RAM_SIZE           = 0x4000
-UART_BASE_PHYSICAL = 0x09000000
-
-ECHO_INIT_VALUE	   = 0x1
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory

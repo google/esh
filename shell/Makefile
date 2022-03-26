@@ -42,13 +42,9 @@ ifeq ($(RAM_SIZE),)
     $(info Example: RAM_SIZE = 0x4000 )
     $(error )
 endif
-endif
-
-ifeq ($(UART_BASE_PHYSICAL),)
-    $(info UART_BASE_PHYSICAL not set!)
-    $(info This is expected to be set in project level Makefile by user)
-    $(info Example: UART_BASE_PHYSICAL = 0x59303000 )
-    $(error )
+else
+RAM_BASE_PHYSICAL = NA
+RAM_SIZE = NA
 endif
 
 ifeq ($(STARTUP),)
@@ -62,11 +58,11 @@ endif
 PROJECT            ?= shell
 PROJECT_ROOT        = ./
 SHELL_ROOT         ?= ./
+DOCS                = $(SHELL_ROOT)/../docs/00-getting-sarted.md
 ECHO_INIT_VALUE    ?= 0x1
 
 # -------------- defines to be passed to c code --------------------------------
 # Every Physical Address should be defined as below
-DEFINES += -DUART_BASE_PHYSICAL=$(UART_BASE_PHYSICAL)
 DEFINES += -DRAM_BASE_PHYSICAL=$(RAM_BASE_PHYSICAL)
 DEFINES += -DECHO_INIT_VALUE=$(ECHO_INIT_VALUE)
 
@@ -187,22 +183,22 @@ clean:
 ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
-$(info |- PROJECT             : $(PROJECT))
-$(info |- BUILD USER          : $(BUILD_USER))
-$(info |- BUILD HOST          : $(BUILD_HOST))
-$(info |- SHELL VERSION       : $(SHELL_VERSION))
-$(info |- USER REPO VERSION   : $(USER_REPO_VERSION))
-$(info |- SHELL ROOT          : $(shell realpath $(SHELL_ROOT)))
-$(info |- PROJECT ROOT        : $(shell realpath $(PROJECT_ROOT)))
-$(info |- OPTIMIZATION        : $(OPTIMIZATION))
+$(info ├── PROJECT             : $(PROJECT))
+$(info ├── BUILD USER          : $(BUILD_USER))
+$(info ├── BUILD HOST          : $(BUILD_HOST))
+$(info ├── SHELL VERSION       : $(SHELL_VERSION))
+$(info ├── USER REPO VERSION   : $(USER_REPO_VERSION))
+$(info ├── SHELL ROOT          : $(shell realpath $(SHELL_ROOT)))
+$(info ├── PROJECT ROOT        : $(shell realpath $(PROJECT_ROOT)))
+$(info ├── OPTIMIZATION        : $(OPTIMIZATION))
 $(info *)
-$(info |- TOOLCHAIN           : $(TOOLCHAIN_PREFIX))
-$(info |- STARTUP             : $(STARTUP_FILE))
-$(info |- LAYOUT FILE         : $(LD_FILE))
-$(info |- RAM BASE            : $(RAM_BASE_PHYSICAL))
-$(info |- RAM SIZE            : $(RAM_SIZE))
-$(info `- UART BASE           : $(UART_BASE_PHYSICAL))
+$(info ├── TOOLCHAIN           : $(TOOLCHAIN_PREFIX))
+$(info ├── STARTUP             : $(STARTUP_FILE))
+$(info ├── LAYOUT FILE         : $(LD_FILE))
+$(info ├── RAM BASE            : $(RAM_BASE_PHYSICAL))
+$(info └── RAM SIZE            : $(RAM_SIZE))
 $(info )
-$(info >> If incorrect, please set these Variables in Makefile << )
+$(info >> If incorrect, please set these Variables in Makefile )
+$(info >> Refer the documentation here: $(shell realpath $(DOCS)))
 $(info )
 endif

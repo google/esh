@@ -14,31 +14,31 @@
  * limitations under the License.
  **/
 
-/**
- * @brief Default UART implementation in case the user hasn't provided
- *        putc(), get(), uart_init() implementation.
- *
- */
-#define UART_DR *((unsigned int *)(UART_BASE_PHYSICAL + 0x00))
-#define UART_STATE *((unsigned int *)(UART_BASE_PHYSICAL + 0x04))
-#define UART_CTRL *((unsigned int *)(UART_BASE_PHYSICAL + 0x08))
-#define UART_INT *((unsigned int *)(UART_BASE_PHYSICAL + 0x04))
+#include "shell.h"
+#include "uart.h"
+
+#define UART_DR *((unsigned int *)(UART_BASE + 0x00))
+#define UART_TFR *((unsigned int *)(UART_BASE + 0x18))
+#define UART_CR *((unsigned int *)(UART_BASE + 0x30))
+#define UART_IFLS *((unsigned int *)(UART_BASE + 0x34))
+#define UART_ICR *((unsigned int *)(UART_BASE + 0x44))
 
 void uputc(char c) {
-  while (UART_STATE & 1)
+  while (UART_TFR & (1 << 5))
     ;
 
-  UART_DR = c;
+  UART_DR = (unsigned int)(c);
 }
 
 int ugetc(void) {
-  if (UART_STATE & (1 << 1)) return UART_DR;
+  if ((UART_TFR & (1 << 4)) == 0) return UART_DR;
 
   return -1;
 }
 
 void uart_init(void) {
-  UART_CTRL = 0x0;
-  UART_INT = 0xF;
-  UART_CTRL = 0x3;
+  UART_CR = (1 << 8) | (1 << 0);
+  UART_ICR = 0x3ff;
+  UART_IFLS = 0;
+  UART_CR |= (1 << 9);
 }

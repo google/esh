@@ -1,6 +1,7 @@
-# Getting Started
+**[<< Back to TOC](00-getting-started.md)**
 
-# Directory structure
+---
+# Setting up new Project
 At the root level create a direcoty `new_project`. The repo should have the following structure. For the purposes of this guide, we set up a from the scratch project in `new_project/` directory.
 ```
 .
@@ -226,3 +227,8 @@ Done!
   - for the shell to work correctly it also needs a uart driver. Typically the user has to implement this.
   - the `platform_init()` funciton initializes the `uart` and provides the shell with a means of putting and fetching a character from the UART.
 - See [02-platform_init-and-uart-driver.md](02-platform_init-and-uart-driver.md) for details on how to enable shell to be fully functional.
+
+---
+**[<< Back to TOC](00-getting-started.md)**
+
+---

@@ -18,17 +18,14 @@ TOOLCHAIN_PREFIX = riscv64-linux-gnu-
 OPTIMIZATION     = g
 STARTUP    		 = riscv32
 
-UART_BASE_PHYSICAL = 0x10013000
-
-USER_LAYOUT_FILE = layout.ld
+USER_LAYOUT_FILE = platform/layout.ld
 
 DEFINES   += -march=rv32imac -mabi=ilp32
 ASM_FLAGS += -march=rv32imac -mabi=ilp32
 LD_FLAGS  += -m elf32lriscv
 
-DEFINES += -DSHELL_NO_PRINTF_LL
-DEFINES += -DSHELL_NO_UTILS
-DEFINES += -DSHELL_NO_HISTORY
+# only 4kB of code memory. Hence, shell lite!
+SHELL_LITE = 1
 
 SHELL_ROOT=../../shell
 -include $(SHELL_ROOT)/Makefile

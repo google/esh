@@ -14,22 +14,29 @@
  * limitations under the License.
  **/
 
+#ifndef __UART_H__
+#define __UART_H__
+
+#define UART_BASE 0x10013000
+
 /**
  * @brief Put a character on uart data buffer
  *
  * @param c byte to be sent out
  */
-void uputc(char c);
+void putc(char c);
 
 /**
  * @brief Get a character from uart data buffer
  *
  * @return int byte read from the uart data register
  */
-int ugetc(void);
+int getc(void);
 
 /**
  * @brief Init the uart, set baud etc
  *
  */
 void uart_init(void);
+
+#endif
