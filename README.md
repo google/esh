@@ -9,7 +9,7 @@ Implementation of a `bare-metal shell`. Can be used for early bringup of embedde
 
 ## Install Dependencies
 
-In order to be able to run the examples in the `example/` directory, you would need to have the following installed:
+In order to be able to run the examples in the `examples/` directory, you would need to have the following installed:
 ```
 sudo apt install -y binutils \
                     make \
@@ -43,13 +43,13 @@ pip3 install pygments
 # Qemu based targets
 Following in `examples/` are qemu based.
 ```
-aarch64/  cortex-m/  riscv64/
+qemu-armv7M-32/  qemu-armv8A-64/  qemu-riscv-64/
 ```
 ## Compiling target
 
-Get into `riscv64/` for the purposes of this demo:
+Get into `qemu-riscv-64/` for the purposes of this demo:
 ```
-cd example/riscv64
+cd examples/qemu-riscv-64
 ```
 To build the source, simply execute
 ```
@@ -65,7 +65,7 @@ Detected Configuration
 |- SHELL VERSION       : 6309660
 |- USER REPO VERSION   : 6309660
 |- SHELL ROOT          : /home/itankar/early-bringup-tool/shell
-|- PROJECT ROOT        : /home/itankar/early-bringup-tool/example/riscv64
+|- PROJECT ROOT        : /home/itankar/early-bringup-tool/examples/qemu-riscv-64
 |- OPTIMIZATION        : 0
 *
 |- TOOLCHAIN           : riscv64-linux-gnu-
@@ -135,7 +135,7 @@ version
 **Exit QEMU**: `ctrl+a` then `x` to exit.
 
 # Debugging
-If you want to debug by using `gdb` you would need to open two terminals wihtin the location `example/riscv64/` and start the `qemu` run with the board halted on terminal and then connect `gdb` to it from the second terminal.
+If you want to debug by using `gdb` you would need to open two terminals wihtin the location `examples/qemu-riscv-64/` and start the `qemu` run with the board halted on terminal and then connect `gdb` to it from the second terminal.
 
 On first terminal execute:
 ```
@@ -209,14 +209,14 @@ make clean
 ```
 # Board based targets
 
-`examples/riscv32/` implements a port for a `hifive_rev_b` board. The code can be
+`examples/hifive-riscv-32/` implements a port for a `hifive_rev_b` board. The code can be
 compiled and uploaded as follows -
 
 ## Compiling
 
 Get into the directory
 ```
-cd examples/riscv32/
+cd examples/hifive-riscv-32/
 ```
 
 Trigger the build process

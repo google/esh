@@ -6,7 +6,7 @@ At the root level create a direcoty `new_project`. The repo should have the foll
 ```
 .
 ├── docs
-├── example
+├── examples
 ├── LICENSE
 ├── new_project
 ├── README.md
@@ -23,7 +23,7 @@ Add following to the `new_project/Makefile`
 
 ```
 #
-# Copyright 2022 Google LLC
+# Copyright <year> <author>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ make: *** [../shell/Makefile:156: shell.elf] Error 1
 - To do so create another file `platform.c` and add the following to it:
 ```
 /**
- * Copyright 2022 Google LLC
+ * Copyright <year> <author>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

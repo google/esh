@@ -15,7 +15,7 @@ new_project
 With `platform.c` having the following:
 ```
 /**
- * Copyright 2022 Google LLC
+ * Copyright <year> <author>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ Assuming these implementations to be available through `uart.h` (that the user h
 
 ```
 /**
- * Copyright 2022 Google LLC
+ * Copyright <year> <author>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ new_project
 - put the following in `uart.h`
 ```
 /**
- * Copyright 2022 Google LLC
+ * Copyright <year> <author>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@ int uart_getc(void);
 - put the following in `uart.c`
 ```
 /**
- * Copyright 2022 Google LLC
+ * Copyright <year> <author>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
