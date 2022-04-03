@@ -188,7 +188,7 @@ static void execute(int argc, char **argv) {
 static void shell(void) {
   int s, argc;
   int count = 0;
-  int escaped = 0;
+  int special_key = 0;
   char c;
 
   char line_buff[LINE_BUFF_SIZE];
@@ -211,7 +211,7 @@ static void shell(void) {
         break;
       }
 
-      if (c == DELETE) {
+      if (c == DELETE || c == BACK_SPACE) {
         if (!echo) {
           delete ();
           delete ();
@@ -225,12 +225,16 @@ static void shell(void) {
         line_buff[count] = END_OF_LINE;
         delete ();
       } else if (c == ESCAPE) {
-        escaped = 1;
+        special_key = 1;
         continue;
-      } else if (c == SQUARE_BRACKET_OPEN && escaped == 1) {
-        escaped = 2;
+      } else if (c == SQUARE_BRACKET_OPEN && special_key == 1) {
+        special_key = 2;
         continue;
-      } else if ((c == 'A' || c == 'B') && escaped == 2) {
+      } else if ((c == 'C' || c == 'D') && special_key != 0) {
+        /* Ignore left/right arrow keys */
+        special_key = 0;
+        continue;
+      } else if ((c == 'A' || c == 'B') && special_key == 2) {
         if (!echo) {
           clear_prompt(count + 4);
         } else {
@@ -248,7 +252,7 @@ static void shell(void) {
           handle_down_arrow(line_buff, &count);
         }
 #endif  // SHELL_NO_HISTORY
-        escaped = 0;
+        special_key = 0;
         continue;
       } else {
         line_buff[count] = c;
