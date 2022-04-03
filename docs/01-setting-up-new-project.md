@@ -16,7 +16,7 @@ limitations under the License.
 
 -->
 
-**[<< Back to TOC](00-getting-started.md)**
+**[<< Back to TOC](index.md)**
 
 ---
 # Setting up new Project
@@ -247,6 +247,6 @@ Done!
 - See [02-platform_init-and-uart-driver.md](02-platform_init-and-uart-driver.md) for details on how to enable shell to be fully functional.
 
 ---
-**[<< Back to TOC](00-getting-started.md)**
+**[<< Back to TOC](index.md)**
 
 ---

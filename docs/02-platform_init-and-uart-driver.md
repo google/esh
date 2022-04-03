@@ -16,7 +16,7 @@ limitations under the License.
 
 -->
 
-**[<< Back to TOC](00-getting-started.md)**
+**[<< Back to TOC](index.md)**
 
 ---
 # Platform Initialization
@@ -245,6 +245,6 @@ Done!
 - [03-uart-driver.md](03-uart-driver.md) discusses more on the uart driver implementation which should be the last step in making the shell completely functional.
 
 ---
-**[<< Back to TOC](00-getting-started.md)**
+**[<< Back to TOC](index.md)**
 
 ---
