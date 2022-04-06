@@ -91,6 +91,7 @@ endif
 
 # ------------------------------ toolchain -------------------------------------
 GCC     = $(TOOLCHAIN_PREFIX)gcc
+GPP     = $(TOOLCHAIN_PREFIX)g++
 LD      = $(TOOLCHAIN_PREFIX)ld
 AS      = $(TOOLCHAIN_PREFIX)gcc
 OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
@@ -101,6 +102,8 @@ BINSIZE = $(TOOLCHAIN_PREFIX)size
 # discover the C source files in project and shell directory
 SRC_C    += $(shell realpath $(shell find . $(SHELL_ROOT) \
 			-type f -name "*.c" ) 2>/dev/null)
+SRC_CPP  += $(shell realpath $(shell find . $(SHELL_ROOT) \
+			-type f -name "*.cpp" ) 2>/dev/null)
 
 # discover the ASM source files in project directory
 SRC_ASM  += $(shell realpath $(shell find . -type f -name "*.S") \
@@ -115,12 +118,16 @@ STARTUP_FILE ?= $(shell realpath $(shell find . $(SHELL_ROOT) \
 FILTERED_SRC_ASM = $(filter-out $(STARTUP_FILE), $(SRC_ASM))
 
 # record all the paths where .h files are available
-H_FILES  = $(shell find . $(SHELL_ROOT) -type f -name "*.h")
+H_FILES = $(shell find . $(SHELL_ROOT) -type f -name "*.h")
+HPP_FILES = $(shell find . $(SHELL_ROOT) -type f -name "*.hpp")
 INCLUDES = $(shell find . $(SHELL_ROOT) -type f -name "*.h" | \
 			sed -r "s|/[^/]+$$||" | \
 			sort | uniq | \
 			while read line; do echo "-I"$$line; done;)
-
+INCLUDES += $(shell find . $(SHELL_ROOT) -type f -name "*.hpp" | \
+			sed -r "s|/[^/]+$$||" | \
+			sort | uniq | \
+			while read line; do echo "-I"$$line; done;)
 # ------------------------------ optimization ----------------------------------
 OPTIMIZATION ?= 0
 
@@ -131,6 +138,7 @@ LD_FLAGS  ?=
 # ------------------------------ objects ---------------------------------------
 OBJS ?=
 OBJS += $(patsubst %.c,%.o,$(SRC_C))
+OBJS += $(patsubst %.cpp,%.o,$(SRC_CPP))
 OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
@@ -155,11 +163,15 @@ endif
 	@echo "compiling" $^
 	@$(GCC) $(GCC_FLAGS) $^ -o $@
 
+%.o:%.cpp
+	@echo "compiling" $^
+	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
+
 %.o:%.S
 	@echo "assembling" $^
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
-%.elf: $(OBJS) $(H_FILES) $(LAYOUT_FILE)
+%.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LAYOUT_FILE)
 	@echo "generating" $@
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst

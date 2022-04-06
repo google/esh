@@ -17,6 +17,10 @@
 #ifndef __H_SHELL__
 #define __H_SHELL__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "a2i.h"
@@ -45,8 +49,8 @@ typedef void (*cmd)(int argc, char **argv);
  *
  */
 typedef struct {
-  char *command_name;
-  char *command_help;
+  const char *command_name;
+  const char *command_help;
   cmd command;
 } cmd_t;
 
@@ -118,5 +122,9 @@ void set_write_char(void (*func)(char));
  * }
  */
 void platform_init(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

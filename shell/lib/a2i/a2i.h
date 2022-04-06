@@ -17,6 +17,10 @@
 #ifndef __A2I_H__
 #define __A2I_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -32,5 +36,9 @@ int atoi(const char* str);
  * @param str string
  */
 uint32_t atoh(const char* str);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // __A2I_H__

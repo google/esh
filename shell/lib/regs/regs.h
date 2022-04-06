@@ -17,6 +17,10 @@
 #ifndef __REGS_H__
 #define __REGS_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #include "a2i.h"
@@ -24,5 +28,9 @@
 #include "string.h"
 
 #define reg32(addr) (*((volatile uint32_t *)((uintptr_t)(addr))))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

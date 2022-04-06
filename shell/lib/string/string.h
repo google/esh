@@ -17,6 +17,10 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 /**
@@ -59,5 +63,9 @@ void *memcpy(void *dest, const void *src, size_t size);
  * @param size - number of bytes to set
  */
 void *memset(void *dest, int val, size_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // __STRING_H__

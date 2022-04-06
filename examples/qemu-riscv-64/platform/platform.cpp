@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,11 @@
  * limitations under the License.
  **/
 
-#include <stdint.h>
-#include "uart.h"
+#include "shell.h"
+#include "uart.hpp"
 
-#define UART_THR *((unsigned char *)(UART_BASE + 0x00))
-#define UART_RBR *((unsigned char *)(UART_BASE + 0x00))
-#define UART_LSR *((unsigned char *)(UART_BASE + 0x05))
-
-#define TX_BUFF_FULL (!(UART_LSR & (1 << 5)))
-#define NO_DATA (-1)
-#define RX_BUFF_FULL (UART_LSR & 1)
-
-void putc(char c) {
-  while (TX_BUFF_FULL)
-    ;
-
-  UART_THR = c;
+void platform_init(void) {
+  uart_init();
+  set_read_char(getc);
+  set_write_char(putc);
 }
-
-int getc(void) {
-  if (RX_BUFF_FULL) return (int)UART_RBR;
-
-  return NO_DATA;
-}
-
-void uart_init(void) { /* The default config works! */}
