@@ -60,6 +60,8 @@ PROJECT_ROOT        = ./
 SHELL_ROOT         ?= ./
 DOCS                = $(SHELL_ROOT)/../docs/00-getting-sarted.md
 ECHO_INIT_VALUE    ?= 0x1
+EXTERN_SRC         ?=
+IGNORE_SRC_PATH    ?=
 
 # -------------- defines to be passed to c code --------------------------------
 # Every Physical Address should be defined as below
@@ -100,10 +102,19 @@ BINSIZE = $(TOOLCHAIN_PREFIX)size
 
 # ------------------------------ source ----------------------------------------
 # discover the C source files in project and shell directory
-SRC_C    += $(shell realpath $(shell find . $(SHELL_ROOT) \
-			-type f -name "*.c" ) 2>/dev/null)
-SRC_CPP  += $(shell realpath $(shell find . $(SHELL_ROOT) \
-			-type f -name "*.cpp" ) 2>/dev/null)
+ALL_SRC_C	+= $(shell realpath $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) \
+				-type f -name "*.c" ) 2>/dev/null)
+ALL_SRC_CPP	+= $(shell realpath $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) \
+				-type f -name "*.cpp" ) 2>/dev/null)
+ifneq ($(IGNORE_SRC_PATH),)
+IGNORE_C	= $(shell realpath $(shell find $(IGNORE_SRC_PATH) \
+				-type f -name "*.c" ) 2>/dev/null)
+IGNORE_CPP	= $(shell realpath $(shell find $(IGNORE_SRC_PATH) \
+				-type f -name "*.cpp" ) 2>/dev/null)
+endif
+
+SRC_C 	= $(filter-out $(IGNORE_C), $(ALL_SRC_C))
+SRC_CPP = $(filter-out $(IGNORE_CPP), $(ALL_SRC_CPP))
 
 # discover the ASM source files in project directory
 SRC_ASM  += $(shell realpath $(shell find . -type f -name "*.S") \
@@ -118,9 +129,20 @@ STARTUP_FILE ?= $(shell realpath $(shell find . $(SHELL_ROOT) \
 FILTERED_SRC_ASM = $(filter-out $(STARTUP_FILE), $(SRC_ASM))
 
 # record all the paths where .h files are available
-H_FILES = $(shell find . $(SHELL_ROOT) -type f -name "*.h")
-HPP_FILES = $(shell find . $(SHELL_ROOT) -type f -name "*.hpp")
-INCLUDES = $(shell find . $(SHELL_ROOT) -type f -name "*.h" | \
+ALL_H_FILES		+= $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.h")
+ALL_HPP_FILES	+= $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.hpp")
+
+ifneq ($(IGNORE_HEADER_PATH),)
+IGNORE_H	= $(shell realpath $(shell find $(IGNORE_HEADER_PATH) \
+				-type f -name "*.h" ) 2>/dev/null)
+IGNORE_HPP	= $(shell realpath $(shell find $(IGNORE_HEADER_PATH) \
+				-type f -name "*.hpp" ) 2>/dev/null)
+endif
+
+H_FILES		= $(filter-out $(IGNORE_H), $(ALL_H_FILES))
+HPP_FILES	= $(filter-out $(IGNORE_HPP), $(ALL_HPP_FILES))
+
+INCLUDES = $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.h" | \
 			sed -r "s|/[^/]+$$||" | \
 			sort | uniq | \
 			while read line; do echo "-I"$$line; done;)
