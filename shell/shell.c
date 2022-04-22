@@ -75,6 +75,14 @@ void set_read_char(int (*func)(void)) { __read_char__ = func; }
 
 void set_write_char(void (*func)(char)) { __write_char__ = func; }
 
+__attribute__((weak)) void setup(void) {
+  // to be provided by the user
+}
+
+__attribute__((weak)) void loop(void) {
+  // to be provided by the user
+}
+
 static void set_echo(int argc, char **argv) {
   if (argc < 2) {
     printf("Usage: echo <on/off>\n");
@@ -261,6 +269,8 @@ static void shell(void) {
       if (echo) {
         __write_char__(c);
       }
+    } else {
+      loop();
     }
   }
 
@@ -316,7 +326,11 @@ void initial_setup(void) {
 void prompt() {
   initial_setup();
   exec_auto_cmds();
-  while (TRUE) shell();
+  setup();
+
+  while (TRUE) {
+    shell();
+  }
 }
 
 void exec(char *cmd_str) {
