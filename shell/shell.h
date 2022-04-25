@@ -33,13 +33,13 @@ extern "C" {
  *
  * @param cmd_str command string to be executed
  */
-void exec(char *cmd_str);
+int exec(char *cmd_str);
 
 /**
  * @brief Expected format of the user defined function
  *
  */
-typedef void (*cmd)(int argc, char **argv);
+typedef int (*cmd)(int argc, char **argv);
 
 /**
  * @brief Command table entry format

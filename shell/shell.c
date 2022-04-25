@@ -57,6 +57,7 @@ extern unsigned long int __AUTO_TABLE_START__;
 
 static const cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
 static const cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
+volatile static int cmd_exit_status;
 
 /*
  * To reduce the shell size the history feature
@@ -83,10 +84,10 @@ __attribute__((weak)) void loop(void) {
   // to be provided by the user
 }
 
-static void set_echo(int argc, char **argv) {
+static int set_echo(int argc, char **argv) {
   if (argc < 2) {
     printf("Usage: echo <on/off>\n");
-    return;
+    return -1;
   }
 
   if (!strcmp(argv[1], "on")) {
@@ -94,6 +95,8 @@ static void set_echo(int argc, char **argv) {
   } else {
     echo = false;
   }
+
+  return 0;
 }
 
 static void delete(void) {
@@ -182,15 +185,17 @@ static void execute(int argc, char **argv) {
 
   for (int i = 0; table[i].command_name != NULL; i++) {
     if (strcmp(argv[0], table[i].command_name) == 0) {
-      table[i].command(argc, &argv[0]);
+      cmd_exit_status = table[i].command(argc, &argv[0]);
       match_found = TRUE;
       break;
     }
   }
 
-  if (match_found == FALSE)
+  if (match_found == FALSE) {
     printf("\"%s\": command not found. Use \"help\" to list all command.\n",
            argv[0]);
+    cmd_exit_status = -1;
+  }
 }
 
 static void shell(void) {
@@ -296,9 +301,10 @@ static void exec_auto_cmds(void) {
   }
 }
 
-static void build_info(int argc, char **argv) {
+static int build_info(int argc, char **argv) {
   printf("Build: [" SHELL_VERSION ":" USER_REPO_VERSION "] - ["
           BUILD_USER "@" BUILD_HOST "] - " __DATE__ " - " __TIME__ "\n");
+  return 0;
 }
 
 void initial_setup(void) {
@@ -333,7 +339,7 @@ void prompt() {
   }
 }
 
-void exec(char *cmd_str) {
+int exec(char *cmd_str) {
   int argc;
 
   // TODO: this takes too much stack space. Optimize!
@@ -344,9 +350,11 @@ void exec(char *cmd_str) {
 
   // execute the parsed commands
   if (argc > 0) execute(argc, argv);
+
+  return cmd_exit_status;
 }
 
-void help(int argc, char **argv) {
+int help(int argc, char **argv) {
   int i = 0;
   while (table[i].command_name != NULL) {
     printf(table[i].command_name);
@@ -355,9 +363,11 @@ void help(int argc, char **argv) {
     printf("\n\n");
     i++;
   }
+
+  return 0;
 }
 
-void printf_examples(int argc, char **argv) {
+int printf_examples(int argc, char **argv) {
   printf("Printing printf examples\n");
   printf("%c \n", 'A');
   printf("%s \n", "Test");
@@ -370,6 +380,7 @@ void printf_examples(int argc, char **argv) {
   printf("%llu \n", (1ll << 60));
   printf("%lld \n", (1ll << 63));
   printf("%llx \n", (0xDEADBEEFll << 32) | 0xDEADBEEF);
+  return 0;
 }
 
 // DO NOT REMOVE THESE

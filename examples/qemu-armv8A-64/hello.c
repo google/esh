@@ -24,12 +24,13 @@
  * There can be one or many function with same prototype, exposed as
  * a command on the shell. They can be in same or multiple files.
  */
-void hello(int argc, char** argv) {
+int hello(int argc, char** argv) {
   for (int i = 0; i < argc; i++) {
     printf("%s ", argv[i]);
   }
 
   printf("\nPress ctrl + a, x to exit !\n");
+  return 0;
 }
 
 /*

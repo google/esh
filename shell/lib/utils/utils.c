@@ -22,10 +22,10 @@
  * final binary size. Skip if SHELL_NO_UTILS is defined.
  */
 #ifndef SHELL_NO_UTILS
-void r32(int argc, char *argv[]) {
+int r32(int argc, char *argv[]) {
   if (argc < 2) {
     printf("Usage: %s <address> (in hex)\n", argv[0]);
-    return;
+    return -1;
   }
 
   uint32_t addr = atoh(argv[1]);
@@ -34,22 +34,25 @@ void r32(int argc, char *argv[]) {
   data = reg32(addr);
 
   printf("0x%x: 0x%x\n", addr, data);
+  return 0;
 }
 
-void w32(int argc, char *argv[]) {
+int w32(int argc, char *argv[]) {
   if (argc < 3) {
     printf("Usage: %s <address> (in hex) <value> (in hex)\n", argv[0]);
-    return;
+    return -1;
   }
   uint32_t addr = atoh(argv[1]);
   uint32_t data = atoh(argv[2]);
   reg32(addr) = data;
+
+  return 0;
 }
 
-void read_mem(int argc, char *argv[]) {
+int read_mem(int argc, char *argv[]) {
   if (argc < 3) {
     printf("Usage: %s <address> (in hex) <num_words> (in decimal)\n", argv[0]);
-    return;
+    return -1;
   }
 
   uint32_t addr = atoh(argv[1]);
@@ -62,6 +65,8 @@ void read_mem(int argc, char *argv[]) {
 
     addr += 4;
   }
+
+  return 0;
 }
 
 ADD_CMD(r32, "reads a 32 bit memory location", r32);
