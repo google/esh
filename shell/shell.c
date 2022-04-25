@@ -57,7 +57,7 @@ extern unsigned long int __AUTO_TABLE_START__;
 
 static const cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
 static const cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
-volatile static int cmd_exit_status;
+volatile static int __cmd_exec_status;
 
 /*
  * To reduce the shell size the history feature
@@ -185,7 +185,7 @@ static void execute(int argc, char **argv) {
 
   for (int i = 0; table[i].command_name != NULL; i++) {
     if (strcmp(argv[0], table[i].command_name) == 0) {
-      cmd_exit_status = table[i].command(argc, &argv[0]);
+      __cmd_exec_status = table[i].command(argc, &argv[0]);
       match_found = TRUE;
       break;
     }
@@ -194,7 +194,7 @@ static void execute(int argc, char **argv) {
   if (match_found == FALSE) {
     printf("\"%s\": command not found. Use \"help\" to list all command.\n",
            argv[0]);
-    cmd_exit_status = -1;
+    __cmd_exec_status = -1;
   }
 }
 
@@ -351,7 +351,7 @@ int exec(char *cmd_str) {
   // execute the parsed commands
   if (argc > 0) execute(argc, argv);
 
-  return cmd_exit_status;
+  return __cmd_exec_status;
 }
 
 int help(int argc, char **argv) {
@@ -383,11 +383,17 @@ int printf_examples(int argc, char **argv) {
   return 0;
 }
 
+int cmd_exec_status(int argc, char **argv) {
+  printf("%d\n", __cmd_exec_status);
+  return 0;
+}
+
 // DO NOT REMOVE THESE
 AUTO_CMD(version, "Prints details of the build", build_info);
 ADD_CMD(help, "Prints all available commands", help);
 ADD_CMD(printf_examples, "Prints example usage of printf", printf_examples);
 ADD_CMD(echo, "Turn input echo on/off", set_echo);
+ADD_CMD(status, "Returns exit status of last executed command", cmd_exec_status);
 
 // Mandatory!
 __attribute__((section(".cmd_end"))) cmd_t cmd_end_ = {NULL, NULL, NULL};
