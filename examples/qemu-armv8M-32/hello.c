@@ -19,12 +19,19 @@
  * This has the ADD_CMD() macro
  */
 #include "shell.h"
+#include "unistd.h"
+#include "platform.h"
+#include "uart.h"
+#include "mhu.h"
 
 /*
  * There can be one or many function with same prototype, exposed as
  * a command on the shell. They can be in same or multiple files.
  */
 int hello(int argc, char** argv) {
+    volatile uint32_t id = get_cpu_id();
+    printf("CoreID: %d: \t", id);
+
     for (int i = 0; i < argc; i++) {
         printf(argv[i]);
         printf(" ");
@@ -34,8 +41,37 @@ int hello(int argc, char** argv) {
     return 0;
 }
 
+
+/*
+ * @brief Switch the prompt to run on other core.
+ */
+extern volatile uint32_t g_mhu_flag0;
+extern volatile uint32_t g_mhu_flag1;
+
+//read: https://en.wikipedia.org/wiki/Kho_kho
+int kho(int argc, char** argv)
+{
+
+    volatile uint32_t id = get_cpu_id();
+
+    if (id == CPU0_ID) {
+        printf("Transferring control to core-1\n");
+        g_mhu_flag0 = 0;
+        mhu_send(MHU0_BASE, CPU1_ID);
+    } else if (id == CPU1_ID) {
+        printf("Transferring control to core-0\n");
+        g_mhu_flag1 = 0;
+        mhu_send(MHU0_BASE, CPU0_ID);
+    } else {
+        while(1);
+    }
+
+    return 0;
+}
+
 /*
  * One or many such can exist per file.
  * Description: ADD_CMD(command, help string, function to be exposed)
  */
 ADD_CMD(hello, "Echoes the commandline\n\tusage: hello <any string>", hello);
+ADD_CMD(kho, "Switch the prompt to run on other core.\n\tWord origin: https://en.wikipedia.org/wiki/Kho_kho", kho);

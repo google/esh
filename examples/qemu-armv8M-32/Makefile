@@ -32,11 +32,12 @@ DEFINES = -mcpu=cortex-m33 -mthumb
 ASM_FLAGS = -march=armv8-m.main
 LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
 
-STARTUP = cortex-m
+STARTUP = cortex-m33
 USER_LAYOUT_FILE = ./platform/m33.ld
 
 DEFINES += -DSHELL_NO_PRINTF_LL
-DEFINES += -DSTACK_START=0x30007FFF
+DEFINES += -DSTACK_START=0x30007FFF #32KB Stack in SRAM0 for core0
+DEFINES += -DSTACK_START2=0x3000FFFF #32KB stack in SRAM1 for core1
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
@@ -56,7 +57,7 @@ run_debug:
 		-gdb tcp::4444
 
 debug:
-	@gdb-multiarch $(PROJECT).elf -ex "target extended-remote localhost:4444"
+	@gdb-multiarch $(PROJECT).elf -ex "target extended-remote localhost:4444" 
 
 run: $(PROJECT).elf
 	@qemu-system-arm \

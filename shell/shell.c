@@ -45,6 +45,7 @@
 #define UP_ARROW '\101'
 
 #define PROMPT "# "
+
 #define LINE_BUFF_SIZE 32
 #define MAX_ARG_COUNT (LINE_BUFF_SIZE / 2)
 #define NUM_HISTORY_ENTRIES 2
@@ -183,6 +184,19 @@ static void execute(int argc, char **argv) {
   }
 }
 
+// This method is a place holder to prepend prompt
+__attribute__ ((weak))  void prepend_prompt()
+{
+	;	//nothing by default
+}
+
+// Check if prompt is active, by default true.
+// Platforms can decide a logic for this.
+__attribute__ ((weak))  int active_prompt()
+{
+    return TRUE;
+}
+
 static void shell(void) {
   int s, argc;
   int count = 0;
@@ -196,9 +210,14 @@ static void shell(void) {
 
   for (int i = 0; i < MAX_ARG_COUNT; i++) argv[i] = NULL;
 
+  prepend_prompt();
   printf(PROMPT);
 
   while (TRUE) {
+    if (!active_prompt()) {
+        continue;
+    }
+
     s = __read_char__();
     if (s != -1) {
       c = (char)s;
