@@ -18,6 +18,7 @@ sudo apt install -y binutils \
                     binutils-arm-none-eabi \
                     gcc-aarch64-linux-gnu \
                     gcc-riscv64-linux-gnu \
+                    g++-riscv64-linux-gnu \
                     gcc-arm-none-eabi \
                     qemu-system-riscv64 \
                     qemu-system-aarch64 \
