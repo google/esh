@@ -130,7 +130,7 @@ SHELL_ROOT=../shell
 ## Try to compile
 - Issuing the `make` command should result in the following prints.
 ```
-➜   make
+$ make
 Detected Configuration
 *
 |- PROJECT             : shell
@@ -204,7 +204,7 @@ new_project
 ```
 - Issue `make` again and you should see similar prints as below:
 ```
-➜   make
+$ make
 Detected Configuration
 *
 |- PROJECT             : shell

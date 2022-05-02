@@ -96,13 +96,13 @@ make run
 ```
 You should see a prompt as below:
 ```
-➜   make run
+$ make run
 Build: [6309660]:[6309660] - [itankar@sandbox] - Mar 24 2022 - 05:53:50
 #
 ```
 Typing `help` should reveal all the available commands. Like below:
 ```
-➜   make run
+$ make run
 Build: [6309660]:[6309660] - [itankar@sandbox] - Mar 24 2022 - 05:53:50
 # help
 hello
@@ -152,7 +152,7 @@ make debug
 
 This will then start `gdb` and attach it to the qemu target. You should see output as below:
 ```
-➜ make debug
+$ make debug
 ...
 Remote debugging using localhost:1234
 0x0000000000001000 in ?? ()
@@ -161,7 +161,7 @@ Remote debugging using localhost:1234
 
 You can now use familiar gdb commands at the `(gdb)` prompt, like `break`, `continue`, `run` etc to debug the target further. If the GDB Dashboard in installed, the view shoyuld be some what as below:
 ```
-➜ make debug
+$ make debug
 ...
 Reading symbols from shell.elf...
 Remote debugging using localhost:1234
@@ -227,7 +227,7 @@ make
 ```
 following should be seen
 ```
-➜   make
+$ make
 ...
 generating shell.elf
 section size:
@@ -264,7 +264,7 @@ make upload
 ```
 the following should be seen:
 ```
-➜   make upload
+$ make upload
 Uploading...Open On-Chip Debugger 0.11.0
 Licensed under GNU GPL v2
 For bug reports, read
@@ -319,14 +319,14 @@ We can use `make debug` and `make gdb` on two separate terminals to start a gdb 
 
 Terminal 1:
 ```
-➜ make debug
+$ make debug
 GDB server active...
 Use Ctrl+c to close the server!
 ```
 
 Terminal 2:
 ```
-➜   make gdb
+$ make gdb
 Reading symbols from shell.elf...
 0x00001004 in ?? ()
 ─── Assembly ───────────────────────────────────────────────────────────────────

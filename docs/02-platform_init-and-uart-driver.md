@@ -105,7 +105,7 @@ void platform_init(void) {
 ```
 - Issuing `make` in `new_project/` should result in the following:
 ```
-➜   make
+$ make
 Detected Configuration
 *
 |- PROJECT             : shell
