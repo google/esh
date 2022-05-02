@@ -70,7 +70,7 @@ static volatile int curr_command_ptr = 0;
 static char cmd_history[NUM_HISTORY_ENTRIES][LINE_BUFF_SIZE];
 #endif
 
-static volatile bool echo = ECHO_INIT_VALUE;  // Should be set in the Makefile
+static volatile bool __echo = ECHO_INIT_VALUE;  // Should be set in the Makefile
 
 void set_read_char(int (*func)(void)) { __read_char__ = func; }
 
@@ -82,21 +82,6 @@ __attribute__((weak)) void setup(void) {
 
 __attribute__((weak)) void loop(void) {
   // to be provided by the user
-}
-
-static int set_echo(int argc, char **argv) {
-  if (argc < 2) {
-    printf("Usage: echo <on/off>\n");
-    return -1;
-  }
-
-  if (!strcmp(argv[1], "on")) {
-    echo = true;
-  } else {
-    echo = false;
-  }
-
-  return 0;
 }
 
 static void delete(void) {
@@ -225,7 +210,7 @@ static void shell(void) {
       }
 
       if (c == DELETE || c == BACK_SPACE) {
-        if (!echo) {
+        if (!__echo) {
           delete ();
           delete ();
         }
@@ -248,7 +233,7 @@ static void shell(void) {
         special_key = 0;
         continue;
       } else if ((c == 'A' || c == 'B') && special_key == 2) {
-        if (!echo) {
+        if (!__echo) {
           clear_prompt(count + 4);
         } else {
           clear_prompt(count);
@@ -271,7 +256,7 @@ static void shell(void) {
         line_buff[count] = c;
         count++;
       }
-      if (echo) {
+      if (__echo) {
         __write_char__(c);
       }
     } else {
@@ -360,26 +345,10 @@ int help(int argc, char **argv) {
     printf(table[i].command_name);
     printf("\n\t");
     printf(table[i].command_help);
-    printf("\n\n");
+    printf("\n");
     i++;
   }
 
-  return 0;
-}
-
-int printf_examples(int argc, char **argv) {
-  printf("Printing printf examples\n");
-  printf("%c \n", 'A');
-  printf("%s \n", "Test");
-  printf("%u \n", (uint32_t)(-1));
-  printf("%d \n", -1);
-  printf("%x \n", 0xDEADBEEF);
-  printf("%lu \n", (uint32_t)(-2));
-  printf("%ld \n", -2);
-  printf("%lx \n", ~0xDEADBEEF);
-  printf("%llu \n", (1ll << 60));
-  printf("%lld \n", (1ll << 63));
-  printf("%llx \n", (0xDEADBEEFll << 32) | 0xDEADBEEF);
   return 0;
 }
 
@@ -391,8 +360,6 @@ int cmd_exec_status(int argc, char **argv) {
 // DO NOT REMOVE THESE
 AUTO_CMD(version, "Prints details of the build", build_info);
 ADD_CMD(help, "Prints all available commands", help);
-ADD_CMD(printf_examples, "Prints example usage of printf", printf_examples);
-ADD_CMD(echo, "Turn input echo on/off", set_echo);
 ADD_CMD(status, "Returns exit status of last executed command", cmd_exec_status);
 
 // Mandatory!
