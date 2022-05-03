@@ -16,12 +16,10 @@ limitations under the License.
 
 -->
 
-**[<< Back to TOC](index.md)**
-
----
 # UART driver
 
 Assuming that you have followed the steps listed in [platform_init and uart driver](02-platform_init-and-uart-driver.md), this section covers the implementation of the UART driver within `uart.c`. At this point the new project's directory may look as follows:
+
 ```
 new_project
 |-- Makefile
@@ -30,7 +28,9 @@ new_project
     |-- uart.c
     └── uart.h
 ```
+
 `uart.c` must be looking as follows -
+
 ```
 /**
  * Copyright <year> <author>
@@ -66,6 +66,7 @@ int uart_getc(void) {
 For the shell to be functional we would need to implement the empty functions. The implementation of these functions may defer based on the type of uart.
 
 ## Constraints
+
 - The driver has to be polling based and only allow reading and writing `1 Byte!`.
 - UART interrupts should be disabled.
   - This is because the shell is to be used for quick enablement of the board.
@@ -76,8 +77,10 @@ For the shell to be functional we would need to implement the empty functions. T
 - As part of the `uart_init()` be sure to enable the `tx` and `rx`.
 
 ## Example
+
 For the `PL110` UART, the implementation looks as follows assuming the `uart` base is `0x00C00FEE` -
 - `uart.h` must be looking as follows -
+
 ```
 /**
  * Copyright <year> <author>
@@ -106,7 +109,9 @@ int uart_getc(void);
 
 #endif
 ```
+
 - And `uart.c` must be looking as follows -
+
 ```
 /**
  * Copyright <year> <author>
@@ -154,17 +159,13 @@ void uart_init(void) {
 ```
 
 ## Debugging tips
+
 After the uart driver is implemented and is accurate, the compiled binary can be flashed on the board and the shell should be seen on the serial terminal connecting to the board's uart. If you don't see it, here are few things to consider:
 - Ensure the `tx`/`rx` are enabled for the uart.
 - Ensure hardware flow control is disabled. Check this both -
-  - In the `uart_init()`, ensure for the particular uart the hardware flow control settings are diabled.
+  - In the `uart_init()`, ensure for the particular uart the hardware flow control settings are disabled.
   - On the host machine, the serial application program should have have the hardware flow control disabled.
 - Ensure, UART interrupts are disabled as part of the `uart_init()`.
 - Check if the baud rate is set correctly and the serial application on the host is using the same baud to connect with the board.
 - Check if the UART FIFO is disabled.
 - Check if the UART IP is rightly clocked.
-
----
-**[<< Back to TOC](index.md)**
-
----

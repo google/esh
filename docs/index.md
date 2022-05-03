@@ -16,12 +16,18 @@ limitations under the License.
 
 -->
 
-# Getting Started
-
 ## Table of contents
-- [Setting up new project](01-setting-up-new-project.md)
-  - Details on how to start setting up a new project
-- [Platform initialization and uart driver](02-platform_init-and-uart-driver.md)
-  - Details the implementation of the `platform_init()` and the relation to the uart driver.
-- [Uart driver](03-uart-driver.md)
-  - Describes implementation and constraint on the uart driver.
+| Topic| Description |
+| :--- |:---        |
+|[How shell Works](shell-working.md)|Explains the working of shell with a flowchart.|
+|[Running examples in `example/`](00-setup-examples.md)|Guides on getting started with trying examples. Includes topics like - <br/> - `installing dependences`<br/> - `qemu based targets`<br/> - `physical board based targets`<br/> - `debugging` etc |
+|[Setting up new project](01-setting-up-new-project.md)|Details on how to start setting up a new project.|
+|[Platform initialization and uart driver](02-platform_init-and-uart-driver.md)|Details the implementation of the `platform_init()` and the relation to the uart driver.|
+|[Uart driver](03-uart-driver.md)| Describes implementation and constraint on the uart driver.|
+
+## Contributing
+
+| Topic| Description |
+| :--- |:----        |
+| [Code of Conduct](code-of-conduct.md) |Guides on the conduct expected while making contributions. |
+|[Contributing](contributing.md)|Guidelines on how to contribute to the code on Github.|

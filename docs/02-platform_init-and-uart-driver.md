@@ -16,21 +16,22 @@ limitations under the License.
 
 -->
 
-**[<< Back to TOC](index.md)**
-
----
 # Platform Initialization
+
 Be sure to read [01-setting-up-new-project.md](01-setting-up-new-project.md) before continuing as this document will make references to it and assuming that the reading is aware of the background as to why platform initialization is required.
 
 Platform initialization is a way for the user to do one time configuration of the hardware and is done by implementing `platform_init()` functions. The initialization could be for example - clock configurations, enabling or disabling certain blocks etc. **If not anything, the user needs to provide a way for shell to put and get a character from some stream (e.g uart). This is Mandatory! And expected!**
 
 `platform_init()` can be implemented at any level but for the reasons of making the source code organization obvious, it's preferred to have a `platform.c` file which implements it. As discussed in [Define platform_init()](01-setting-up-new-project.md#define-platforminit) section we have the following directory structure:
+
 ```
 new_project
 |-- Makefile
 └── platform.c
 ```
+
 With `platform.c` having the following:
+
 ```
 /**
  * Copyright <year> <author>
@@ -54,10 +55,12 @@ void platform_init(void) {
 
 }
 ```
+
 - Our interest is in populating the contents of `pltform_init()`. As hinted earlier the shell needs a way to put and get a character from somewhere so user interaction is possible.
 - Typically this would be a `uart` and in certain cases can be `memory`, `mailbox` or some other interface. We assume it is the `uart`.
 
 ## The Uart interfaces
+
 The user would need to provide a uart driver that provides the following interfaces:
 - `void uart_init(void)` uart initialization.
 - `void uart_putc(char c)` a way to send a character out.
@@ -133,8 +136,10 @@ compiling /home/itankar/early-bringup-tool/new_project/platform.c
 compilation terminated.
 make: *** [../shell/Makefile:148: /home/itankar/early-bringup-tool/new_project/platform.o] Error 1
 ```
+
 - we would need to fix this. Create a directory `new_project/uart/` and add two files `uart.c` and `uart.h` in it. (if the user already has a uart driver, then the source should be simply copied to `new_project/` and the expected interfaces as expected above should be provided in `uart.h`).
 - the directory structure should look as follows:
+
 ```
 new_project
 |-- Makefile
@@ -143,7 +148,9 @@ new_project
     |-- uart.c
     └── uart.h
 ```
+
 - put the following in `uart.h`
+
 ```
 /**
  * Copyright <year> <author>
@@ -202,7 +209,9 @@ int uart_getc(void) {
   return -1;
 }
 ```
+
 - Issue `make` in `new_project/` again. Prints similar to following should be seen:
+
 ```
 Detected Configuration
 *
@@ -240,11 +249,8 @@ section size:
 generating shell.bin
 Done!
 ```
+
 # Next:
+
 - While the compilation is successful. Becuase the uart driver in this case was incomplete (empty functions), the shell would boot but now work as expected.
 - [03-uart-driver.md](03-uart-driver.md) discusses more on the uart driver implementation which should be the last step in making the shell completely functional.
-
----
-**[<< Back to TOC](index.md)**
-
----

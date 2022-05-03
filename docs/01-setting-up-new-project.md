@@ -16,11 +16,10 @@ limitations under the License.
 
 -->
 
-**[<< Back to TOC](index.md)**
-
----
 # Setting up new Project
-At the root level create a direcoty `new_project`. The repo should have the following structure. For the purposes of this guide, we set up a from the scratch project in `new_project/` directory.
+
+At the root level create a directory `new_project`. The repo should have the following structure. For the purposes of this guide, we set up a from the scratch project in `new_project/` directory.
+
 ```
 .
 ├── docs
@@ -31,12 +30,15 @@ At the root level create a direcoty `new_project`. The repo should have the foll
 └── shell
 ```
 
-# Setting up the biuld - Makefile
+# Setting up the build - Makefile
+
 In the project directory (`new_project/`), create a `Makefile`. The directory tree should look as follows:
+
 ```
 new_project
 └── Makefile
 ```
+
 Add following to the `new_project/Makefile`
 
 ```
@@ -77,7 +79,7 @@ RAM_BASE_PHYSICAL  = 0x80000000
 RAM_SIZE           = 0x4000000
 
 # Provide the base of the uart on which the shell
-# should be spwaned on.
+# should be available on.
 UART_BASE_PHYSICAL = 0x10000000
 
 # If you have your own layout file that should be used by the linker, set this
@@ -93,21 +95,21 @@ UART_BASE_PHYSICAL = 0x10000000
 #   * printf formatting \
 #   * long integers in printf \
 #   * memory manipulation utilities \
-#   * commmand history in prompt \
+#   * command history in prompt \
 # Skip the next 4 defines in this file if using SHELL_LITE
 # SHELL_LITE = 1
 
 # Uncomment to use printf() without the formatting support
 # DEFINES += -DSHELL_PRINTF_LITE
 
-# Uncomment to use printf() without the long interger
+# Uncomment to use printf() without the long integer
 # formatting support. Valid only if SHELL_PRINTF_LITE is not defined
 # DEFINES += -DSHELL_NO_PRINTF_LL
 
 # Uncomment to skip compiling the memory manipulation utilities.
 # DEFINES += -DSHELL_NO_UTILS
 
-# Uncommnet to disable the command history on the prompt
+# Uncomment to disable the command history on the prompt
 # DEFINES += -DSHELL_NO_HISTORY
 
 # Set this variable to point to the shell directory
@@ -128,7 +130,9 @@ SHELL_ROOT=../shell
   - The Project level variables steer the build magic to achieve the compilation.
 
 ## Try to compile
+
 - Issuing the `make` command should result in the following prints.
+
 ```
 $ make
 Detected Configuration
@@ -163,7 +167,9 @@ riscv64-linux-gnu-ld: /home/itankar/early-bringup-tool/shell/shell.o: in functio
 /home/itankar/early-bringup-tool/shell/shell.c:280: undefined reference to `platform_init'
 make: *** [../shell/Makefile:156: shell.elf] Error 1
 ```
+
 - The linking phase fails! the linker (`ld`) has reported a missing implementation of `platform_init()`
+
 ```
 riscv64-linux-gnu-ld: /home/itankar/early-bringup-tool/shell/shell.o: in function `exec_auto_cmds':
 /home/itankar/early-bringup-tool/shell/shell.c:280: undefined reference to `platform_init'
@@ -171,8 +177,10 @@ make: *** [../shell/Makefile:156: shell.elf] Error 1
 ```
 
 # Define platform_init()
+
 - Do get to zero error compilation we would need to define a function `platform_init()`.
 - To do so create another file `platform.c` and add the following to it:
+
 ```
 /**
  * Copyright <year> <author>
@@ -196,13 +204,17 @@ void platform_init(void) {
 
 }
 ```
+
 - At this point the directory structure should be as follows:
+
 ```
 new_project
 |-- Makefile
 └── platform.c
 ```
+
 - Issue `make` again and you should see similar prints as below:
+
 ```
 $ make
 Detected Configuration
@@ -240,13 +252,10 @@ section size:
 generating shell.bin
 Done!
 ```
+
 # Next
+
 - **A zero error compilation with project level `Makefile` (as below) doesn't necessarily mean that the binary will boot and the shell would be available on the uart**.
   - for the shell to work correctly it also needs a uart driver. Typically the user has to implement this.
   - the `platform_init()` funciton initializes the `uart` and provides the shell with a means of putting and fetching a character from the UART.
 - See [02-platform_init-and-uart-driver.md](02-platform_init-and-uart-driver.md) for details on how to enable shell to be fully functional.
-
----
-**[<< Back to TOC](index.md)**
-
----
