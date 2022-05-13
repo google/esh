@@ -45,7 +45,6 @@ void platform_init(){
     set_read_char(ugetc);
     set_write_char(uputc);
 
-    setup();
 }
 
 
