@@ -14,16 +14,54 @@
 # limitations under the License.
 #
 
+#define CPU_STACK_SIZE   1024
+
 # Execution starts from here
 .section .init
 .globl _start_
 _start_:
-    // Only boot one cpu, others spin!
-    mrs x0, mpidr_el1
-    and x0, x0, #0x3
-    cbz x0, 1f
+    //*********************************************//
+    // Setup Stack pointer for each core           //
+    //*********************************************//
+    mrs x0, mpidr_el1                    // Read Core id on Armv8
+    and x0, x0, #0x3                     // Make cpu id bitmask
+    ldr x13, =_STACK_TOP_                // load address of stack top into x13
+    mov x2, #CPU_STACK_SIZE              // each core gets stack size of 1024
+    mul x1, x0, x2                       // allocating stack according to core id
+    sub x13, x13, x1                     // x13 will be sp if we switch to aarch32
+    mov sp, x13
+    adr x5, spin_cpu                     // Load address of spin cpu1
+    mov x1, #0                           // zero x1 register
+    str x1, [x5]                         // Make sure caller address is zeroed
+    cbz x0, 1f                           // core 0 branches and secondary cores enter the spin loop
+ //*************************************************//
+ //                   spinloop                      //
+ //**************************************************//
+
+StartSecondarySpin:
+    mrs x6, mpidr_el1                    // get core Id
+    and x6, x6, #0x3                     // Make cpu id bitmask
+    adr x5, spin_cpu                     // Load address of spin cpu
+secondary_spin:
+    wfe                                  // secondary cores goes to sleep
+    ldr x4, [x5]                         // fetch what is in the spin address into x4
+    cbz x4, secondary_spin               // if zero then spin
+    mov x0, #0
+    str x0, [x5]                         // Zero caller address
+    mov x1, #0
+    mov x2, #0                           // Zero registers x0-x3, just in case
+    mov x3, #0
+    mov x0, x6                           // now x0 holds cpu id before it jumps to function
+    blr  x4                              // jump to the address in x4 , and start excecuting the instruction there
+    b StartSecondarySpin                 // Loop back to spin lock
+
+1:                                       // Core 0 branches to prompt
+    bl prompt                            // show the prompt
     b .
-1:  ldr x0, =_STACK_TOP_    // Store the stackpointer
-    mov sp, x0              // Move the value to SP
-    bl prompt               // show the prompt
-    b .
+
+.ltorg
+
+.org 0xd8
+.globl spin_cpu                         // spin address
+spin_cpu:
+    .quad 0
