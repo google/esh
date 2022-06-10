@@ -16,6 +16,8 @@
 
 #include "printf.h"
 #include "shell.h"
+#define PLATFORM_CORE_COUNT 4
+#define WATCH_VALUE_SIZE 8
 
-extern unsigned int spin_cpu;
-void start_core(unsigned long cpuid, void (*func)(unsigned long));
+extern uint64_t spin_cpu;
+void start_core(uint64_t cpuid, void (*func)(uint64_t));

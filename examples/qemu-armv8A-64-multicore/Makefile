@@ -22,8 +22,7 @@ STARTUP          = aarch64-multicore
 #     These 3 parameters are needed for every port
 #     Provide all values in hex
 RAM_BASE_PHYSICAL  = 0x40100000
-RAM_SIZE           = 0x4000
-NUM_CORES          = 0x2
+RAM_SIZE           = 0x40000
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
@@ -34,20 +33,24 @@ SHELL_ROOT=../../shell
 
 # ------------------------ User targets below this line ------------------------
 run_debug:
-	@qemu-system-aarch64 -smp $(NUM_CORES) -S -M virt,secure=on,virtualization=on \
+	@qemu-system-aarch64 -smp 4 -S -M virt,secure=on,virtualization=on \
 	 -cpu cortex-a72 -nographic -bios \
 	 $(PROJECT).elf -gdb tcp::1234 \
 	 -device loader,addr=0x40100000,cpu-num=0 \
      -device loader,addr=0x40100000,cpu-num=1 \
+	 -device loader,addr=0x40100000,cpu-num=2 \
+	 -device loader,addr=0x40100000,cpu-num=3 \
 	 -device loader,file=$(PROJECT).elf
 
 debug:
 	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-aarch64 -smp $(NUM_CORES) -M virt,secure=on,virtualization=on \
+	@qemu-system-aarch64 -smp 4 -M virt,secure=on,virtualization=on \
 	 -cpu cortex-a72 -nographic \
 	 -bios $(PROJECT).elf \
 	 -device loader,addr=0x40100000,cpu-num=0 \
      -device loader,addr=0x40100000,cpu-num=1 \
+	 -device loader,addr=0x40100000,cpu-num=2 \
+	 -device loader,addr=0x40100000,cpu-num=3 \
 	 -device loader,file=$(PROJECT).elf
