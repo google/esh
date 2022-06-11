@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+set -e
+
+# colors for echo
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo -e "${GREEN}"
+echo "This script will install all the dependencies and tools"
+echo "required to be able to compile and run all examples."
+echo -e "${NC}"
+
+# install all the dependencies to run each example
+sudo apt install -y binutils \
+                    make \
+                    binutils-riscv64-linux-gnu \
+                    binutils-arm-none-eabi \
+                    gcc-aarch64-linux-gnu \
+                    gcc-riscv64-linux-gnu \
+                    g++-riscv64-linux-gnu \
+                    gcc-arm-none-eabi \
+                    qemu-system-riscv64 \
+                    qemu-system-aarch64 \
+                    qemu-system-arm \
+                    qemu-system \
+                    gdb-multiarch \
+                    gcc-riscv64-linux-gnu \
+                    openocd \
+                    minicom \
+                    python3-pip
+
+# enable color on gdb console
+pip3 install pygments
+
+# install gdb console
+wget -P ~ https://git.io/.gdbinit
+
+echo "Done!"
+
+echo "Documentation: docs/index.md"
