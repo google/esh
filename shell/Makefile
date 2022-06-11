@@ -58,7 +58,7 @@ endif
 PROJECT            ?= shell
 PROJECT_ROOT        = ./
 SHELL_ROOT         ?= ./
-DOCS                = $(SHELL_ROOT)/../docs/00-getting-sarted.md
+DOCS                = $(SHELL_ROOT)/../docs/index.md
 ECHO_INIT_VALUE    ?= 0x1
 EXTERN_SRC         ?=
 IGNORE_SRC_PATH    ?=

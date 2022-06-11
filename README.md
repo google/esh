@@ -10,7 +10,6 @@ Features:
 - Low footprint shell implementation.
 - Commands with same foot print as `int main(int argc, char* argv[]){}`
 - Export function as command using a macro (available in `shell.h`).
--
 
 ## Quick Demo
 
