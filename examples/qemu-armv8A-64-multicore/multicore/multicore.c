@@ -15,10 +15,12 @@
 */
 #include "multicore.h"
 
+static cmd function_addr;  // holds address of function triggered
+
 /**
  * Secondary Cores complete their boot up and jump to secondary core main
  */
-void secondary_core_main(uint64_t cpuid) {
+static void secondary_core_main(uint64_t cpuid) {
     printf("Core %ld Bootup done\n", cpuid);
 }
 /**
@@ -44,4 +46,82 @@ static int secondary_core_boot(int argc, char **argv) {
     return 0;
 }
 
+// test function to check multi-core execution
+int test_fun1(int cpuid, char *argv[]) {
+    for (int i = 0; i <= 10; i++) {
+        printf("Core:%ld executing fun1\n", cpuid);
+    }
+    return 0;
+}
+
+// test function to check multi-core execution
+int test_fun2(int cpuid, char *argv[]) {
+    for (int i = 0; i <= 10; i++) {
+        printf("Core:%ld executing fun2\n", cpuid);
+    }
+    return 0;
+}
+
+// Checks if given core id and function name are valid or not.
+static int check_args(int cpuid, char *cmd_str) {
+    // check core_id
+    if (cpuid < 0 || cpuid >= PLATFORM_CORE_COUNT) {
+        printf("Invalid Core Number\n");
+        return 0;
+    }
+    // get function address
+    function_addr = get_function_addr(cmd_str);
+    // check function name
+    if (function_addr == NULL) {
+        printf("Invalid Function Name: %s\n", cmd_str);
+        return 0;
+    }
+    return 1;
+}
+
+// Writes the triggered function address in the given core's watch address.
+static void wrt_watch_addr(int cpuid) {
+    printf("\nStarting Core %ld\n", cpuid);
+    uint64_t offset = WATCH_VALUE_SIZE * (cpuid);
+    *(uint64_t *)(((uint64_t)&spin_cpu) + offset) = (uint64_t)function_addr; // Save caller address
+}
+
+// Executes the given function on given core
+static int function_execute(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Usage: %s <core_number> <function_name>\n", argv[0]);
+        return -1;
+    }
+    int cpuid = atoi(argv[1]);
+
+    if (check_args(cpuid, argv[2]) == 0) {
+        printf("Usage: %s <core_number> <function_name>\n", argv[0]);
+        return -1;
+    }
+
+    // given core is a secondary core
+    if (cpuid != 0) {
+        wrt_watch_addr(cpuid);
+    }
+
+    printf("\nStarting Execution....\n\n");
+    asm volatile("sev");
+
+    // given core is main core
+    if (cpuid == 0) {
+        function_addr(0, NULL);
+    }
+
+    // wait for executing secondary core to return
+    volatile int i = 0;
+    while (i < 1000000) {
+        i++; //  delay of 1000000 cycles.
+    }
+    // return back to prompt
+    return 0;
+}
+
+ADD_CMD(Function1, "Test function", test_fun1);
+ADD_CMD(Function2, "Test function", test_fun2);
+ADD_CMD(run_task, "Executes functions on given Core Number", function_execute);
 AUTO_CMD(SecondaryBoot, "Starts Secondary Cores", secondary_core_boot);

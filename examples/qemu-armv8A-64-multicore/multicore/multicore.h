@@ -14,8 +14,8 @@
 # limitations under the License.
 */
 
-#include "printf.h"
 #include "shell.h"
+
 #define PLATFORM_CORE_COUNT 4
 #define WATCH_VALUE_SIZE 8
 
