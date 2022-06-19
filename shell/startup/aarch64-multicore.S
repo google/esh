@@ -47,12 +47,16 @@ StartSecondarySpin:
     adr x5, spin_cpu                     // Load address of spin cpu
     mov x2, #WATCH_VALUE_SIZE
     mul x2, x2, x6                       // offset = (core_num)*WATCH_VALUE_SIZE
+    adr x7, core_available                // Load address of core_available
+    mov x8, #1
+    str x8, [x7, x2]                     // Store 1 at (offset + base address), to make sure core is ready & avilable
 secondary_spin:
     wfe                                  // secondary cores goes to sleep
     ldr x4, [x5, x2]                     // Add offset to the base address and load what's there into x4
     cbz x4, secondary_spin               // Loop if zero, otherwise continue
     mov x0, #0
     str x0, [x5, x2]                     // Zero caller address
+    str x0, [x7, x2]                     // Store 0 at (offset + base address), to make sure core is not avilable
     mov x1, #0
     mov x2, #0                           // Zero registers x0-x3, just in case
     mov x3, #0
@@ -71,3 +75,6 @@ secondary_spin:
 spin_cpu:
     .skip WATCH_VALUE_SIZE*PLATFORM_CORE_COUNT  // uninitialized array of size PLATFORM_CORE_COUNT , each core watch a value of size WATCH_VALUE_SIZE bytes
 
+.globl core_available                           // core_available stores availablity of each platform core for execution.
+core_available:
+    .skip WATCH_VALUE_SIZE*PLATFORM_CORE_COUNT  // uninitialized array of length PLATFORM_CORE_COUNT , each element of size WATCH_VALUE_SIZE bytes
