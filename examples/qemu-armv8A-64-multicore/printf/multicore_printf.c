@@ -15,13 +15,11 @@
 */
 
 #include "multicore_printf.h"
-#include "shell.h"
 
-#define PLATFORM_CORE_COUNT 4
-#define WATCH_VALUE_SIZE 8
+struct lock_t pr;
 
-// import spin_cpu and core_available array
-extern uint64_t spin_cpu[];
-extern uint64_t core_available[];
-
-void start_core(uint64_t cpuid, void (*func)(uint64_t));
+// initialize the lock for multicore printf
+void printfinit(void) {
+  initlock(&pr.lock, "pr");
+  pr.locking = 1;
+}

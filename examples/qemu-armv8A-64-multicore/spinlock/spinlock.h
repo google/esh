@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,23 @@
  * limitations under the License.
  **/
 
-#include "multicore_printf.h"
-#include "shell.h"
-#include "uart.h"
+#include <stdint.h>
 
-/**
- * @brief Inilialize the platform
- *
- */
-void platform_init() {
-  uart_init();
-  set_read_char(ugetc);
-  set_write_char(uputc);
-  printfinit();
-}
+extern void acquire(uint64_t *);
+extern void release(uint64_t *);
+extern uint64_t mycpu(void);
+
+// Mutual exclusion lock.
+struct spinlock {
+  uint64_t locked;  // Is the lock held?
+
+  // For debugging:
+  char *name;    // Name of lock.
+  uint64_t cpu;  // The cpu holding the lock.
+};
+
+void initlock(struct spinlock *, char *);
+void spin_lock(struct spinlock *);
+void spin_unlock(struct spinlock *);
+int holding(struct spinlock *);
+void freeze_cpu(void);
