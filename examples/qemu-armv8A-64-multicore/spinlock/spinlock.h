@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 #include <stdint.h>
 
-extern void acquire(uint64_t *);
+extern void acquire(uint64_t *, uint64_t *);
 extern void release(uint64_t *);
 extern uint64_t mycpu(void);
 
 // Mutual exclusion lock.
 struct spinlock {
+  // holds the latest ticket number which is available to allocate
+  uint64_t next_ticket;
+  // holds the now serving ticket number
+  uint64_t curr_ticket;
   uint64_t locked;  // Is the lock held?
-
   // For debugging:
   char *name;    // Name of lock.
   uint64_t cpu;  // The cpu holding the lock.

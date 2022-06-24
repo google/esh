@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@
 // signals if any core tried re-acquiring or re-releasing the lock
 volatile int re_entrancy = 0;
 
-// initialise the spinlock, with given name
+// initialise the spinlock, with given name and default settings
 void initlock(struct spinlock *lock, char *name) {
   lock->name = name;
+  lock->next_ticket = 0;
+  lock->curr_ticket = 0;
   lock->locked = 0;
   lock->cpu = -1;
 }
@@ -39,8 +41,10 @@ void spin_lock(struct spinlock *lock) {
   if (re_entrancy) {
     freeze_cpu();
   }
-  // acquire lock->locked , loop (spins) untill the lock is acquired.
-  acquire(&lock->locked);
+  // core gets a ticket number and waits for its turn to get served/processed.
+  acquire(&lock->next_ticket, &lock->curr_ticket);
+  // update lock status
+  lock->locked = 1;
   // Record info about lock acquisition for holding() and debugging.
   lock->cpu = mycpu();
 }
@@ -57,10 +61,11 @@ void spin_unlock(struct spinlock *lock) {
   if (re_entrancy) {
     freeze_cpu();
   }
-
+  // update lock status
+  lock->locked = 0;
   lock->cpu = -1;
-  // Release the lock, equivalent to lock->locked = 0.
-  release(&lock->locked);
+  // Release the lock and increment the now serving ticket number
+  release(&lock->curr_ticket);
 }
 
 // Check whether this cpu is holding the lock.
