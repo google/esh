@@ -358,6 +358,15 @@ int exec(char *cmd_str) {
   return __cmd_exec_status;
 }
 
+cmd get_function_addr(char *cmd_str) {
+  for (int i = 0; table[i].command_name != NULL; i++) {
+    if (strcmp(cmd_str, table[i].command_name) == 0) {
+      return table[i].command;
+    }
+  }
+  return NULL;
+}
+
 int help(int argc, char **argv) {
   int i = 0;
   while (table[i].command_name != NULL) {

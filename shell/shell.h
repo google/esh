@@ -82,6 +82,13 @@ typedef struct {
   cmd_t _var##_function = {#_name, _help_string, &_function}
 
 /**
+ * @brief Looks for and returns address of the function triggered by a command string
+ *
+ * @param cmd_str command string that triggers the function
+ */
+cmd get_function_addr(char *cmd_str);
+
+/**
  * @brief Set a way to read a byte from input source.
  *        The use needs to set a function that can be used to read a character
  *        from a source. This way the shell would be able to read incoming
