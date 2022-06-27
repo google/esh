@@ -11,18 +11,25 @@ Features:
 - Commands with same foot print as `int main(int argc, char* argv[]){}`
 - Export function as command using a macro (available in `shell.h`).
 
-## Quick Demo
+# Quick Setup
 
-![Qemu Demo](docs/images/demo.gif)
+Execute `./scripts/setup` to install all the dependencies.
+
+## Quick Demo
 
 Following is a run of example in `examples/qemu-riscv-64/`
 
+![Qemu Demo](docs/images/demo.gif)
 
-To run it installed the dependencies:
+If you haven't done the `Quick Setup` as noted above, you'll need to install following utilities:
 
 ```
 sudo apt install -y binutils make binutils-riscv64-linux-gnu gcc-riscv64-linux-gnu g++-riscv64-linux-gnu \
                     qemu-system-riscv64
+
+wget -P ~ https://git.io/.gdbinit
+
+pip3 install pygments
 ```
 and then:
 ```shell
@@ -31,7 +38,17 @@ make
 make run
 ```
 
-You should similar output as in above visual.
+Further, gdb based debugging can also be done by running the following commands in two separate terminals:
+```
+make debug_run
+```
+and
+```
+make debug
+```
+![Qemu Debug](docs/images/debug.gif)
+
+You should see similar output as in above visual.
 
 # Documentation
 
