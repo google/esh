@@ -21,15 +21,15 @@
 #include "config.h"
 #include "string.h"
 
-volatile int (*__read_char__)(void);
-volatile void (*__write_char__)(char c);
+int (*__read_char__)(void);
+void (*__write_char__)(char c);
 
 extern unsigned long int __CMD_TABLE_START__;
 extern unsigned long int __AUTO_TABLE_START__;
 
 static const cmd_t *table = (cmd_t *)&__CMD_TABLE_START__;
 static const cmd_t *auto_load = (cmd_t *)&__AUTO_TABLE_START__;
-volatile static int __cmd_exec_status;
+static volatile int __cmd_exec_status;
 
 /*
  * To reduce the shell size the history feature

@@ -59,7 +59,7 @@ int read_mem(int argc, char *argv[]) {
   uint32_t length = atoi(argv[2]);
   uint32_t data;
 
-  for (int i = 0; i < length; i++) {
+  for (uint32_t i = 0; i < length; i++) {
     data = reg32(addr);
     printf("0x%x: 0x%x\n", addr, data);
 
