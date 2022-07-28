@@ -155,7 +155,7 @@ OPTIMIZATION ?= 0
 
 GCC_FLAGS = $(DEFINES) $(INCLUDES) -Wall -O$(OPTIMIZATION) -nostdlib
 GCC_FLAGS += -nostartfiles -ffreestanding -ggdb -c
-LD_FLAGS  ?=
+LD_FLAGS  ?= --defsym=__RAM_BASE__=$(RAM_BASE_PHYSICAL)  --defsym=__RAM_SIZE__=$(RAM_SIZE)
 
 # ------------------------------ objects ---------------------------------------
 OBJS ?=
@@ -173,12 +173,6 @@ else
 LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
 
 LD_FILE = $(LAYOUT_FILE)
-# ------------------------------ targets ---------------------------------------
-%.ld: %.ldt
-	@echo "generating" $@
-	@cp $^ $@
-	@sed 's/__RAM_BASE__/$(RAM_BASE_PHYSICAL)/g' $^ | \
-	sed 's/__RAM_SIZE__/$(RAM_SIZE)/g' > $@
 endif
 
 %.o:%.c
@@ -195,7 +189,7 @@ endif
 
 %.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LAYOUT_FILE)
 	@echo "generating" $@
-	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) -o $@ -Map=$@.map
+	@$(LD) $(LD_FLAGS) -T$(LD_FILE) $(OBJS)  -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
@@ -210,7 +204,7 @@ all: $(PROJECT).bin $(PROJECT).elf
 
 .PHONY: clean
 clean:
-	@rm -rf $(LAYOUT_FILE) $(OBJS) *.elf *.bin *.lst *.map *.gdb
+	@rm -rf $(OBJS) *.elf *.bin *.lst *.map *.gdb
 
 # ------------------------------ configuration ---------------------------------
 # Only printed when issued - make
