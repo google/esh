@@ -155,7 +155,7 @@ OPTIMIZATION ?= 0
 
 GCC_FLAGS = $(DEFINES) $(INCLUDES) -Wall -O$(OPTIMIZATION) -nostdlib
 GCC_FLAGS += -nostartfiles -ffreestanding -ggdb -c
-LD_FLAGS  ?= --defsym=__RAM_BASE__=$(RAM_BASE_PHYSICAL)  --defsym=__RAM_SIZE__=$(RAM_SIZE)
+LD_FLAGS  ?=
 
 # ------------------------------ objects ---------------------------------------
 OBJS ?=
@@ -171,8 +171,8 @@ ifneq ($(USER_LAYOUT_FILE),)
 LD_FILE = $(shell realpath $(USER_LAYOUT_FILE))
 else
 LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
-
 LD_FILE = $(LAYOUT_FILE)
+LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(RAM_SIZE)
 endif
 
 %.o:%.c
@@ -189,7 +189,7 @@ endif
 
 %.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LAYOUT_FILE)
 	@echo "generating" $@
-	@$(LD) $(LD_FLAGS) -T$(LD_FILE) $(OBJS)  -o $@ -Map=$@.map
+	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
