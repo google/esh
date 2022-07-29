@@ -187,7 +187,7 @@ endif
 	@echo "assembling" $^
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
-%.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LAYOUT_FILE)
+%.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LD_FILE)
 	@echo "generating" $@
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
