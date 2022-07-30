@@ -16,6 +16,16 @@
 
 MAKEFLAGS += --silent
 
+# When set to 1, print dots for progress
+SILENT_BUILD ?= 0
+ifeq ($(SILENT_BUILD),1)
+PRINT_ONLY_ERRORS = 1> /dev/null
+
+define progress
+@echo -n "."
+endef
+endif
+
 # -------------------- Mandatory user configurable -----------------------------
 # These variables are to be declared by the user in the project level Makefile
 # The build system would use these as part of the automtion to generate a *.ld
@@ -155,7 +165,6 @@ OPTIMIZATION ?= 0
 
 GCC_FLAGS = $(DEFINES) $(INCLUDES) -Wall -O$(OPTIMIZATION) -nostdlib
 GCC_FLAGS += -nostartfiles -ffreestanding -ggdb -c
-LD_FLAGS  ?=
 
 # ------------------------------ objects ---------------------------------------
 OBJS ?=
@@ -176,28 +185,33 @@ LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(R
 endif
 
 %.o:%.c
-	@echo "compiling" $^
+	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
+	$(call progress)
 	@$(GCC) $(GCC_FLAGS) $^ -o $@
 
 %.o:%.cpp
-	@echo "compiling" $^
+	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
+	$(call progress)
 	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
 
 %.o:%.S
-	@echo "assembling" $^
+	@echo "assembling" $^ $(PRINT_ONLY_ERRORS)
+	$(call progress)
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
 %.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LD_FILE)
-	@echo "generating" $@
+	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
+	$(call progress)
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
-	@echo "section size: "
-	@$(BINSIZE) -B $^
-	@echo "generating" $@
-	@$(OBJCOPY) -O binary $^ $@
-	@echo "Done!"
+	@echo ""
+	@echo "section size: " $(PRINT_ONLY_ERRORS)
+	@$(BINSIZE) -B $^ $(PRINT_ONLY_ERRORS)
+	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
+	@$(OBJCOPY) -O binary $^ $@ $(PRINT_ONLY_ERRORS)
+	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
 all: $(PROJECT).bin $(PROJECT).elf
 	@
@@ -208,6 +222,8 @@ clean:
 
 # ------------------------------ configuration ---------------------------------
 # Only printed when issued - make
+
+ifeq ($(SILENT_BUILD),0)
 ifeq ($(MAKECMDGOALS),)
 $(info Detected Configuration)
 $(info *)
@@ -229,4 +245,5 @@ $(info )
 $(info >> If incorrect, please set these Variables in Makefile )
 $(info >> Refer the documentation here: $(shell realpath $(DOCS)))
 $(info )
+endif
 endif
