@@ -34,7 +34,8 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 # create list of directories to clean
-list=$(ls -d examples/*)
+list=$(ls -d examples/emulation/*)
+list="$list $(ls -d examples/physical/*)"
 current=$(pwd)
 
 # cycle through each directory and clean it

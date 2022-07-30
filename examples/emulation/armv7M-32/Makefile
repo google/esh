@@ -14,33 +14,49 @@
 # limitations under the License.
 #
 
-TOOLCHAIN_PREFIX = aarch64-linux-gnu-
+# NOTE: the toolchain can be installed using -
+# sudo apt install -y gcc-arm-none-eabi
+
+TOOLCHAIN_PREFIX ?= arm-none-eabi-
 OPTIMIZATION     = g
-STARTUP    		 = aarch64
+
+TOOLCHAIN_VERSION := $(shell $(TOOLCHAIN_PREFIX)gcc -dumpversion)
+LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/$(TOOLCHAIN_VERSION)/thumb/v7-m/nofp/
+
+DEFINES = -mcpu=cortex-m3 -mthumb
+ASM_FLAGS = -march=armv7-m
+LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
+
+STARTUP = cortex-m
 
 # MANDATORY:
 #     These 3 parameters are needed for every port
 #     Provide all values in hex
-RAM_BASE_PHYSICAL  = 0x40000000
+RAM_BASE_PHYSICAL  = 0x00000000
 RAM_SIZE           = 0x4000
+
+# to reduce binary size, set to 1
+# SHELL_LITE = 0
+
+# setting the stack start manually for m class processors
+DEFINES += -DSTACK_START=0x0003FFFF
+DEFINES += -DSHELL_NO_PRINTF_LL
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
-SHELL_ROOT=../../shell
+SHELL_ROOT=../../../shell
 -include $(SHELL_ROOT)/Makefile
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
 # ------------------------ User targets below this line ------------------------
 run_debug:
-	@qemu-system-aarch64 -S -M virt,secure=on,virtualization=on \
-	 -cpu cortex-a72 -nographic -kernel \
+	@qemu-system-arm -S -M mps2-an385 -cpu cortex-m3 -nographic -kernel \
 	 $(PROJECT).elf -gdb tcp::1234
 
 debug:
 	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-aarch64 -M virt,secure=on,virtualization=on \
-	 -cpu cortex-a72 -nographic \
+	@qemu-system-arm -M mps2-an385 -cpu cortex-m3 -nographic \
 	 -kernel $(PROJECT).elf

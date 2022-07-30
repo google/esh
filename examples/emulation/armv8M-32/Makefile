@@ -46,7 +46,7 @@ DEFINES += -DSTACK_START2=0x3000FFFF #32KB stack in SRAM1 for core1
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
-SHELL_ROOT=../../shell
+SHELL_ROOT=../../../shell
 -include $(SHELL_ROOT)/Makefile
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
@@ -61,7 +61,7 @@ run_debug:
 		-gdb tcp::4444
 
 debug:
-	@gdb-multiarch $(PROJECT).elf -ex "target extended-remote localhost:4444" 
+	@gdb-multiarch $(PROJECT).elf -ex "target extended-remote localhost:4444"
 
 run: $(PROJECT).elf
 	@qemu-system-arm \

@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,41 +16,31 @@
 
 TOOLCHAIN_PREFIX = aarch64-linux-gnu-
 OPTIMIZATION     = g
-STARTUP          = aarch64-multicore
+STARTUP    		 = aarch64
 
 # MANDATORY:
 #     These 3 parameters are needed for every port
 #     Provide all values in hex
-RAM_BASE_PHYSICAL  = 0x40100000
-RAM_SIZE           = 0x40000
+RAM_BASE_PHYSICAL  = 0x40000000
+RAM_SIZE           = 0x4000
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
-SHELL_ROOT=../../shell
+SHELL_ROOT=../../../shell
 -include $(SHELL_ROOT)/Makefile
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
 # ------------------------ User targets below this line ------------------------
 run_debug:
-	@qemu-system-aarch64 -smp 4 -S -M virt,secure=on,virtualization=on \
-	 -cpu cortex-a72 -nographic -bios \
-	 $(PROJECT).elf -gdb tcp::1234 \
-	 -device loader,addr=0x40100000,cpu-num=0 \
-     -device loader,addr=0x40100000,cpu-num=1 \
-	 -device loader,addr=0x40100000,cpu-num=2 \
-	 -device loader,addr=0x40100000,cpu-num=3 \
-	 -device loader,file=$(PROJECT).elf
+	@qemu-system-aarch64 -S -M virt,secure=on,virtualization=on \
+	 -cpu cortex-a72 -nographic -kernel \
+	 $(PROJECT).elf -gdb tcp::1234
 
 debug:
 	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-aarch64 -smp 4 -M virt,secure=on,virtualization=on \
+	@qemu-system-aarch64 -M virt,secure=on,virtualization=on \
 	 -cpu cortex-a72 -nographic \
-	 -bios $(PROJECT).elf \
-	 -device loader,addr=0x40100000,cpu-num=0 \
-     -device loader,addr=0x40100000,cpu-num=1 \
-	 -device loader,addr=0x40100000,cpu-num=2 \
-	 -device loader,addr=0x40100000,cpu-num=3 \
-	 -device loader,file=$(PROJECT).elf
+	 -kernel $(PROJECT).elf

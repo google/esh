@@ -51,15 +51,15 @@ pip3 install pygments
 ```
 
 # Qemu based targets
-Following in `examples/` are qemu based.
+Following in `examples/emulation/` are qemu based.
 ```
-qemu-armv7M-32/  qemu-armv8A-64/  qemu-riscv-64/
+armv7M-32  armv8A-64  armv8A-64-smp  armv8M-32  riscv-64  RPi2b  RPi3b
 ```
 ## Compiling target
 
-Get into `qemu-riscv-64/` for the purposes of this demo:
+Get into `riscv-64/` for the purposes of this demo:
 ```
-cd examples/qemu-riscv-64
+cd examples/emulation/riscv-64
 ```
 To build the source, simply execute
 ```
@@ -75,7 +75,7 @@ Detected Configuration
 |- SHELL VERSION       : 6309660
 |- USER REPO VERSION   : 6309660
 |- SHELL ROOT          : /home/itankar/early-bringup-tool/shell
-|- PROJECT ROOT        : /home/itankar/early-bringup-tool/examples/qemu-riscv-64
+|- PROJECT ROOT        : /home/itankar/early-bringup-tool/examples/emulation/riscv-64
 |- OPTIMIZATION        : 0
 *
 |- TOOLCHAIN           : riscv64-linux-gnu-
@@ -145,7 +145,7 @@ version
 **Exit QEMU**: `ctrl+a` then `x` to exit.
 
 # Debugging
-If you want to debug by using `gdb` you would need to open two terminals within the location `examples/qemu-riscv-64/` and start the `qemu` run with the board halted on terminal and then connect `gdb` to it from the second terminal.
+If you want to debug by using `gdb` you would need to open two terminals within the location `examples/emulation/riscv-64/` and start the `qemu` run with the board halted on terminal and then connect `gdb` to it from the second terminal.
 
 On first terminal execute:
 ```
@@ -219,14 +219,14 @@ make clean
 ```
 # Board based targets
 
-`examples/hifive-riscv-32/` implements a port for a `hifive_rev_b` board. The code can be
+`examples/physical/hifive/` implements a port for a `hifive_rev_b` board. The code can be
 compiled and uploaded as follows -
 
 ## Compiling
 
 Get into the directory
 ```
-cd examples/hifive-riscv-32/
+cd examples/physical/hifive/
 ```
 
 Trigger the build process

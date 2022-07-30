@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,26 +14,33 @@
 # limitations under the License.
 #
 
-TOOLCHAIN_PREFIX   ?= riscv64-linux-gnu-
+TOOLCHAIN_PREFIX = arm-none-eabi-
+OPTIMIZATION     = g
+STARTUP          = arm32
 
-STARTUP            = riscv64
-RAM_BASE_PHYSICAL  = 0x80000000
-RAM_SIZE           = 0x4000000
+RAM_BASE_PHYSICAL  = 0x00000000
+RAM_SIZE           = 0x4000
+
+TOOLCHAIN_VERSION := $(shell $(TOOLCHAIN_PREFIX)gcc -dumpversion)
+LIB_GCC_PATH = /usr/lib/gcc/arm-none-eabi/$(TOOLCHAIN_VERSION)/thumb/v7-a/nofp
+
+LD_FLAGS = -lgcc -L$(LIB_GCC_PATH)
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
-SHELL_ROOT=../../shell
+SHELL_ROOT=../../../shell
 -include $(SHELL_ROOT)/Makefile
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
 # ------------------------ User targets below this line ------------------------
-run_debug:
-	@qemu-system-riscv64 -S -M virt -nographic -bios none\
-	 -kernel $(PROJECT).elf -gdb tcp::1234
+debug: $(PROJECT).elf
+	@echo Please use \"make gdb\" in another terminal to attach gdb.
+	@echo Use \"cltr+a,x\" to quit qemu debug
+	@qemu-system-arm -S -s -M raspi2b -nographic -kernel $(PROJECT).elf
 
-debug:
-	@gdb-multiarch shell.elf -ex "target remote localhost:1234"
+gdb: $(PROJECT).elf
+	@gdb-multiarch $(PROJECT).elf -ex "target remote localhost:1234"
 
 run: $(PROJECT).elf
-	@qemu-system-riscv64 -M virt -nographic -bios none -kernel $(PROJECT).elf
+	@qemu-system-arm -M raspi2b -nographic -kernel $(PROJECT).elf
