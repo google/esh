@@ -52,9 +52,22 @@ ifeq ($(RAM_SIZE),)
     $(info Example: RAM_SIZE = 0x4000 )
     $(error )
 endif
+LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(RAM_SIZE)
+LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/one-seg.ld)
+
+ifneq ($(ROM_BASE_PHYSICAL),)
+LD_MACROS += --defsym __ROM_BASE__=$(ROM_BASE_PHYSICAL) --defsym __ROM_SIZE__=$(ROM_SIZE)
+LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/two-seg.ld)
 else
+ROM_BASE_PHYSICAL = NA
+ROM_SIZE = NA
+endif
+else
+LD_FILE = $(shell realpath $(USER_LAYOUT_FILE))
 RAM_BASE_PHYSICAL = NA
 RAM_SIZE = NA
+ROM_BASE_PHYSICAL = NA
+ROM_SIZE = NA
 endif
 
 ifeq ($(STARTUP),)
@@ -173,17 +186,6 @@ OBJS += $(patsubst %.cpp,%.o,$(SRC_CPP))
 OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
-# ------------------------------ memory layout----------------------------------
-# If the User is using a custom linker file then just assign the absolute path
-# to LD_FILE and use that during the linking.
-ifneq ($(USER_LAYOUT_FILE),)
-LD_FILE = $(shell realpath $(USER_LAYOUT_FILE))
-else
-LAYOUT_FILE = $(shell realpath $(SHELL_ROOT)/scatter/layout.ld)
-LD_FILE = $(LAYOUT_FILE)
-LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(RAM_SIZE)
-endif
-
 %.o:%.c
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
 	$(call progress)
@@ -240,7 +242,9 @@ $(info ├── TOOLCHAIN           : $(TOOLCHAIN_PREFIX))
 $(info ├── STARTUP             : $(STARTUP_FILE))
 $(info ├── LAYOUT FILE         : $(LD_FILE))
 $(info ├── RAM BASE            : $(RAM_BASE_PHYSICAL))
-$(info └── RAM SIZE            : $(RAM_SIZE))
+$(info ├── RAM SIZE            : $(RAM_SIZE))
+$(info ├── ROM BASE            : $(ROM_BASE_PHYSICAL))
+$(info └── ROM SIZE            : $(ROM_SIZE))
 $(info )
 $(info >> If incorrect, please set these Variables in Makefile )
 $(info >> Refer the documentation here: $(shell realpath $(DOCS)))
