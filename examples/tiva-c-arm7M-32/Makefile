@@ -18,12 +18,17 @@ TOOLCHAIN_PREFIX ?= arm-none-eabi-
 OPTIMIZATION = g
 
 STARTUP = start
-USER_LAYOUT_FILE = platform/layout.ld
 
 DEFINES = -mcpu=cortex-m4 -mthumb -mtune=cortex-m4
 DEFINES += -DSHELL_NO_PRINTF_LL
 
 ASM_FLAGS = -march=armv7e-m
+
+ROM_BASE_PHYSICAL = 0x00000000
+ROM_SIZE = 0x00040000
+
+RAM_BASE_PHYSICAL = 0x20000000
+RAM_SIZE = 0x00008000
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
