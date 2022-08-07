@@ -15,27 +15,15 @@
  **/
 
 #include "mmap.h"
-#include "uart.h"
+#include "shell.h"
 
-void uputc(char c) {
-  while (!((USART_SR >> 7) & 1)) {
-    // loop
-  }
-
-  USART_DR = c;
-  if (c == '\n')
-    uputc('\r');
+void setup() {
+  GPIOA_MODER |= (0b01 << 10);
 }
 
-int ugetc(void) {
-  if ((USART_SR >> 5) & 1) return USART_DR;
-
-  return -1;
+int blink(int argc, char** argv) {
+  GPIOA_ODR ^= (1 << 5);
+  return 0;
 }
 
-void uart_init(void) {
-  USART_CR1 &= ~(1 << 13);    // Disable UART
-  USART_BRR = 0x8c;           // Set baud to 115200
-  USART_CR1 |= (1<<3)|(1<<2); // Enable tx/rx
-  USART_CR1 |= 1 << 13;       // Enable the uart
-}
+ADD_CMD(blink, "Toggles LED", blink);
