@@ -18,8 +18,15 @@
 #include "string.h"
 
 static rgn_info_t inp_buf_rgn, out_buf_rgn;
+static mode_t selected_mode = NONE;
 
-void memlog_init(uint8_t *addr, uint32_t size) {
+void memlog_init(uint8_t *addr, uint32_t size, mode_t mode) {
+  selected_mode = mode;
+
+  if (selected_mode == NONE) {
+    return;
+  }
+
   out_buf_rgn.addr = addr;
   out_buf_rgn.size = size / 2;
   out_buf_rgn.curr_index = 0;
@@ -28,12 +35,27 @@ void memlog_init(uint8_t *addr, uint32_t size) {
   inp_buf_rgn.size = size / 2;
   inp_buf_rgn.curr_index = 0;
 
+  if (!(selected_mode & INP)) {
+    // No input, use the extra memory for output.
+
+    out_buf_rgn.size = size;
+  } else if (!(selected_mode & OUT)) {
+    // No output, use the extra memory for input.
+
+    inp_buf_rgn.addr = addr;
+    inp_buf_rgn.size = size;
+  }
+
   memset(addr, 0, size);
 }
 
 int memlog_getc() {
+  if (!(selected_mode & INP)) {
+    return -1;
+  }
+
   if (inp_buf_rgn.addr[inp_buf_rgn.curr_index] == 0) {
-      return -1;
+    return -1;
   }
 
   int val = inp_buf_rgn.addr[inp_buf_rgn.curr_index];
@@ -41,21 +63,21 @@ int memlog_getc() {
   inp_buf_rgn.curr_index++;
 
   if (inp_buf_rgn.curr_index == inp_buf_rgn.size) {
-      inp_buf_rgn.curr_index = 0;
+    inp_buf_rgn.curr_index = 0;
   }
 
   return val;
 }
 
 void memlog_putc(char c) {
-  if (c == 0) {
-      return;
+  if (!(selected_mode & OUT) || c == 0) {
+    return;
   }
 
   out_buf_rgn.addr[out_buf_rgn.curr_index] = (uint8_t) c;
   out_buf_rgn.curr_index++;
 
   if (out_buf_rgn.curr_index == out_buf_rgn.size) {
-      out_buf_rgn.curr_index = 0;
+    out_buf_rgn.curr_index = 0;
   }
 }
