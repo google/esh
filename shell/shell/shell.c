@@ -46,7 +46,9 @@
 
 #define PROMPT "# "
 
+#ifndef LINE_BUFF_SIZE
 #define LINE_BUFF_SIZE 32
+#endif
 #define MAX_ARG_COUNT (LINE_BUFF_SIZE / 2)
 #define NUM_HISTORY_ENTRIES 2
 
