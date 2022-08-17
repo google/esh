@@ -32,6 +32,19 @@ SECTIONS
         *(.init*)
         *(.text*)
 
+        _etext = .;
+    } > ROM AT> ROM
+
+    .data : {
+        _data = .;
+
+        . = ALIGN(8);
+        *(.data*)
+
+        _edata = .;
+    } > RAM AT> ROM
+
+    .rodata : {
         /* start: Command table for the shell */
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
@@ -42,15 +55,7 @@ SECTIONS
         /* end: Command table for the shell */
 
         *(.rodata*)
-        _etext = .;
     } > ROM AT> ROM
-
-    .data : {
-        _data = .;
-        . = ALIGN(8);
-        *(.data*)
-        _edata = .;
-    } > RAM AT> ROM
 
     .bss : {
         _bss = .;
