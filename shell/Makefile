@@ -56,8 +56,15 @@ LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(R
 LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/one-seg.ld)
 
 ifneq ($(ROM_BASE_PHYSICAL),)
+DEFINES += -DTWO_SEGMENT=1
 LD_MACROS += --defsym __ROM_BASE__=$(ROM_BASE_PHYSICAL) --defsym __ROM_SIZE__=$(ROM_SIZE)
 LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/two-seg.ld)
+ifeq ($(ROM_SIZE),)
+    $(info ROM_SIZE not set!)
+    $(info This is expected to be set in project level Makefile by user)
+    $(info Example: ROM_SIZE = 0x4000 )
+    $(error )
+endif
 else
 ROM_BASE_PHYSICAL = NA
 ROM_SIZE = NA

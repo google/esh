@@ -35,25 +35,11 @@ void set_gpio_af() {
   GPIOA_AFRL    |=  (0b0111 << 8) | (0b0111 << 12);
 }
 
-void setup_bss_data(){
-  extern unsigned long int _etext, _data, _edata, _bss, _ebss;
-  unsigned long int *src = &_etext, *dst = &_data;
-
-  /* init .data section */
-  while(dst < &_edata)
-    *(dst++) = *(src++);
-
-  /* Clear .bss*/
-  for(dst = &_bss; dst < &_ebss; dst++)
-    *dst = 0;
-}
-
 /**
  * @brief Inilialize the platform
  *
  */
 void platform_init() {
-  setup_bss_data();
   set_gpio_af();
   uart_init();
   set_read_char(ugetc);

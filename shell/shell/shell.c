@@ -315,6 +315,24 @@ static int build_info(int argc, char **argv) {
 
 void initial_setup(void) {
   /**
+   * Copy the data section from ROM to RAM and
+   * zero init the bss section if we are using
+   * Two segment memory.
+   */
+#if (TWO_SEGMENT==1)
+  extern unsigned long int _etext, _data, _edata, _bss, _ebss;
+  unsigned long int *src = &_etext, *dst = &_data;
+
+  /* init .data section */
+  while(dst < &_edata)
+    *(dst++) = *(src++);
+
+  /* Clear .bss*/
+  for(dst = &_bss; dst < &_ebss; dst++)
+    *dst = 0;
+#endif
+
+  /**
    * platform_init() is expected to be defined by the user.
    * Expectation is that the user would do any needed hardware initialization
    * And register two functions to read a byte and write a byte using
