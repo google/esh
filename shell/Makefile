@@ -56,7 +56,6 @@ LD_MACROS = --defsym __RAM_BASE__=$(RAM_BASE_PHYSICAL) --defsym __RAM_SIZE__=$(R
 LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/one-seg.ld)
 
 ifneq ($(ROM_BASE_PHYSICAL),)
-DEFINES += -DTWO_SEGMENT=1
 LD_MACROS += --defsym __ROM_BASE__=$(ROM_BASE_PHYSICAL) --defsym __ROM_SIZE__=$(ROM_SIZE)
 LD_FILE = $(shell realpath $(SHELL_ROOT)/scatter/two-seg.ld)
 ifeq ($(ROM_SIZE),)

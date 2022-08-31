@@ -23,34 +23,47 @@ MEMORY
 SECTIONS
 {
     .text : {
+        _text = .;
+
         *(.init*)
         *(.text*)
-    } > ROM
+
+        _etext = .;
+    } > ROM AT> ROM
 
     .data : {
+        _data = .;
+
         . = ALIGN(8);
         *(.data*)
-    } > ROM
 
-    .bss : {
-        . = ALIGN(8);
-        *(.bss*)
-    } > RAM
+        _edata = .;
+    } > RAM AT> ROM
 
     .rodata : {
+        /* start: Command table for the shell */
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
         *(.cmd_list*)
         __AUTO_TABLE_START__ = .;
         *(.auto_list*)
         *(.cmd_end*)
+        /* end: Command table for the shell */
+
         *(.rodata*)
-    } > ROM
+    } > ROM AT> ROM
+
+    .bss : {
+        _bss = .;
+        . = ALIGN(8);
+        *(.bss*)
+        _ebss = .;
+    } > RAM AT> RAM
 
     /**
      * Let the stack be at the end of the RAM.
      * Not all CPUs may decrement the stack before use,
      * so point to one word less than the end.
      */
-    _STACK_TOP_ = 0x80000000 + 0x4000 - 4;
+    PROVIDE(_STACK_TOP_ = ORIGIN(RAM) + LENGTH(RAM) - 4);
 }

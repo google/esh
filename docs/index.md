@@ -24,7 +24,7 @@ limitations under the License.
 |[Setting up new project](01-setting-up-new-project.md)|Details on how to start setting up a new project.|
 |[Platform initialization and uart driver](02-platform_init-and-uart-driver.md)|Details the implementation of the `platform_init()` and the relation to the uart driver.|
 |[Uart driver](03-uart-driver.md)| Describes implementation and constraint on the uart driver.|
-
+|[User Linker Scripts](04-user-linker-scripts.md)|Guides on how a liner script should be written if the user wants to manually set the memory layout and do the code placement.|
 ## Contributing
 
 | Topic| Description |

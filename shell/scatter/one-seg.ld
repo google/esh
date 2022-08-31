@@ -26,18 +26,28 @@ MEMORY
 SECTIONS
 {
     .text : {
+        _text = .;
+
         *(.init*)
         *(.text*)
+
+        _etext = .;
     } > RAM
 
     .data : {
+        _data = .;
+
         . = ALIGN(8);
         *(.data*)
+
+        _edata = .;
     } > RAM
 
     .bss : {
+        _bss = .;
         . = ALIGN(8);
         *(.bss*)
+        _ebss = .;
     } > RAM
 
     .rodata : {
@@ -55,5 +65,5 @@ SECTIONS
      * Not all CPUs may decrement the stack before use,
      * so point to one word less than the end.
      */
-    _STACK_TOP_ = __RAM_BASE__ + __RAM_SIZE__ - 4;
+    PROVIDE(_STACK_TOP_ = ORIGIN(RAM) + LENGTH(RAM) - 4);
 }

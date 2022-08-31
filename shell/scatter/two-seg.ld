@@ -64,5 +64,10 @@ SECTIONS
         _ebss = .;
     } > RAM AT> RAM
 
+    /**
+     * Let the stack be at the end of the RAM.
+     * Not all CPUs may decrement the stack before use,
+     * so point to one word less than the end.
+     */
     PROVIDE(_STACK_TOP_ = ORIGIN(RAM) + LENGTH(RAM) - 4);
 }

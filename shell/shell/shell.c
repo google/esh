@@ -318,8 +318,12 @@ void initial_setup(void) {
    * Copy the data section from ROM to RAM and
    * zero init the bss section if we are using
    * Two segment memory.
+   *
+   * In case everything is in the RAM, skip copying the .data section
+   * and zero the .bss section. This helps keep the user/custom
+   * linker script and makefiles free from special variables to be declared.
+   * Less burden on the user.
    */
-#if (TWO_SEGMENT==1)
   extern unsigned long int _etext, _data, _edata, _bss, _ebss;
   unsigned long int *src = &_etext, *dst = &_data;
 
@@ -330,7 +334,6 @@ void initial_setup(void) {
   /* Clear .bss*/
   for(dst = &_bss; dst < &_ebss; dst++)
     *dst = 0;
-#endif
 
   /**
    * platform_init() is expected to be defined by the user.
