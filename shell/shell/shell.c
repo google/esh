@@ -324,8 +324,8 @@ void initial_setup(void) {
    * linker script and makefiles free from special variables to be declared.
    * Less burden on the user.
    */
-  extern unsigned long int _etext, _data, _edata, _bss, _ebss;
-  unsigned long int *src = &_etext, *dst = &_data;
+  extern char _etext, _data, _edata, _bss, _ebss;
+  char *src = &_etext, *dst = &_data;
 
   /* init .data section */
   while(dst < &_edata)

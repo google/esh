@@ -24,24 +24,25 @@ MEMORY
     RAM (rwx) : ORIGIN = __RAM_BASE__, LENGTH = __RAM_SIZE__
 }
 
+/* Symbols used for initialising data */
+_etext = LOADADDR(.data);
+_data = ADDR(.data);
+_edata = ADDR(.data) + SIZEOF(.data);
+
+/* Symbols used for zero-ing out BSS */
+_bss = ADDR(.bss);
+_ebss = ADDR(.bss) + SIZEOF(.bss);
+
 SECTIONS
 {
     .text : {
-        _text = .;
-
         *(.init*)
         *(.text*)
-
-        _etext = .;
     } > ROM AT> ROM
 
     .data : {
-        _data = .;
-
         . = ALIGN(8);
         *(.data*)
-
-        _edata = .;
     } > RAM AT> ROM
 
     .rodata : {
@@ -58,10 +59,8 @@ SECTIONS
     } > ROM AT> ROM
 
     .bss : {
-        _bss = .;
         . = ALIGN(8);
         *(.bss*)
-        _ebss = .;
     } > RAM AT> RAM
 
     /**

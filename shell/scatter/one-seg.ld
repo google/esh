@@ -23,31 +23,32 @@ MEMORY
     RAM : ORIGIN = __RAM_BASE__, LENGTH = __RAM_SIZE__
 }
 
+/* Symbols used for initialising data. While this is not required when everything is
+   in RAM, the symbols are defined to keep the code consistent.
+ */
+_etext = LOADADDR(.data);
+_data = ADDR(.data);
+_edata = ADDR(.data) + SIZEOF(.data);
+
+/* Symbols used for zero-ing out BSS */
+_bss = ADDR(.bss);
+_ebss = ADDR(.bss) + SIZEOF(.bss);
+
 SECTIONS
 {
     .text : {
-        _text = .;
-
         *(.init*)
         *(.text*)
-
-        _etext = .;
     } > RAM
 
     .data : {
-        _data = .;
-
         . = ALIGN(8);
         *(.data*)
-
-        _edata = .;
     } > RAM
 
     .bss : {
-        _bss = .;
         . = ALIGN(8);
         *(.bss*)
-        _ebss = .;
     } > RAM
 
     .rodata : {
