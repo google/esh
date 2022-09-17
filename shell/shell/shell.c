@@ -18,39 +18,8 @@
 
 #include <stdbool.h>
 
+#include "config.h"
 #include "string.h"
-
-// Build and Versioning related info
-#define TO_STR(x) #x
-#define TOSTRING(x) TO_STR(x)
-#define BUILD_USER TOSTRING(__BUILD_USER__)
-#define BUILD_HOST TOSTRING(__BUILD_HOST__)
-#define SHELL_VERSION TOSTRING(__SHELL_VERSION__)
-#define USER_REPO_VERSION TOSTRING(__USER_REPO_VERSION__)
-#define USER_PROMPT TOSTRING(__PROMPT__)
-#define PROMPT USER_PROMPT " "
-
-#define NULL ((void *)0)
-#define TRUE (1 == 1)
-#define FALSE (1 == 0)
-
-// Key codes
-#define END_OF_LINE '\0'
-#define SPACE ' '
-#define TAB '\t'
-#define NEW_LINE '\n'
-#define CARRIAGE_RETURN '\r'
-#define BACK_SPACE '\b'
-#define DELETE '\177'
-#define ESCAPE '\33'
-#define SQUARE_BRACKET_OPEN '\133'
-#define UP_ARROW '\101'
-
-#ifndef LINE_BUFF_SIZE
-#define LINE_BUFF_SIZE 32
-#endif
-#define MAX_ARG_COUNT (LINE_BUFF_SIZE / 2)
-#define NUM_HISTORY_ENTRIES 2
 
 volatile int (*__read_char__)(void);
 volatile void (*__write_char__)(char c);
@@ -187,17 +156,13 @@ static void execute(int argc, char **argv) {
 }
 
 // This method is a place holder to prepend prompt
-__attribute__ ((weak))  void prepend_prompt()
-{
-	;	//nothing by default
+__attribute__((weak)) void prepend_prompt() {
+  ;  // nothing by default
 }
 
 // Check if prompt is active, by default true.
 // Platforms can decide a logic for this.
-__attribute__ ((weak))  int active_prompt()
-{
-    return TRUE;
-}
+__attribute__((weak)) int active_prompt() { return TRUE; }
 
 static void shell(void) {
   int s, argc;
@@ -217,7 +182,7 @@ static void shell(void) {
 
   while (TRUE) {
     if (!active_prompt()) {
-        continue;
+      continue;
     }
 
     s = __read_char__();
@@ -308,8 +273,8 @@ static void exec_auto_cmds(void) {
 }
 
 static int build_info(int argc, char **argv) {
-  printf("Build: [" SHELL_VERSION ":" USER_REPO_VERSION "] - ["
-          BUILD_USER "@" BUILD_HOST "] - " __DATE__ " - " __TIME__ "\n");
+  printf("Build: [" SHELL_VERSION ":" USER_REPO_VERSION "] - [" BUILD_USER
+         "@" BUILD_HOST "] - " __DATE__ " - " __TIME__ "\n");
   return 0;
 }
 
@@ -328,12 +293,10 @@ void initial_setup(void) {
   char *src = &_etext, *dst = &_data;
 
   /* init .data section */
-  while(dst < &_edata)
-    *(dst++) = *(src++);
+  while (dst < &_edata) *(dst++) = *(src++);
 
   /* Clear .bss*/
-  for(dst = &_bss; dst < &_ebss; dst++)
-    *dst = 0;
+  for (dst = &_bss; dst < &_ebss; dst++) *dst = 0;
 
   /**
    * platform_init() is expected to be defined by the user.
@@ -424,7 +387,9 @@ int cmd_exec_status(int argc, char **argv) {
 // DO NOT REMOVE THESE
 AUTO_CMD(version, "Prints details of the build", build_info);
 ADD_CMD(help, "Prints all available commands", help);
-ADD_CMD(status, "Returns exit status of last executed command", cmd_exec_status);
+ADD_CMD(status, "Returns exit status of last executed command",
+        cmd_exec_status);
 
 // Mandatory!
-__attribute__((section(".cmd_end"))) cmd_t cmd_end_ = {NULL, NULL, NULL};
+__attribute__((section(".cmd_end"))) static volatile cmd_t cmd_end_ = {
+    NULL, NULL, NULL};
