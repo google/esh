@@ -15,6 +15,7 @@
 #
 
 MAKEFLAGS += --silent
+MAKEFLAGS += --jobs=$(shell nproc)
 
 # When set to 1, print dots for progress
 SILENT_BUILD ?= 0
