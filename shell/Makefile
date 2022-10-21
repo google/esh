@@ -98,12 +98,16 @@ IGNORE_SRC_PATH    ?=
 DEFINES += -DRAM_BASE_PHYSICAL=$(RAM_BASE_PHYSICAL)
 DEFINES += -DECHO_INIT_VALUE=$(ECHO_INIT_VALUE)
 
+# User defined prompt
+PROMPT ?= \#
+
 # note the use and host that the build was fired on
 BUILD_USER=$(shell whoami)
 BUILD_HOST=$(shell hostname)
 SHELL_VERSION=$(shell cd $(SHELL_ROOT) && git rev-parse --short HEAD 2>/dev/null)
 USER_REPO_VERSION=$(shell cd $(PROJECT_ROOT) && git rev-parse --short HEAD 2>/dev/null)
 
+DEFINES += -D__PROMPT__=$(PROMPT)
 DEFINES += -D__BUILD_USER__=$(BUILD_USER)
 DEFINES += -D__BUILD_HOST__=$(BUILD_HOST)
 DEFINES += -D__SHELL_VERSION__=$(SHELL_VERSION)

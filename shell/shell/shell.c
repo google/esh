@@ -27,6 +27,8 @@
 #define BUILD_HOST TOSTRING(__BUILD_HOST__)
 #define SHELL_VERSION TOSTRING(__SHELL_VERSION__)
 #define USER_REPO_VERSION TOSTRING(__USER_REPO_VERSION__)
+#define USER_PROMPT TOSTRING(__PROMPT__)
+#define PROMPT USER_PROMPT " "
 
 #define NULL ((void *)0)
 #define TRUE (1 == 1)
@@ -43,8 +45,6 @@
 #define ESCAPE '\33'
 #define SQUARE_BRACKET_OPEN '\133'
 #define UP_ARROW '\101'
-
-#define PROMPT "# "
 
 #ifndef LINE_BUFF_SIZE
 #define LINE_BUFF_SIZE 32
