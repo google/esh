@@ -392,10 +392,23 @@ cmd get_function_addr(char *cmd_str) {
 
 int help(int argc, char **argv) {
   int i = 0;
+  /* Default to Verbose */
+  bool verbose = true;
+
+  if (argc > 1 && (strcmp(argv[1], "-l")==0)) {
+    verbose = false;
+  } else {
+    printf("use: help -l for list only.\n\n");
+  }
+
   while (table[i].command_name != NULL) {
     printf(table[i].command_name);
-    printf("\n\t");
-    printf(table[i].command_help);
+
+    if (verbose) {
+      printf("\n\t");
+      printf(table[i].command_help);
+    }
+
     printf("\n");
     i++;
   }
