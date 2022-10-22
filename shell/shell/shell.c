@@ -106,11 +106,33 @@ static void handle_down_arrow(char *cmd_buff, int *char_count) {
 }
 
 static void add_command_to_history(const char *cmd_str) {
+
+  //add only if command is not empty
+  if (cmd_str == NULL || strcmp(cmd_str, "") == 0) {
+    return;
+  }
   int index = total_num_commands % NUM_HISTORY_ENTRIES;
   memcpy(&cmd_history[index], cmd_str, LINE_BUFF_SIZE);
   total_num_commands++;
   curr_command_ptr = total_num_commands;
 }
+
+
+static void show_history(int argc, char *argv) {
+  uint32_t end_index = total_num_commands-1;
+  uint32_t beg_index = 0;
+  if (total_num_commands > NUM_HISTORY_ENTRIES) {
+    beg_index = total_num_commands - NUM_HISTORY_ENTRIES;
+  }
+  for (uint32_t index = beg_index; index <= end_index; ++index) {
+    printf("%s\n", cmd_history[index % NUM_HISTORY_ENTRIES]);
+  }
+
+  return;
+}
+
+ADD_CMD(history, "Show command history", show_history);
+
 #endif  // SHELL_NO_HISTORY
 
 static int parse_line(char **argv, char *line_buff, int argument_size) {

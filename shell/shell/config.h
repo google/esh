@@ -69,7 +69,11 @@ extern "C" {
 /**
  * Maximum commands to be remembered in the history buffer.
  */
+//define if user has not defined NUM_HISTORY_ENTRIES
+#ifndef NUM_HISTORY_ENTRIES
 #define NUM_HISTORY_ENTRIES 2
+#endif
+
 
 #define NULL ((void *)0)
 #define TRUE (1 == 1)
