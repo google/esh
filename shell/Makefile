@@ -153,6 +153,9 @@ OBJS += $(patsubst %.cpp,%.o,$(SRC_CPP))
 OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
+# preserve the object files so subsequent compilation is faster
+.PRECIOUS: $(OBJS)
+
 %.o:%.c
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
 	$(call progress)
