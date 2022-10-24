@@ -117,8 +117,7 @@ static void add_command_to_history(const char *cmd_str) {
   curr_command_ptr = total_num_commands;
 }
 
-
-static void show_history(int argc, char *argv) {
+static int show_history(int argc, char **argv) {
   uint32_t end_index = total_num_commands-1;
   uint32_t beg_index = 0;
   if (total_num_commands > NUM_HISTORY_ENTRIES) {
@@ -128,7 +127,7 @@ static void show_history(int argc, char *argv) {
     printf("%s\n", cmd_history[index % NUM_HISTORY_ENTRIES]);
   }
 
-  return;
+  return 0;
 }
 
 ADD_CMD(history, "Show command history", show_history);
