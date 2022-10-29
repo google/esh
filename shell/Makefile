@@ -219,5 +219,6 @@ define build_config
 	@echo
 endef
 
+.NOTPARALLEL: config
 config:
 	@$(call build_config)
