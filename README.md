@@ -11,13 +11,28 @@ Features:
 - Commands with same foot print as `int main(int argc, char* argv[]){}`
 - Export function as command using a macro (available in `shell.h`).
 
+### Supported Processors/Architectures
+`examples/` implements a `hello world` example for the processor variety listed below:
+| Architecture             | Processor            | Example Location                             | Board                             |
+| :---                     |:--                   |:---                                          |:-                                 |
+| ARM v7 A-class 32 bit    |Cortex-a7 (quadcore)  | examples/emulation/armv7A-32-Rpi2            | raspberry pi 2b (Emulated on Qemu)|
+| ARM v8 A-class 32 bit    |Cortex-a53            | examples/emulation/armv8A-32-RPi3b           | raspberry pi 3b (Emulated on Qemu)|
+| ARM v7 M-class 32 bit    |Cortex-m3             | examples/emulation/armv7M-32                 | mps2-an385 (Emulated on Qemu)     |
+| ARM v8 A-class 64 bit    |Cortex-a72            | examples/emulation/armv8A-64                 | virt (Emulated on Qemu)           |
+| ARM v8 A-class 64 bit    |Cortex-a72 (quadcore) | examples/emulation/armv8A-64-smp (multicore) | virt (Emulated on Qemu)           |
+| ARM v8 M-class 32 bit    |Cortex-m33 (dualcore) | examples/emulation/armv8M-32 (multicore)     | mps3-an524 (Emulated on Qemu)     |
+| RISC-V 64 bit            |rv64g                 | examples/emulation/riscv-64                  | virt (Emulated on Qemu)           |
+| RISC-V 32 bit (RV32IMAC) |SiFive E31            | examples/physical/hifive                     | hifive1-revb (Physical Board)     |
+| ARM v7 M-class 32 bit    |Cortex-m4             | examples/physical/nucleo-f401re              | nucleo-f401re (Physical Board)    |
+| ARM v7 M-class 32 bit    |Cortex-m4             | examples/physical/tiva-c                     | tiva-c (Physical Board)           |
+
 # Quick Setup
 
 Execute `./scripts/setup` to install all the dependencies.
 
 ## Quick Demo
 
-Following is a run of example in `examples/qemu-riscv-64/`
+Following is a run of example in `examples/emulation/riscv-64`
 
 ![Qemu Demo](docs/images/demo.gif)
 
@@ -33,7 +48,7 @@ pip3 install pygments
 ```
 and then:
 ```shell
-cd examples/qemu-riscv-64/
+cd examples/emulation/riscv-64
 make
 make run
 ```
