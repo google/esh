@@ -18,7 +18,7 @@
 
 #include <stdbool.h>
 
-#include "config.h"
+#include "shell_config.h"
 #include "string.h"
 
 int (*__read_char__)(void);
