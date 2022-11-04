@@ -183,11 +183,12 @@ OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
 ## default target
+### all: Builds the project binary. Same as just executing make.
 all:: config $(PROJECT).bin
 	@
 
 .PHONY: clean
-## Cleans the project
+### clean: Cleans the project
 clean::
 	@rm -rf $(OBJS) *.elf *.bin *.lst *.map *.gdb
 
@@ -220,5 +221,12 @@ define build_config
 endef
 
 .NOTPARALLEL: config
+### config: Prints the build configuration
 config:
 	@$(call build_config)
+
+.PHONY: help
+help:
+	@grep -hE '^###.*$$' $(MAKEFILE_LIST) | \
+	sed 's/###//' | sed 's/:/|/' | \
+	column -t  -s '|'
