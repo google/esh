@@ -227,6 +227,7 @@ config:
 
 .PHONY: help
 help:
+	@echo ""
 	@grep -hE '^###.*$$' $(MAKEFILE_LIST) | \
 	sed 's/###//' | sed 's/:/|/' | \
 	column -t  -s '|'

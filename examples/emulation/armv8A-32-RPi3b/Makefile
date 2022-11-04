@@ -26,13 +26,17 @@ SHELL_ROOT=../../../shell
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
 # ------------------------ User targets below this line ------------------------
+### run: Launches QEMU and loads the project binary on it
+run: $(PROJECT).elf
+	@echo "Use Ctrl+A X to exit Qemu"
+	@qemu-system-aarch64 -M raspi3b -nographic -kernel $(PROJECT).elf
+
+### debug: Qemu with GDB server. To be executed before 'make gdb'
 debug: $(PROJECT).elf
 	@echo Please use \"make gdb\" in another terminal to attach gdb.
 	@echo Use \"cltr+a,x\" to quit qemu debug
 	@qemu-system-aarch64 -S -s -M raspi3b -nographic -kernel $(PROJECT).elf
 
+### gdb: Launches GDB and connects to qemu. To be executed after 'make debug'
 gdb: $(PROJECT).elf
 	@gdb-multiarch $(PROJECT).elf -ex "target remote localhost:1234"
-
-run: $(PROJECT).elf
-	@qemu-system-aarch64 -M raspi3b -nographic -kernel $(PROJECT).elf

@@ -45,10 +45,11 @@ SHELL_ROOT=../../../shell
 OPENOC_CONFIG_FILE =/usr/local/share/openocd/scripts/board/st_nucleo_f4.cfg
 OPENOC_FILE_UPLOAD ="program $(PROJECT).elf verify reset exit"
 
-# Uploads the .hex file to the board
+### upload: Uploads the binary to the board
 upload: $(PROJECT).elf
 	sudo openocd --file $(OPENOC_CONFIG_FILE) -c $(OPENOC_FILE_UPLOAD)
 
+### debug: Launches OpenOCD with gdb server. To be executed before 'make gdb'
 debug: $(PROJECT).elf upload
 	@echo "target extended-remote localhost:3333" > $(PROJECT).gdb
 	@echo "monitor reset halt" >> $(PROJECT).gdb
@@ -56,5 +57,6 @@ debug: $(PROJECT).elf upload
 	@echo "Use Ctrl+c to close the server!"
 	@sudo openocd -f $(OPENOC_CONFIG_FILE) 2>/dev/null
 
+### gdb: Launches GDB and connects to the target. To be executed after 'make debug'
 gdb: $(PROJECT).elf
 	@gdb-multiarch -q $^ --command=$(PROJECT).gdb

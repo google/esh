@@ -35,11 +35,13 @@ SHELL_ROOT=../../../shell
 OPENOCD = openocd
 OPENOC_CONFIG_FILE = board/sifive-hifive1-revb.cfg
 
+### upload: Uploads the binary to the board
 upload: $(PROJECT).elf
 	@echo -n "Uploading..."
 	@sudo $(OPENOCD) -f $(OPENOC_CONFIG_FILE) -c "program $^ verify reset exit"
 	@echo "Done :)"
 
+### debug: Launches OpenOCD with gdb server. To be executed before 'make gdb'
 debug: $(PROJECT).elf
 	@echo "target extended-remote localhost:3333" > $(PROJECT).gdb
 	@echo "monitor reset halt" >> $(PROJECT).gdb
@@ -47,5 +49,6 @@ debug: $(PROJECT).elf
 	@echo "Use Ctrl+c to close the server!"
 	@sudo $(OPENOCD) -f $(OPENOC_CONFIG_FILE) 2>/dev/null
 
+### gdb: Launches GDB and connects to the target. To be executed after 'make debug'
 gdb: $(PROJECT).elf
 	@gdb-multiarch -q $^ --command=$(PROJECT).gdb

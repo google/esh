@@ -51,7 +51,20 @@ SHELL_ROOT=../../../shell
 # ^^ Do not move the above line. All user targets to be defined below this line!
 
 # ------------------------ User targets below this line ------------------------
-run_debug:
+### run: Launches QEMU and loads the project binary on it
+run: $(PROJECT).elf
+	@echo "Use Ctrl+A X to exit Qemu"
+	@qemu-system-arm \
+		-M mps3-an524 \
+		-cpu cortex-m33 \
+		-smp 2 \
+		-nographic \
+		-kernel $(PROJECT).elf
+
+### debug: Qemu with GDB server. To be executed before 'make gdb'
+debug:
+	@echo Please use \"make gdb\" in another terminal to attach gdb.
+	@echo Use \"cltr+a,x\" to quit qemu debug
 	@qemu-system-arm -S \
 		-M mps3-an524 \
 		-cpu cortex-m33 \
@@ -60,13 +73,6 @@ run_debug:
 		-kernel $(PROJECT).elf \
 		-gdb tcp::4444
 
-debug:
+### gdb: Launches GDB and connects to qemu. To be executed after 'make debug'
+gdb:
 	@gdb-multiarch $(PROJECT).elf -ex "target extended-remote localhost:4444"
-
-run: $(PROJECT).elf
-	@qemu-system-arm \
-		-M mps3-an524 \
-		-cpu cortex-m33 \
-		-smp 2 \
-		-nographic \
-		-kernel $(PROJECT).elf
