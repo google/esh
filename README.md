@@ -4,12 +4,23 @@
 
 # Embedded Shell
 
-Targeted at embedded systems engineers and researchers who want to explore the hardware by writing small functions that can be triggered from a shell like interface. This tool implemnts a UART based shell that enables finer control of CPU by allowing functions to be exposed as commands to be triggered from the prompt. With a low memory footprint of < 4kB this is a perfect tool for getting up and running with a new board in less than 1 hour.
+**A Terminal like interface over UART.**
 
-Features:
+- Targeted at embedded systems engineers and researchers who want to explore the hardware by writing small functions that can be triggered from a shell like interface.
+- A UART based shell that enables finer control of CPU by allowing functions to be exposed as commands to be triggered from the prompt.
+- Low memory footprint of < 4kB
+
+this is a perfect tool for getting up and running with a new board in less than 1 hour.
+
+### Features:
 - Low footprint shell implementation.
 - Commands with same foot print as `int main(int argc, char* argv[]){}`
-- Export function as command using a macro (available in `shell.h`).
+- Export function as command using a macro (`ADD_CMD()` available in `shell.h`).
+- Supported Languages: **C**, **C++** and **Assembly**.
+- Automatic source file discovery
+    - `.c`, `.cpp` and `.S` source files in the Project and shell directory are automatically picked for compilation **(No need to modify any Makefile. The build system automatically figrues the source files)**.
+- Automatic Header discovery.
+    - location for `.h` and `.hpp` files is automatically passed to the compiler for header file lookup.
 
 ### Supported Processors/Architectures
 `examples/` implements a `hello world` example for the processor variety listed below:
@@ -33,7 +44,11 @@ Execute `./scripts/setup` to install all the dependencies.
 ## Quick Demo
 
 Following is a run of example in `examples/emulation/riscv-64`
-
+```shell
+cd examples/emulation/riscv-64
+make
+make run
+```
 ![Qemu Demo](docs/images/demo.gif)
 
 If you haven't done the `Quick Setup` as noted above, you'll need to install following utilities:
@@ -46,20 +61,14 @@ wget -P ~ https://git.io/.gdbinit
 
 pip3 install pygments
 ```
-and then:
-```shell
-cd examples/emulation/riscv-64
-make
-make run
-```
 
 Further, gdb based debugging can also be done by running the following commands in two separate terminals:
 ```
-make debug_run
+make debug
 ```
 and
 ```
-make debug
+make gdb
 ```
 ![Qemu Debug](docs/images/debug.gif)
 
