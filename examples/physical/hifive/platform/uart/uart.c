@@ -32,17 +32,17 @@
 
 void uart_init() {
   UART_DIV = BAUD_115200;
-  GPIO_IOF_EN |= (1 << UART0_TX) | (1 << UART0_RX);
-  GPIO_IOF_SEL &= ~((1 << UART0_TX) | (1 << UART0_RX));
+  GPIO_IOF_EN |= (1u << UART0_TX) | (1u << UART0_RX);
+  GPIO_IOF_SEL &= ~((1u << UART0_TX) | (1u << UART0_RX));
 }
 
 void putc(char c) {
-  while (UART_TXDATA & (1 << 31))
+  while (UART_TXDATA & (1u << 31))
     ;
   UART_TXDATA = c;
 
   if (c == '\n') {
-    while (UART_TXDATA & (1 << 31))
+    while (UART_TXDATA & (1u << 31))
       ;
     UART_TXDATA = '\r';
   }
@@ -51,6 +51,6 @@ void putc(char c) {
 int getc(void) {
   while (1) {
     uint32_t c = UART_RXDATA;
-    if (!(c & (1 << 31))) return (int)c;
+    if (!(c & (1u << 31))) return (int)c;
   }
 }

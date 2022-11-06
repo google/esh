@@ -28,7 +28,7 @@ volatile uint32_t g_mhu_flag1 = 0;    //shell ownership flag for core-1
  */
 uint32_t mhu_get_status(MHU_TypeDef *base, uint32_t cpu_id)
 {
-    uint32_t status;
+    uint32_t status = 0;
     if (cpu_id == CPU0_ID) {
         status = base->cpu0_interrupt_status;
     } else if (cpu_id == CPU1_ID) {

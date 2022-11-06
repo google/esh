@@ -30,7 +30,7 @@
  */
 int hello(int argc, char** argv) {
     volatile uint32_t id = get_cpu_id();
-    printf("CoreID: %d: \t", id);
+    printf("CoreID: %u: \t", id);
 
     for (int i = 0; i < argc; i++) {
         printf(argv[i]);

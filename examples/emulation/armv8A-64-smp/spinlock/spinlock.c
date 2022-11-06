@@ -77,7 +77,7 @@ int holding(struct spinlock *lock) {
 
 // send freeze message to console and enter infinite loop (freeze)
 void freeze_cpu(void) {
-  printf("Core %ld is freezed.\n", mycpu());
+  printf("Core %lu is freezed.\n", mycpu());
   // freeze
   for (;;) {
     asm volatile("wfe");

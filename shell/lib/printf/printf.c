@@ -232,6 +232,8 @@ int printf(const char *fmt, ...) {
       }
     }
   }
+
+  va_end(args);
   return 0;
 }
 #else

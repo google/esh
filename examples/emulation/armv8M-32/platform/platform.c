@@ -80,7 +80,7 @@ uint32_t check_active_core() {
  */
 void print_core_id() {
   volatile uint32_t id = get_cpu_id();
-  printf("[%d] ", id);
+  printf("[%u] ", id);
 }
 
 //overriding some of the shell methods below
