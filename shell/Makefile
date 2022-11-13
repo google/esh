@@ -171,12 +171,13 @@ OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 %.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LD_FILE)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
 	$(call progress)
-	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ -Map=$@.map
+	@echo ""
+	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ \
+	--print-memory-usage -Map=$@.map
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
-	@echo ""
-	@echo "section size: " $(PRINT_ONLY_ERRORS)
+	@echo "Section size: " $(PRINT_ONLY_ERRORS)
 	@$(BINSIZE) -B $^ $(PRINT_ONLY_ERRORS)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
 	@$(OBJCOPY) -O binary $^ $@ $(PRINT_ONLY_ERRORS)
