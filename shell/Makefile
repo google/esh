@@ -18,6 +18,8 @@ MAKEFLAGS += --silent
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --jobs=$(shell nproc)
 
+BUILD_PATH = objects
+
 SHELL_ROOT ?= ./
 -include $(SHELL_ROOT)/build-magic/defaults.mk
 
@@ -104,22 +106,22 @@ GCC_FLAGS += -nostartfiles -ffreestanding -ggdb -c
 
 # ------------------------------ objects ---------------------------------------
 OBJS ?=
-OBJS += $(patsubst %.c,%.o,$(SRC_C))
-OBJS += $(patsubst %.cpp,%.o,$(SRC_CPP))
-OBJS += $(patsubst %.S,%.o,$(FILTERED_SRC_ASM))
-OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
+OBJS += $(patsubst %.c,$(BUILD_PATH)/%.o,$(SRC_C))
+OBJS += $(patsubst %.cpp,$(BUILD_PATH)/%.o,$(SRC_CPP))
+OBJS += $(patsubst %.S,$(BUILD_PATH)/%.o,$(FILTERED_SRC_ASM))
+OBJS += $(patsubst %.S,$(BUILD_PATH)/%.o,$(STARTUP_FILE))
 
-%.o:%.c
+$(BUILD_PATH)/%.o:%.c
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
 	$(call progress)
 	@$(GCC) $(GCC_FLAGS) $^ -o $@
 
-%.o:%.cpp
+$(BUILD_PATH)/%.o:%.cpp
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
 	$(call progress)
 	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
 
-%.o:%.S
+$(BUILD_PATH)/%.o:%.S
 	@echo "assembling" $^ $(PRINT_ONLY_ERRORS)
 	$(call progress)
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
@@ -141,13 +143,20 @@ OBJS += $(patsubst %.S,%.o,$(STARTUP_FILE))
 
 ## default target
 ### all: Builds the project binary. Same as just executing make.
-all:: config $(PROJECT).bin
+all:: | config $(BUILD_PATH) $(PROJECT).bin
 	@
+
+$(BUILD_PATH):
+	mkdir -p $(BUILD_PATH) $(shell dirname $(OBJS))
 
 .PHONY: clean
 ### clean: Cleans the project
 clean::
-	@rm -rf $(OBJS) *.elf *.bin *.lst *.map *.gdb
+	@rm -rf $(OBJS) *.elf *.bin *.lst *.map *.gdb $(BUILD_PATH)
 
 # helpful config and help targets
 -include $(SHELL_ROOT)/build-magic/configuration.mk
+
+# preserve all the object files
+.PRECIOUS: $(OBJS)
+VPATH = $(shell dirname $(SRC_C) $(SRC_CPP) $(FILTERED_SRC_ASM) $(STARTUP_FILE))
