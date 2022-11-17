@@ -15,6 +15,7 @@
 #
 
 MAKEFLAGS += --silent
+MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --jobs=$(shell nproc)
 
 SHELL_ROOT ?= ./
@@ -92,56 +93,11 @@ OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
 
-# ------------------------------ source ----------------------------------------
-# discover the C source files in project and shell directory
-ALL_SRC_C	+= $(shell realpath $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) \
-				-type f -name "*.c" ) 2>/dev/null)
-ALL_SRC_CPP	+= $(shell realpath $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) \
-				-type f -name "*.cpp" ) 2>/dev/null)
-ifneq ($(IGNORE_SRC_PATH),)
-IGNORE_C	= $(shell realpath $(shell find $(IGNORE_SRC_PATH) \
-				-type f -name "*.c" ) 2>/dev/null)
-IGNORE_CPP	= $(shell realpath $(shell find $(IGNORE_SRC_PATH) \
-				-type f -name "*.cpp" ) 2>/dev/null)
-endif
+# find all the *.c, *.cpp, *.S source files
+-include $(SHELL_ROOT)/build-magic/find-source.mk
 
-SRC_C 	= $(filter-out $(IGNORE_C), $(ALL_SRC_C))
-SRC_CPP = $(filter-out $(IGNORE_CPP), $(ALL_SRC_CPP))
-
-# discover the ASM source files in project directory
-SRC_ASM  += $(shell realpath $(shell find . -type f -name "*.S") \
-			2>/dev/null)
-
-# search the startup file in bot project and shell directory
-STARTUP_FILE ?= $(shell realpath $(shell find . $(SHELL_ROOT) \
-				-type f -name "$(STARTUP)" -o  -name "$(STARTUP).S") \
-				2>/dev/null)
-
-# startup file may be included twice, filter it from the source
-FILTERED_SRC_ASM = $(filter-out $(STARTUP_FILE), $(SRC_ASM))
-
-# record all the paths where .h files are available
-ALL_H_FILES		+= $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.h")
-ALL_HPP_FILES	+= $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.hpp")
-
-ifneq ($(IGNORE_HEADER_PATH),)
-IGNORE_H	= $(shell realpath $(shell find $(IGNORE_HEADER_PATH) \
-				-type f -name "*.h" ) 2>/dev/null)
-IGNORE_HPP	= $(shell realpath $(shell find $(IGNORE_HEADER_PATH) \
-				-type f -name "*.hpp" ) 2>/dev/null)
-endif
-
-H_FILES		= $(filter-out $(IGNORE_H), $(ALL_H_FILES))
-HPP_FILES	= $(filter-out $(IGNORE_HPP), $(ALL_HPP_FILES))
-
-INCLUDES = $(shell find . $(SHELL_ROOT) $(EXTERN_SRC) -type f -name "*.h" | \
-			sed -r "s|/[^/]+$$||" | \
-			sort | uniq | \
-			while read line; do echo "-I"$$line; done;)
-INCLUDES += $(shell find . $(SHELL_ROOT) -type f -name "*.hpp" | \
-			sed -r "s|/[^/]+$$||" | \
-			sort | uniq | \
-			while read line; do echo "-I"$$line; done;)
+# process the include files
+-include $(SHELL_ROOT)/build-magic/find-headers.mk
 
 GCC_FLAGS = $(DEFINES) $(INCLUDES) -Wall -O$(OPTIMIZATION) -nostdlib
 GCC_FLAGS += -nostartfiles -ffreestanding -ggdb -c
@@ -193,42 +149,5 @@ all:: config $(PROJECT).bin
 clean::
 	@rm -rf $(OBJS) *.elf *.bin *.lst *.map *.gdb
 
-# ------------------------------ configuration ---------------------------------
-# Only printed when issued - make
-
-define build_config
-	@echo Detected Configuration
-	@echo "*"
-	@echo "├── PROJECT             : $(PROJECT)"
-	@echo "├── BUILD USER          : $(BUILD_USER)"
-	@echo "├── BUILD HOST          : $(BUILD_HOST)"
-	@echo "├── SHELL VERSION       : $(SHELL_VERSION)"
-	@echo "├── USER REPO VERSION   : $(USER_REPO_VERSION)"
-	@echo "├── SHELL ROOT          : $(shell realpath $(SHELL_ROOT))"
-	@echo "├── PROJECT ROOT        : $(shell realpath $(PROJECT_ROOT))"
-	@echo "├── OPTIMIZATION        : $(OPTIMIZATION)"
-	@echo "*"
-	@echo "├── TOOLCHAIN           : $(TOOLCHAIN_PREFIX)"
-	@echo "├── STARTUP             : $(STARTUP_FILE)"
-	@echo "├── LAYOUT FILE         : $(LD_FILE)"
-	@echo "├── RAM BASE            : $(RAM_BASE_PHYSICAL)"
-	@echo "├── RAM SIZE            : $(RAM_SIZE)"
-	@echo "├── ROM BASE            : $(ROM_BASE_PHYSICAL)"
-	@echo "└── ROM SIZE            : $(ROM_SIZE)"
-	@echo
-	@echo ">> If incorrect, please set these Variables in Makefile"
-	@echo ">> Refer the documentation here: $(shell realpath $(DOCS))"
-	@echo
-endef
-
-.NOTPARALLEL: config
-### config: Prints the build configuration
-config:
-	@$(call build_config)
-
-.PHONY: help
-help:
-	@echo ""
-	@grep -hE '^###.*$$' $(MAKEFILE_LIST) | \
-	sed 's/###//' | sed 's/:/|/' | \
-	column -t  -s '|'
+# helpful config and help targets
+-include $(SHELL_ROOT)/build-magic/configuration.mk
