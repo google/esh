@@ -26,10 +26,6 @@ SHELL_ROOT ?= ./
 # When set to 1, print dots for progress
 ifeq ($(SILENT_BUILD),1)
 PRINT_ONLY_ERRORS = 1> /dev/null
-
-define progress
-@echo -n "."
-endef
 endif
 
 # -------------------- Mandatory user configurable -----------------------------
@@ -114,25 +110,20 @@ OBJS += $(patsubst %.S,$(BUILD_PATH)/%.o,$(STARTUP_FILE))
 
 $(BUILD_PATH)/%.o:%.c
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
-	$(call progress)
 	@$(GCC) $(GCC_FLAGS) $^ -o $@
 
 $(BUILD_PATH)/%.o:%.cpp
 	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
-	$(call progress)
 	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
 
 $(BUILD_PATH)/%.o:%.S
 	@echo "assembling" $^ $(PRINT_ONLY_ERRORS)
-	$(call progress)
 	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
 
 %.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LD_FILE)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
-	$(call progress)
-	@echo ""
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ \
-	--print-memory-usage -Map=$@.map
+	--print-memory-usage -Map=$@.map $(PRINT_ONLY_ERRORS)
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf

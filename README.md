@@ -39,7 +39,7 @@ this is a perfect tool for getting up and running with a new board in less than 
 
 # Quick Setup
 
-Execute `./scripts/setup` to install all the dependencies.
+Execute `./manage -s` or `.scripts/setup` to install all the dependencies.
 
 ## Quick Demo
 

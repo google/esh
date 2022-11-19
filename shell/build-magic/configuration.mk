@@ -45,7 +45,11 @@ endef
 .NOTPARALLEL: config
 ### config: Prints the build configuration
 config:
+ifeq ($(SILENT_BUILD),1)
+	@
+else
 	@$(call build_config)
+endif
 
 .PHONY: help
 help:

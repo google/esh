@@ -23,10 +23,15 @@ help=$1
 # if the user wanted to get help for the script
 if [[ $help == "--help" ]]
 then
-  echo "This script issues a 'make clean' in all the projects within the examples/ directory"
-  echo "Usage: ./scripts/clean-examples"
+  echo "This script issues a 'make' in all the projects within the examples/ directory."
+  echo "Intended to check if changes in the shell/ breaks the build of any project!"
+  echo "Usage: ./scripts/build-examples"
   exit 0
 fi
+
+# colors for echo
+GREEN='\033[0;32m'
+NC='\033[0m'
 
 # create list of directories to clean
 list=$(ls -d examples/emulation/*)
@@ -36,10 +41,10 @@ current=$(pwd)
 # cycle through each directory and clean it
 for i in $list
 do
-  echo "cleaning $i"
-  cd $current/$i && make clean && rm -rf .gdb_history
+  echo -e "${GREEN}building $i ${NC}"
+  cd $current/$i && make clean && make
 done
 
-echo "done!"
+echo "built all!"
 exit 0
 

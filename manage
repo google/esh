@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+set -e
+
+help() {
+  echo "./manage [-s|-c|-sb|-b]"
+  echo "  -s  : Runs first time setup"
+  echo "  -c  : Cleans all examples"
+  echo "  -b  : Builds all examples"
+  echo "  -sb : Builds all examples, SILENTLY!"
+  echo "  -h  : Prints this help message"
+}
+
+if [[ $1 == "" ]]; then
+  help
+  exit -1
+fi
+
+case $1 in
+  "-s")
+    .scripts/setup
+  ;;
+  "-c")
+    .scripts/clean-examples
+  ;;
+  "-sb")
+    SILENT_BUILD=1 .scripts/build-examples
+  ;;
+  "-b")
+    .scripts/build-examples
+  ;;
+  *)
+    # print this for -h and any other case!
+    help
+  ;;
+esac
+
+exit 0
