@@ -56,6 +56,15 @@ __attribute__((weak)) void loop(void) {
   // to be provided by the user
 }
 
+// This method is a place holder to prepend prompt
+__attribute__((weak)) void prepend_prompt() {
+  ;  // nothing by default
+}
+
+// Check if prompt is active, by default true.
+// Platforms can decide a logic for this.
+__attribute__((weak)) int active_prompt() { return TRUE; }
+
 static void delete(void) {
   __write_char__(BACK_SPACE);
   __write_char__(SPACE);
@@ -134,6 +143,59 @@ ADD_CMD(history, "Show command history", show_history);
 
 #endif  // SHELL_NO_HISTORY
 
+
+#ifndef SHELL_NO_FANCY
+
+static int prefix_match(char *sub, int len, const char *str) {
+  if (sub == NULL || str == NULL || len <= 0 || len > strlen(str)) {
+    return FALSE;
+  }
+
+  for (int i = 0; i<len; ++i) {
+    if (sub[i] != str[i]) {
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+static void handle_tab(char *cmd_buff, int *char_count) {
+  if (cmd_buff == NULL || char_count <= 0) {
+    return;
+  }
+
+  int i = 0;
+  int match_count = 0;
+  int last_match = -1;
+  while (table[i].command_name != NULL) { //loop over all commands
+
+    //if prefix matches, print that as one of the options
+    if (prefix_match(cmd_buff, *char_count, table[i].command_name)) {
+      match_count++;
+      last_match = i;
+      printf("\n%s", table[i].command_name);
+    }
+
+    i++;
+  }
+
+  // if only one match, then that's the command to be executed
+  if (match_count == 1) {
+    memcpy(cmd_buff, table[last_match].command_name, LINE_BUFF_SIZE);
+    *char_count = strlen(cmd_buff);
+  }
+
+  // print current line with old/updated command
+  if (match_count) {
+    printf("\n");
+    prepend_prompt();
+    printf(PROMPT);
+    printf("%s", cmd_buff);
+  }
+}
+
+#endif  // SHELL_NO_FANCY
+
 static int parse_line(char **argv, char *line_buff, int argument_size) {
   int argc = 0;
   int pos = 0;
@@ -175,15 +237,6 @@ static void execute(int argc, char **argv) {
     __cmd_exec_status = -1;
   }
 }
-
-// This method is a place holder to prepend prompt
-__attribute__((weak)) void prepend_prompt() {
-  ;  // nothing by default
-}
-
-// Check if prompt is active, by default true.
-// Platforms can decide a logic for this.
-__attribute__((weak)) int active_prompt() { return TRUE; }
 
 static void shell(void) {
   int s, argc;
@@ -259,7 +312,14 @@ static void shell(void) {
 #endif  // SHELL_NO_HISTORY
         special_key = 0;
         continue;
-      } else {
+      }
+#ifndef SHELL_NO_FANCY
+      else if (c == TAB) {
+        handle_tab(line_buff, &count);
+        continue;
+      }
+#endif
+      else {
         line_buff[count] = c;
         count++;
       }
