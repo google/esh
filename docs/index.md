@@ -30,4 +30,4 @@ limitations under the License.
 | Topic| Description |
 | :--- |:----        |
 | [Code of Conduct](code-of-conduct.md) |Guides on the conduct expected while making contributions. |
-|[Contributing](contributing.md)|Guidelines on how to contribute to the code on Github.|
+|[Contributing](contributing.md)|Guidelines on how to contribute to the code on GitHub.|

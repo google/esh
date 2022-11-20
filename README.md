@@ -79,6 +79,22 @@ You should see similar output as in above visual.
 - To be able to run all the example and create your own project follow the documentation in [docs/](docs/index.md#table-of-contents).
 - It also provides details about the internal workings of shell and how to setup your own project.
 
+## Table of contents
+| Topic| Description |
+| :--- |:---        |
+|[How shell Works](docs/shell-working.md)|Explains the working of shell with a flowchart.|
+|[Running examples in `example/`](docs/00-setup-examples.md)|Guides on getting started with trying examples. Includes topics like - <br/> - `installing dependences`<br/> - `qemu based targets`<br/> - `physical board based targets`<br/> - `debugging` etc |
+|[Setting up new project](docs/01-setting-up-new-project.md)|Details on how to start setting up a new project.|
+|[Platform initialization and uart driver](docs/02-platform_init-and-uart-driver.md)|Details the implementation of the `platform_init()` and the relation to the uart driver.|
+|[Uart driver](docs/03-uart-driver.md)| Describes implementation and constraint on the uart driver.|
+|[User Linker Scripts](docs/04-user-linker-scripts.md)|Guides on how a liner script should be written if the user wants to manually set the memory layout and do the code placement.|
+## Contributing
+
+| Topic| Description |
+| :--- |:----        |
+| [Code of Conduct](docs/code-of-conduct.md) |Guides on the conduct expected while making contributions. |
+|[Contributing](docs/contributing.md)|Guidelines on how to contribute to the code on GitHub.|
+
 <hr>
 
 # Source Code Headers

@@ -53,7 +53,7 @@ pip3 install pygments
 # Qemu based targets
 Following in `examples/emulation/` are qemu based.
 ```
-armv7M-32  armv8A-64  armv8A-64-smp  armv8M-32  riscv-64  RPi2b  RPi3b
+armv7A-32-Rpi2  armv7M-32  armv8A-32-RPi3b  armv8A-64  armv8A-64-smp  armv8M-32  riscv-64
 ```
 ## Compiling target
 
