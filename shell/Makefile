@@ -134,6 +134,7 @@ $(BUILD_PATH)/%.o:%.S
 	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
 ## default target
+.DEFAULT_GOAL := all
 ### all: Builds the project binary. Same as just executing make.
 all:: | config $(BUILD_PATH) $(PROJECT).bin
 	@
