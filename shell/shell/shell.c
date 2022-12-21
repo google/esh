@@ -359,7 +359,7 @@ static int build_info(int argc, char **argv) {
   return 0;
 }
 
-void initial_setup(void) {
+__attribute__((weak)) void initial_setup(void) {
   /**
    * Copy the data section from ROM to RAM and
    * zero init the bss section if we are using
