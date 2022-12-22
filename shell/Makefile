@@ -18,6 +18,7 @@ MAKEFLAGS += --silent
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --jobs=$(shell nproc)
 
+# Save the object files in this directory
 BUILD_PATH = objects
 
 SHELL_ROOT ?= ./
@@ -108,19 +109,21 @@ OBJS += $(patsubst %.cpp,$(BUILD_PATH)/%.o,$(SRC_CPP))
 OBJS += $(patsubst %.S,$(BUILD_PATH)/%.o,$(FILTERED_SRC_ASM))
 OBJS += $(patsubst %.S,$(BUILD_PATH)/%.o,$(STARTUP_FILE))
 
-$(BUILD_PATH)/%.o:%.c
-	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
-	@$(GCC) $(GCC_FLAGS) $^ -o $@
+DEP_HEADERS = $(H_FILES) $(HPP_FILES)
 
-$(BUILD_PATH)/%.o:%.cpp
-	@echo "compiling" $^ $(PRINT_ONLY_ERRORS)
+$(BUILD_PATH)/%.o:%.c $(DEP_HEADERS)
+	@echo "compiling" $< $(PRINT_ONLY_ERRORS)
+	@$(GCC) $(GCC_FLAGS) $< -o $@
+
+$(BUILD_PATH)/%.o:%.cpp $(DEP_HEADERS)
+	@echo "compiling" $< $(PRINT_ONLY_ERRORS)
 	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
 
-$(BUILD_PATH)/%.o:%.S
-	@echo "assembling" $^ $(PRINT_ONLY_ERRORS)
-	@$(AS) -c $(ASM_FLAGS)  $^ -o $@
+$(BUILD_PATH)/%.o:%.S $(DEP_HEADERS)
+	@echo "assembling" $< $(PRINT_ONLY_ERRORS)
+	@$(AS) -c $(ASM_FLAGS)  $< -o $@
 
-%.elf: $(OBJS) $(H_FILES) $(HPP_FILES) $(LD_FILE)
+%.elf: $(OBJS) $(LD_FILE)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ \
 	--print-memory-usage -Map=$@.map $(PRINT_ONLY_ERRORS)
@@ -128,9 +131,9 @@ $(BUILD_PATH)/%.o:%.S
 
 %.bin:%.elf
 	@echo "Section size: " $(PRINT_ONLY_ERRORS)
-	@$(BINSIZE) -B $^ $(PRINT_ONLY_ERRORS)
+	@$(BINSIZE) -B $< $(PRINT_ONLY_ERRORS)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
-	@$(OBJCOPY) -O binary $^ $@ $(PRINT_ONLY_ERRORS)
+	@$(OBJCOPY) -O binary $< $@ $(PRINT_ONLY_ERRORS)
 	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
 ## default target
