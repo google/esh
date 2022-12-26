@@ -117,7 +117,7 @@ $(BUILD_PATH)/%.o:%.c $(DEP_HEADERS)
 
 $(BUILD_PATH)/%.o:%.cpp $(DEP_HEADERS)
 	@echo "compiling" $< $(PRINT_ONLY_ERRORS)
-	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $^ -o $@
+	@$(GPP) $(GCC_FLAGS) -Wwrite-strings $< -o $@
 
 $(BUILD_PATH)/%.o:%.S $(DEP_HEADERS)
 	@echo "assembling" $< $(PRINT_ONLY_ERRORS)
@@ -125,19 +125,20 @@ $(BUILD_PATH)/%.o:%.S $(DEP_HEADERS)
 
 %.elf: $(OBJS) $(LD_FILE)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
+	@echo "Size Report: " $(PRINT_ONLY_ERRORS)
+	@$(BINSIZE) -B -d -t $(OBJS) $(PRINT_ONLY_ERRORS)
 	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ \
 	--print-memory-usage -Map=$@.map $(PRINT_ONLY_ERRORS)
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
-	@echo "Section size: " $(PRINT_ONLY_ERRORS)
-	@$(BINSIZE) -B $< $(PRINT_ONLY_ERRORS)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
 	@$(OBJCOPY) -O binary $< $@ $(PRINT_ONLY_ERRORS)
 	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
 ## default target
 .DEFAULT_GOAL := all
+
 ### all: Builds the project binary. Same as just executing make.
 all:: | config $(BUILD_PATH) $(PROJECT).bin
 	@
