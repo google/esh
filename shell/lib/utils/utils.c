@@ -68,6 +68,66 @@ int read_mem(int argc, char *argv[]) {
   return 0;
 }
 
+#ifndef SHELL_NO_BIT_UTILS
+int w32_bit(int argc, char *argv[])
+{
+  if (argc < 4) {
+    goto usage;
+  }
+
+  uint32_t addr = atoh(argv[1]);
+  uint32_t bit_loc = atoi(argv[2]);
+  uint32_t bit_val = atoi(argv[3]);
+
+  if (bit_loc > 31) {
+    printf("Error: Invalid bit location argument\n");
+    goto usage;
+  }
+
+  if (bit_val != 0 && bit_val != 1) {
+    printf("Error: Invalid bit value argument\n");
+    goto usage;
+  }
+
+  uint32_t data = reg32(addr);
+  data = data | (bit_val << bit_loc);
+  data = data & ~(!bit_val << bit_loc);
+  reg32(addr) = data;
+
+  return 0;
+usage:
+  printf("Usage: %s <address_in_hex(32-bits)> <bit_location_in_decimal(0 to 31)> <bit_value(0 or 1)>\n", argv[0]);
+  return -1;
+}
+
+int r32_bit(int argc, char *argv[])
+{
+  if (argc < 3) {
+    goto usage;
+  }
+
+  uint32_t addr = atoh(argv[1]);
+  uint32_t bit_loc = atoi(argv[2]);
+
+  if (bit_loc > 31) {
+    printf("Error: Invalid bit location argument\n");
+    goto usage;
+  }
+
+  uint32_t data = reg32(addr);
+  uint32_t bit_val = (data >> bit_loc) & 0x1;
+  printf("Bit %u @ 0x%08x: %u\n", bit_loc, addr, bit_val);
+  return 0;
+
+usage:
+  printf("Usage: %s <address_in_hex(32-bits)> <bit_location_in_decimal(0 to 31)\n", argv[0]);
+  return -1;
+}
+
+ADD_CMD(wb, "write a bit to memory location", w32_bit);
+ADD_CMD(rb, "read a bit to memory location", r32_bit);
+#endif //SHELL_NO_BIT_UTILS
+
 ADD_CMD(r32, "reads a 32 bit memory location", r32);
 ADD_CMD(w32, "writes a 32 bit value to a memory location", w32);
 ADD_CMD(read, "Reads number of bytes from memory", read_mem);

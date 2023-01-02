@@ -81,7 +81,8 @@ DEFINES += -DSHELL_PRINTF_LITE
 DEFINES += -DSHELL_NO_PRINTF_LL
 DEFINES += -DSHELL_NO_UTILS
 DEFINES += -DSHELL_NO_HISTORY
-DEFINES += -DSHELL_NO_FANCY
+DEFINES += -DSHELL_NO_TAB_COMPLETE
+DEFINES += -DSHELL_NO_BIT_UTILS
 endif
 
 # ------------------------------ toolchain -------------------------------------

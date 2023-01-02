@@ -144,7 +144,7 @@ ADD_CMD(history, "Show command history", show_history);
 #endif  // SHELL_NO_HISTORY
 
 
-#ifndef SHELL_NO_FANCY
+#ifndef SHELL_NO_TAB_COMPLETE
 
 static int prefix_match(char *sub, int len, const char *str) {
   if (sub == NULL || str == NULL || len <= 0 || len > strlen(str)) {
@@ -194,7 +194,7 @@ static void handle_tab(char *cmd_buff, int *char_count) {
   }
 }
 
-#endif  // SHELL_NO_FANCY
+#endif  // SHELL_NO_TAB_COMPLETE
 
 static int parse_line(char **argv, char *line_buff, int argument_size) {
   int argc = 0;
@@ -313,12 +313,12 @@ static void shell(void) {
         special_key = 0;
         continue;
       }
-#ifndef SHELL_NO_FANCY
+#ifndef SHELL_NO_TAB_COMPLETE
       else if (c == TAB) {
         handle_tab(line_buff, &count);
         continue;
       }
-#endif
+#endif //SHELL_NO_TAB_COMPLETE
       else {
         line_buff[count] = c;
         count++;
