@@ -359,7 +359,8 @@ static int build_info(int argc, char **argv) {
   return 0;
 }
 
-__attribute__((weak)) void initial_setup(void) {
+
+void __attribute__((optimize("O0"), weak)) initial_setup(void) {
   /**
    * Copy the data section from ROM to RAM and
    * zero init the bss section if we are using
@@ -373,8 +374,13 @@ __attribute__((weak)) void initial_setup(void) {
   extern char _etext, _data, _edata, _bss, _ebss;
   char *src = &_etext, *dst = &_data;
 
-  /* init .data section */
-  while (dst < &_edata) *(dst++) = *(src++);
+  /**
+   * Copy over the data section from ROM to RAM.
+   * In case of RAM based target, we skip this since
+   * src and dst would point to same location in RAM
+   */
+  if (dst != src)
+    while (dst < &_edata) *(dst++) = *(src++);
 
   /* Clear .bss*/
   for (dst = &_bss; dst < &_ebss; dst++) *dst = 0;

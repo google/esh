@@ -16,9 +16,12 @@
 
 TOOLCHAIN_PREFIX = riscv64-linux-gnu-
 OPTIMIZATION     = g
-STARTUP    		 = riscv32
+STARTUP          = riscv32
 
-USER_LAYOUT_FILE = platform/layout.ld
+ROM_BASE_PHYSICAL = 0x20010000
+ROM_SIZE          = 0x00010000
+RAM_BASE_PHYSICAL = 0x80000000
+RAM_SIZE          = 0x00004000
 
 DEFINES   += -march=rv32imac -mabi=ilp32
 ASM_FLAGS += -march=rv32imac -mabi=ilp32
