@@ -21,7 +21,14 @@ MAKEFLAGS += --jobs=$(shell nproc)
 # Save the object files in this directory
 BUILD_PATH = objects
 
-SHELL_ROOT ?= ./
+# SHELL_ROOT is to be set my the user in their makefile and should point
+# to the directory that current Makefile resides in (i.e shell/).
+ifeq ($(SHELL_ROOT),)
+    $(info Direct compilation from the shell/ is not permitted)
+    $(info Please issue make command from the project directory)
+    $(error )
+endif
+
 -include $(SHELL_ROOT)/build-magic/defaults.mk
 
 # When set to 1, print dots for progress
@@ -94,6 +101,8 @@ OBJDUMP = $(TOOLCHAIN_PREFIX)objdump
 OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 BINSIZE = $(TOOLCHAIN_PREFIX)size
 
+DEFAULT_LD_FLAGS = --print-memory-usage
+
 # find all the *.c, *.cpp, *.S source files
 -include $(SHELL_ROOT)/build-magic/find-source.mk
 
@@ -128,8 +137,8 @@ $(BUILD_PATH)/%.o:%.S $(DEP_HEADERS)
 	@echo "generating" $@ $(PRINT_ONLY_ERRORS)
 	@echo "Size Report: " $(PRINT_ONLY_ERRORS)
 	@$(BINSIZE) -B -d -t $(OBJS) $(PRINT_ONLY_ERRORS)
-	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(LD_MACROS) -o $@ \
-	--print-memory-usage -Map=$@.map $(PRINT_ONLY_ERRORS)
+	@$(LD) -T$(LD_FILE) $(OBJS) $(LD_FLAGS) $(DEFAULT_LD_FLAGS) $(LD_MACROS) \
+	-o $@ -Map=$@.map $(PRINT_ONLY_ERRORS)
 	@$(OBJDUMP) -D -S $@ > $@.lst
 
 %.bin:%.elf
@@ -155,6 +164,6 @@ clean::
 # helpful config and help targets
 -include $(SHELL_ROOT)/build-magic/configuration.mk
 
-# preserve all the object files
-.PRECIOUS: $(OBJS)
+# preserve all the object and the project elf file(s)
+.PRECIOUS: $(OBJS) $(PROJECT).elf
 VPATH = $(shell dirname $(SRC_C) $(SRC_CPP) $(FILTERED_SRC_ASM) $(STARTUP_FILE))

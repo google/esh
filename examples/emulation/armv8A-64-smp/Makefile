@@ -24,6 +24,8 @@ STARTUP          = aarch64-multicore
 RAM_BASE_PHYSICAL  = 0x40100000
 RAM_SIZE           = 0x40000
 
+LD_FLAGS = --no-warn-rwx-segments
+
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
 #     Only Variable should be set above this line
