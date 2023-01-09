@@ -23,8 +23,9 @@ MEMORY
     RAM : ORIGIN = __RAM_BASE__, LENGTH = __RAM_SIZE__
 }
 
-/* Symbols used for initialising data. While this is not required when everything is
-   in RAM, the symbols are defined to keep the code consistent.
+/* 
+ * Symbols used for initialising data. While this is not required when everything is
+ * in RAM, the symbols are defined to keep the code consistent.
  */
 _etext = LOADADDR(.data);
 _data = ADDR(.data);
@@ -54,10 +55,10 @@ SECTIONS
     .rodata : {
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
-        *(.cmd_list*)
+        KEEP(*(.cmd_list*))
         __AUTO_TABLE_START__ = .;
-        *(.auto_list*)
-        *(.cmd_end*)
+        KEEP(*(.auto_list*))
+        KEEP(*(.cmd_end*))
         *(.rodata*)
     } > RAM
 

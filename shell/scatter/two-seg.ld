@@ -49,10 +49,10 @@ SECTIONS
         /* start: Command table for the shell */
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
-        *(.cmd_list*)
+        KEEP(*(.cmd_list*))
         __AUTO_TABLE_START__ = .;
-        *(.auto_list*)
-        *(.cmd_end*)
+        KEEP(*(.auto_list*))
+        KEEP(*(.cmd_end*))
         /* end: Command table for the shell */
 
         *(.rodata*)
