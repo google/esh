@@ -23,7 +23,21 @@ _start_:
     and x0, x0, #0x3
     cbz x0, 1f
     b .
-1:  ldr x0, =_STACK_TOP_    // Store the stackpointer
+1:
+
+    mrs x1, cptr_el3
+    bic x1, x1, #(1 << 10) // Ensure that CPTR_EL3.TFP is clear
+    msr cptr_el3, x1
+    mrs x1, cptr_el2
+    bic x1, x1, #(1 << 10)
+    msr cptr_el2, x1
+
+    mov x1, #(0x3 << 20)
+    msr cpacr_el1, x1
+
+    isb sy
+
+    ldr x0, =_STACK_TOP_    // Store the stackpointer
     mov sp, x0              // Move the value to SP
     bl prompt               // show the prompt
     b .
