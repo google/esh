@@ -323,7 +323,7 @@ static void shell(void) {
         line_buff[count] = c;
         count++;
       }
-      if (__echo) {
+      if (__echo && c != DELETE && c != BACK_SPACE) {
         __write_char__(c);
       }
     } else {
