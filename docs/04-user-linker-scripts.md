@@ -74,9 +74,9 @@ Placement of the above sections must be made at the `8 Byte` aligned memory
 address and these be placed together as follows:
 ```ld
 . = ALIGN(8);
-*(.cmd_list*)
-*(.auto_list*)
-*(.cmd_end*)
+KEEP(*(.cmd_list*))
+KEEP(*(.auto_list*))
+KEEP(*(.cmd_end*))
 ```
 The order is important! **These must go in the exact same order!**
 
@@ -87,9 +87,9 @@ example the `.rodata` section. Example placement is as below:
 .rodata : {
 ...
     . = ALIGN(8);
-    *(.cmd_list*)
-    *(.auto_list*)
-    *(.cmd_end*)
+    KEEP(*(.cmd_list*))
+    KEEP(*(.auto_list*))
+    KEEP(*(.cmd_end*))
 ...
 ```
 
@@ -146,10 +146,10 @@ SECTIONS
         /* start: Command table for the shell */
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
-        *(.cmd_list*)
+        KEEP(*(.cmd_list*))
         __AUTO_TABLE_START__ = .;
-        *(.auto_list*)
-        *(.cmd_end*)
+        KEEP(*(.auto_list*))
+        KEEP(*(.cmd_end*))
         /* end: Command table for the shell */
 
         *(.rodata*)
@@ -201,10 +201,10 @@ SECTIONS
         /* start: Command table for the shell */
         . = ALIGN(8);
         __CMD_TABLE_START__ = .;
-        *(.cmd_list*)
+        KEEP(*(.cmd_list*))
         __AUTO_TABLE_START__ = .;
-        *(.auto_list*)
-        *(.cmd_end*)
+        KEEP(*(.auto_list*))
+        KEEP(*(.cmd_end*))
         /* end: Command table for the shell */
 
         *(.rodata*)
