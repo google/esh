@@ -1,0 +1,24 @@
+{
+  "name": "Embedded shell (esh)",
+  "version": "1.0.0",
+  "description": "UART based embedded shell for embedded systems. Intended to be used for learning, experimenting and diagnostics.",
+  "keywords": "baremetal, shell, uart",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/google/esh.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Piyush Itankar",
+      "email": "pitankar@gmail.com.com",
+      "url": "https://www.john-smith/contact",
+      "maintainer": true
+    }
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/google/esh",
+  "frameworks": "*",
+  "platforms": "*"
+}
