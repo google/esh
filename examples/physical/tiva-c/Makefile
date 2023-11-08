@@ -41,7 +41,7 @@ SHELL_ROOT=../../../shell
 ICDI = /dev/ttyACM0
 
 # OpenOCD specific variables
-OPENOC_CONFIG_FILE =/usr/local/share/openocd/scripts/board/ek-lm4f120xl.cfg
+OPENOC_CONFIG_FILE = board/ek-lm4f120xl.cfg
 OPENOC_FILE_UPLOAD ="program $(PROJECT).elf verify reset exit"
 
 ### upload: Uploads the binary to the board
