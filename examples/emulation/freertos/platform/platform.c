@@ -15,39 +15,48 @@
  **/
 #include <stdio.h>
 #include "FreeRTOS.h"
-#include "/home/yash/test/FreeRTOS-Kernel/include/task.h"
-#include "/home/yash/test/FreeRTOS-Kernel/include/timers.h"
+#include "task.h"
+#include "timers.h"
 #include "queue.h"
 #include "shell.h"
 #include <stdbool.h>
 
 #include "shell_config.h"
+#include "string.h"
 #include "shell.h"
 #include "uart.h"
 
+/**
+ * @brief Inilialize the platform
+ *
+ */
 static void vTaskRunShell(void *pvParameters);
-
-
-void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
-                                         StackType_t ** ppxTimerTaskStackBuffer,
-                                         uint32_t * pulTimerTaskStackSize )
-    {
-        static StaticTask_t xTimerTaskTCB;
-        static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
-
-        *ppxTimerTaskTCBBuffer = &( xTimerTaskTCB );
-        *ppxTimerTaskStackBuffer = &( uxTimerTaskStack[ 0 ] );
-        *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
-    }
-
+extern void prompt();
+// extern void vApplicationTickHook(void);
 void vApplicationStackOverflowHook( TaskHandle_t xTask,
-                                        char * pcTaskName ){
-                                            while(1);
-                                        }
-void vApplicationTickHook( void ){
-    printf("Interuppt");
-    while(1);
+                                    char * pcTaskName )
+{
+    /* Check pcTaskName for the name of the offending task,
+     * or pxCurrentTCB if pcTaskName has itself been corrupted. */
+    ( void ) xTask;
+    ( void ) pcTaskName;
 }
+
+
+void vApplicationMallocFailedHook()
+{   
+    // printf("Application Malloc Falied");
+	// while(1);
+}
+
+void vApplicationTickHook(void) {
+    
+}
+void vAssertCalled( const char *pcFileName, uint32_t ulLine ) {
+//   printf("Assert! Spining forever!\n");
+  while(1);
+}
+
 void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
                                             StackType_t ** ppxIdleTaskStackBuffer,
                                             uint32_t * pulIdleTaskStackSize )
@@ -59,50 +68,44 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
             *ppxIdleTaskStackBuffer = &( uxIdleTaskStack[ 0 ] );
             *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
         }
-void vApplicationMallocFailedHook(){
-    printf("Malloc Failde");
-    while(1);
-}
-void vAssertCalled( const char *pcFileName, uint32_t ulLine )
-{   
-    while(1);
-}
+void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
+                                         StackType_t ** ppxTimerTaskStackBuffer,
+                                         uint32_t * pulTimerTaskStackSize )
+    {
+        static StaticTask_t xTimerTaskTCB;
+        static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-
-void shell_function(void)
-{   
-    printf("Shell Function");
-    int y = xTaskCreate(vTaskRunShell, "ShellTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-    if (y == pdPASS) {
-        // Task created successfully.
-        printf("Success");
-        // You can use xTaskHandle to refer to this task in the future.
-    } else {
-
-        printf("Failure");
-        // Task creation failed.
-        // Handle the error.
+        *ppxTimerTaskTCBBuffer = &( xTimerTaskTCB );
+        *ppxTimerTaskStackBuffer = &( uxTimerTaskStack[ 0 ] );
+        *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
     }
+void main_blinky1(void)
+{ 
+    //   platform_init();
+    prompt();
+    xTaskCreate(vTaskRunShell, "ShellTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     vTaskStartScheduler();
-
-    printf("Reached END");
 }
 
 static void vTaskRunShell(void *pvParameters)
 {
     (void)pvParameters;
 
-    printf("hello");
+    // printf("hello");
+	
+	prompt();
 
 
-    shell_function();
 }
 void platform_init() {
 
-
-  shell_function();
   uart_init();
-  printf("Executing platform.c");
   set_read_char(ugetc);
   set_write_char(uputc);
 }
+int bootFreeRTOS(){
+    xTaskCreate(vTaskRunShell, "ShellTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    vTaskStartScheduler();
+    return 0;
+}
+ADD_CMD(bootFreeRTOS,"ABCD",bootFreeRTOS);

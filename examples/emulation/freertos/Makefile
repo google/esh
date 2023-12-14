@@ -67,7 +67,6 @@ run: $(PROJECT).elf
 	@echo "Use Ctrl+A X to exit Qemu"
 	@qemu-system-arm -M mps2-an385 -cpu cortex-m3 -nographic \
 	 -kernel $(PROJECT).elf
-	@echo "Hello from make run"
 ### debug: Qemu with GDB server. To be executed before 'make gdb'
 debug:
 	@echo Please use \"make gdb\" in another terminal to attach gdb.

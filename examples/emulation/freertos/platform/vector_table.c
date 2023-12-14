@@ -14,7 +14,9 @@
  * limitations under the License.
  **/
 #include <stdint.h>
-
+extern void vPortSVCHandler( void );
+extern void xPortPendSVHandler(void);
+extern void xPortSysTickHandler(void);
 #define ISR_HANDLER(x) ((uint32_t)&x)
 
 extern void reset_handler(void);
@@ -28,8 +30,8 @@ uint32_t vector_table[240] __attribute__((section(".init_vector"))) = {
     (uint32_t)STACK_START, ISR_HANDLER(reset_handler),
     ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
     ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
-    ISR_HANDLER(default_handler), 0, 0, 0, 0, ISR_HANDLER(default_handler),
-    ISR_HANDLER(default_handler), ISR_HANDLER(default_handler), 0, 0,
+    ISR_HANDLER(default_handler), 0, 0, 0, 0,     ISR_HANDLER(vPortSVCHandler),      
+    ISR_HANDLER(default_handler), 0,  ISR_HANDLER(xPortPendSVHandler),  ISR_HANDLER(xPortSysTickHandler),
     // 132 IRQs
     ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
     ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
