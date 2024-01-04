@@ -28,7 +28,7 @@ void default_handler(void) {
 
 uint32_t vector_table[240] __attribute__((section(".init_vector"))) = {
     (uint32_t)STACK_START, ISR_HANDLER(reset_handler),
-    ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
+    ISR_HANDLER(default_handler), ISR_HANDLER(vPortSVCHandler),
     ISR_HANDLER(default_handler), ISR_HANDLER(default_handler),
     ISR_HANDLER(default_handler), 0, 0, 0, 0,     ISR_HANDLER(vPortSVCHandler),      
     ISR_HANDLER(default_handler), 0,  ISR_HANDLER(xPortPendSVHandler),  ISR_HANDLER(xPortSysTickHandler),
