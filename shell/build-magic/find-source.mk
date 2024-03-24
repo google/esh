@@ -27,7 +27,7 @@ IGNORE_CPP	= $(shell realpath $(shell find $(IGNORE_SRC_PATH) \
 				-type f -name "*.cpp" ) 2>/dev/null)
 endif
 
-SRC_C 	= $(filter-out $(IGNORE_C), $(ALL_SRC_C))
+SRC_C 	+= $(filter-out $(IGNORE_C), $(ALL_SRC_C))
 SRC_CPP = $(filter-out $(IGNORE_CPP), $(ALL_SRC_CPP))
 
 # discover the ASM source files in project directory

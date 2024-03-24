@@ -19,5 +19,5 @@
 .globl reset_handler
 .type reset_handler, %function
 reset_handler:
-    bl prompt
+    bl main_blinky1
     bl .

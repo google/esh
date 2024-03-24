@@ -33,6 +33,6 @@ H_FILES		= $(filter-out $(IGNORE_H), $(ALL_H_FILES))
 HPP_FILES	= $(filter-out $(IGNORE_HPP), $(ALL_HPP_FILES))
 
 # final list of include paths!
-INCLUDES = $(shell dirname $(H_FILES) $(HPP_FILES) \
+INCLUDES += $(shell dirname $(H_FILES) $(HPP_FILES) \
 			sort | uniq | \
 			while read line; do echo "-I"$$line; done;)

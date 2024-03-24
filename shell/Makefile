@@ -146,7 +146,7 @@ $(BUILD_PATH)/%.o:%.S $(DEP_HEADERS)
 	@$(OBJCOPY) -O binary $< $@ $(PRINT_ONLY_ERRORS)
 	@echo "Done!" $(PRINT_ONLY_ERRORS)
 
-## default target
+## default targetf
 .DEFAULT_GOAL := all
 
 ### all: Builds the project binary. Same as just executing make.

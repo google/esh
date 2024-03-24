@@ -1,0 +1,7 @@
+1) clone the repository
+2) Inside /esh clone the freeRTOS kernel source code : https://github.com/FreeRTOS/FreeRTOS-Kernel
+3) Disable the configAssert of port.c in freeRTOS kernel Code (For the given example of GCC/ARM3/port.c Line 370)
+4) make
+5) make run
+
+This will start two tasks concurrently one to run shell and other to periodically print a statement

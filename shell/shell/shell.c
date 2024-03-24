@@ -411,7 +411,13 @@ void prompt() {
   exec_auto_cmds();
   setup();
 
-  while (TRUE) {
+  // while (TRUE) {
+  //   shell();
+  // }
+}
+
+void shell1(){
+  while(1){
     shell();
   }
 }
