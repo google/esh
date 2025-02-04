@@ -20,7 +20,7 @@ STARTUP            = riscv64
 RAM_BASE_PHYSICAL  = 0x80000000
 RAM_SIZE           = 0x4000000
 
-LD_FLAGS = --no-warn-rwx-segments
+#LD_FLAGS = --no-warn-rwx-segments
 
 # MANDATORY:
 #     Provide relative path to shell/ from current directory
